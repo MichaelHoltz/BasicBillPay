@@ -17,44 +17,44 @@ namespace BasicBillPay.Models
         /// </summary>
         public int PayToId { get; set; }
         public int PayFromId { get; set; }
-        [JsonIgnore]
-        public Account PayTo
-        {
-            get
-            {
-                if (databaseFunctions != null)
-                {
-                    return databaseFunctions.GetAccount(PayToId);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                PayToId = value.Id;
-            }
-        }
-        [JsonIgnore]
-        public Account PayFrom
-        {
-            get
-            {
-                if (databaseFunctions != null)
-                {
-                    return databaseFunctions.GetAccount(PayFromId);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                PayFromId = value.Id;
-            }
-        }
+        //[JsonIgnore]
+        //public Account PayTo
+        //{
+        //    get
+        //    {
+        //        if (databaseFunctions != null)
+        //        {
+        //            return databaseFunctions.GetAccount(PayToId);
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //    set
+        //    {
+        //        PayToId = value.Id;
+        //    }
+        //}
+        //[JsonIgnore]
+        //public Account PayFrom
+        //{
+        //    get
+        //    {
+        //        if (databaseFunctions != null)
+        //        {
+        //            return databaseFunctions.GetAccount(PayFromId);
+        //        }
+        //        else
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //    set
+        //    {
+        //        PayFromId = value.Id;
+        //    }
+        //}
 
         public DateTime DateDue { get; set; } // Normalization Violation
 
@@ -66,11 +66,11 @@ namespace BasicBillPay.Models
         /// </summary>
         public String Reference { get; set; }
 
-        private Database databaseFunctions = null;
+        //private Database databaseFunctions = null;
         public Payment()
         {
         }
-        public Payment(int id, int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, ref Database db)
+        public Payment(int id, int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount)
         {
             Id = id;
             PayToId = payToId;
@@ -78,7 +78,7 @@ namespace BasicBillPay.Models
             DateDue = dateDue;
             DatePaid = datePaid;
             PaymentAmount = paymentAmount;
-            databaseFunctions = db;
+            //databaseFunctions = db;
         }
 
         #region Overrides
@@ -87,12 +87,7 @@ namespace BasicBillPay.Models
         /// </summary>
         public override string ToString()
         {
-            if (PayTo != null)
-            {
-                return PayTo.Name;
-            }
-            else
-                return "PayTo is Null!!";
+           return Id.ToString();
         }
         #endregion
         #region HashCodes / Object Identification

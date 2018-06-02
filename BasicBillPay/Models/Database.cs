@@ -49,12 +49,16 @@ namespace BasicBillPay.Models
         {
             return Accounts.FirstOrDefault(o => o.Id == id);
         }
+        public Account GetAccount(String name)
+        {
+            return Accounts.FirstOrDefault(o => o.Name == name);
+        }
         #endregion Account Functions
 
         #region Payment Functions
-        public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, ref Database db)
+        public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount)
         {
-            Payment p = new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount, ref db);
+            Payment p = new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount);
             bool retVal = Payments.Add(p);
             if (!retVal)
             {

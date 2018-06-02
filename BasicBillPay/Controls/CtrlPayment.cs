@@ -16,21 +16,44 @@ namespace BasicBillPay.Controls
     {
 
         Payment p;
+        Database databaseFunctions;
         public CtrlPayment()
         {
             InitializeComponent();
 
         }
-        public CtrlPayment(Payment payment, int itemIndex) : base(itemIndex)
+        public CtrlPayment(ref Database db, Payment payment, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
+            databaseFunctions = db;
             //Initialize Backing Data Model
             p = payment;
             
-            //Set DataBindings 
 
+        }
+
+        private void CtrlPayment_Load(object sender, EventArgs e)
+        {
+            //Set DataBindings 
             tbName.DataBindings.Clear();
-            tbName.DataBindings.Add("Text", p.PayTo, "Name");
+            if (p.PayToId == -1)
+            {
+                //Need to add new account or link to Existing one.
+            }
+            else
+            {
+                tbName.DataBindings.Add("Text", databaseFunctions.GetAccount(p.PayToId), "Name");
+            }
+
+            tbPayFrom.DataBindings.Clear();
+            if (p.PayFromId == -1)
+            {
+                //Need to add new account or link to Existing one.
+            }
+            else
+            {
+                tbPayFrom.DataBindings.Add("Text", databaseFunctions.GetAccount(p.PayFromId), "Name");
+            }
 
             dtpDateDue.DataBindings.Clear();
             dtpDateDue.DataBindings.Add("Text", p, "DateDue");
@@ -46,7 +69,40 @@ namespace BasicBillPay.Controls
             b.Parse += new ConvertEventHandler(currencyStringToFloat);
             tbAmount.DataBindings.Add(b);
         }
-
+        private void tbName_TextChanged(object sender, EventArgs e)
+        {
+            //Only do this for Unlinked account
+            if (p.PayToId == -1)
+            {
+                Account a = databaseFunctions.GetAccount(tbName.Text);
+                if (a != null)
+                {
+                    if (MessageBox.Show("Account Found with that name, would you like to link to it?", "Confirm Account Link", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        p.PayToId = a.Id;
+                        tbName.DataBindings.Clear();
+                        tbName.DataBindings.Add("Text", a, "Name");
+                    }
+                }
+            }
+        }
+        private void tbPayFrom_TextChanged(object sender, EventArgs e)
+        {
+            //Only do this for Unlinked account
+            if (p.PayFromId == -1)
+            {
+                Account a = databaseFunctions.GetAccount(tbPayFrom.Text);
+                if (a != null)
+                {
+                    if (MessageBox.Show("Account Found with that name, would you like to link to it?", "Confirm Account Link", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        p.PayFromId = a.Id;
+                        tbPayFrom.DataBindings.Clear();
+                        tbPayFrom.DataBindings.Add("Text", a, "Name");
+                    }
+                }
+            }
+        }
         private void floatToCurrencyString(object sender, ConvertEventArgs cevent)
         {
             // The method converts only to string type. Test this using the DesiredType.
@@ -64,5 +120,7 @@ namespace BasicBillPay.Controls
             // Converts the string back to decimal using the static Parse method.
             cevent.Value = float.Parse(cevent.Value.ToString(), NumberStyles.Currency, null);
         }
+
+
     }
 }

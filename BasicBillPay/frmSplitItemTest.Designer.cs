@@ -31,6 +31,7 @@
             this.tbSplit1 = new System.Windows.Forms.TextBox();
             this.tbSplit2 = new System.Windows.Forms.TextBox();
             this.tbTotal = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // tbSplit1
@@ -57,11 +58,19 @@
             this.tbTotal.TabIndex = 2;
             this.tbTotal.Leave += new System.EventHandler(this.tbTotal_Leave);
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(21, 88);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1003, 400);
+            this.flowLayoutPanel1.TabIndex = 3;
+            // 
             // frmSplitItemTest
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 261);
+            this.ClientSize = new System.Drawing.Size(1070, 550);
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.tbTotal);
             this.Controls.Add(this.tbSplit2);
             this.Controls.Add(this.tbSplit1);
@@ -78,5 +87,6 @@
         private System.Windows.Forms.TextBox tbSplit1;
         private System.Windows.Forms.TextBox tbSplit2;
         private System.Windows.Forms.TextBox tbTotal;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

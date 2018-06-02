@@ -50,6 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\CtrlBudget.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrlBudget.Designer.cs">
+      <DependentUpon>CtrlBudget.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CtrlHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -90,6 +96,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\PersistenceBase.cs" />
+    <EmbeddedResource Include="Controls\CtrlBudget.resx">
+      <DependentUpon>CtrlBudget.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlHeader.resx">
       <DependentUpon>CtrlHeader.cs</DependentUpon>
     </EmbeddedResource>

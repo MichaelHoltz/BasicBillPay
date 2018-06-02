@@ -32,6 +32,7 @@
             this.dtpDatePaid = new System.Windows.Forms.DateTimePicker();
             this.tbAmount = new System.Windows.Forms.TextBox();
             this.tbName = new System.Windows.Forms.TextBox();
+            this.tbPayFrom = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // dtpDateDue
@@ -60,32 +61,44 @@
             // 
             this.tbAmount.Location = new System.Drawing.Point(665, 0);
             this.tbAmount.Name = "tbAmount";
-            this.tbAmount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.tbAmount.Size = new System.Drawing.Size(62, 20);
             this.tbAmount.TabIndex = 10;
+            this.tbAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(117, 3);
+            this.tbName.Location = new System.Drawing.Point(117, 0);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(138, 20);
             this.tbName.TabIndex = 11;
+            this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
+            // 
+            // tbPayFrom
+            // 
+            this.tbPayFrom.Location = new System.Drawing.Point(261, 0);
+            this.tbPayFrom.Name = "tbPayFrom";
+            this.tbPayFrom.Size = new System.Drawing.Size(138, 20);
+            this.tbPayFrom.TabIndex = 12;
+            this.tbPayFrom.TextChanged += new System.EventHandler(this.tbPayFrom_TextChanged);
             // 
             // CtrlPayment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.tbPayFrom);
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.tbAmount);
             this.Controls.Add(this.dtpDatePaid);
             this.Controls.Add(this.dtpDateDue);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CtrlPayment";
-            this.Size = new System.Drawing.Size(1000, 40);
+            this.Size = new System.Drawing.Size(1000, 20);
+            this.Load += new System.EventHandler(this.CtrlPayment_Load);
             this.Controls.SetChildIndex(this.dtpDateDue, 0);
             this.Controls.SetChildIndex(this.dtpDatePaid, 0);
             this.Controls.SetChildIndex(this.tbAmount, 0);
             this.Controls.SetChildIndex(this.tbName, 0);
+            this.Controls.SetChildIndex(this.tbPayFrom, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -97,5 +110,6 @@
         private System.Windows.Forms.DateTimePicker dtpDatePaid;
         private System.Windows.Forms.TextBox tbAmount;
         private System.Windows.Forms.TextBox tbName;
+        private System.Windows.Forms.TextBox tbPayFrom;
     }
 }

@@ -35,6 +35,10 @@ namespace BasicBillPay.Models
         /// UserName for Account - Will be encrypted (if not all fields)
         /// </summary>
         public String UserName { get; set; }
+        /// <summary>
+        /// Calculated based on Date...
+        /// </summary>
+        public float Balance { get; set; }
 
         public Account()
         {

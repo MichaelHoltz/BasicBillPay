@@ -15,6 +15,7 @@ namespace BasicBillPay.Models
     /// </summary>
     public class BudgetItem
     {
+        public int Id { get; set; }
         public String Name { get; set; }
         public TransactionPeriod PaidFrequency { get; set; }
         public float Amount { get; set; }

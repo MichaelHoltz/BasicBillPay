@@ -32,6 +32,7 @@
             this.btnAddBill = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.flpBudget = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // flpBills
@@ -75,11 +76,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // flpBudget
+            // 
+            this.flpBudget.AllowDrop = true;
+            this.flpBudget.AutoScroll = true;
+            this.flpBudget.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.flpBudget.Location = new System.Drawing.Point(153, 501);
+            this.flpBudget.Name = "flpBudget";
+            this.flpBudget.Size = new System.Drawing.Size(1003, 420);
+            this.flpBudget.TabIndex = 4;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1167, 795);
+            this.ClientSize = new System.Drawing.Size(1167, 950);
+            this.Controls.Add(this.flpBudget);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnAddBill);
@@ -97,6 +109,7 @@
         private System.Windows.Forms.Button btnAddBill;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.FlowLayoutPanel flpBudget;
     }
 }
 

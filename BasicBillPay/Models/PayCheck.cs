@@ -33,6 +33,10 @@ namespace BasicBillPay.Models
         public float BenifitCostPerPayPeriod { get; set; }
         public float GarnishmentCostPerPayPeriod { get; set; }
         public float OtherCostPerPayPeriod { get; set; }
+        /// <summary>
+        /// Start Date to Establish proper frequency
+        /// </summary>
+        public DateTime PayDayStart { get; set; }
 
         #region Pay Calculations
         public float TotalDeductionsPerPayPeriod()

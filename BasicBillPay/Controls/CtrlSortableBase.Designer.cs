@@ -36,7 +36,7 @@
             // lblIndex
             // 
             this.lblIndex.AutoSize = true;
-            this.lblIndex.Location = new System.Drawing.Point(3, 2);
+            this.lblIndex.Location = new System.Drawing.Point(27, 2);
             this.lblIndex.Name = "lblIndex";
             this.lblIndex.Size = new System.Drawing.Size(13, 13);
             this.lblIndex.TabIndex = 7;
@@ -45,9 +45,9 @@
             // btnDelete
             // 
             this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
-            this.btnDelete.Location = new System.Drawing.Point(1, 18);
+            this.btnDelete.Location = new System.Drawing.Point(1, 0);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(23, 23);
+            this.btnDelete.Size = new System.Drawing.Size(20, 20);
             this.btnDelete.TabIndex = 8;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
@@ -63,7 +63,7 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.Name = "CtrlSortableBase";
-            this.Size = new System.Drawing.Size(1000, 40);
+            this.Size = new System.Drawing.Size(1000, 20);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.CtrlSortableBase_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.CtrlSortableBase_DragEnter);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CtrlSortableBase_MouseDown);

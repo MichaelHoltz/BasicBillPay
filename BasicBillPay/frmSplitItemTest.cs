@@ -8,7 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using BasicBillPay.Models;
+using BasicBillPay.Controls;
 namespace BasicBillPay
 {
     public partial class frmSplitItemTest : Form
@@ -29,6 +30,16 @@ namespace BasicBillPay
             tbSplit2.Text = Split2.ToString("c");
             splitPercentage = (Split1 / Total);
             CalculateSplit(0);
+            BudgetItem bi = new BudgetItem();
+            bi.Name = "Test Item";
+            bi.PaidFrequency = TransactionPeriod.Monthly;
+            bi.Amount = 300f;
+            bi.Split1Amount = 100f;
+            bi.Split2Amount = 200f;
+
+            CtrlBudget cb = new CtrlBudget(bi, 0);
+            flowLayoutPanel1.Controls.Add(cb);
+           
         }
         /// <summary>
         /// Zero is based on Total Changing
@@ -62,8 +73,6 @@ namespace BasicBillPay
                     //Change Split 1
                     break;
             }
-            
-
         }
         private void tbSplit1_Leave(object sender, EventArgs e)
         {
