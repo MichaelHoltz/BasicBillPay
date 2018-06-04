@@ -75,7 +75,7 @@
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlFooter);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmPopup";
@@ -83,6 +83,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Title of Popup";
+            this.Load += new System.EventHandler(this.frmPopup_Load);
             this.pnlFooter.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

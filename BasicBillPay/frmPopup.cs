@@ -12,29 +12,41 @@ namespace BasicBillPay
 {
     public partial class frmPopup : Form
     {
+        UserControl uc;
+        Control callingControl;
         public frmPopup()
         {
             InitializeComponent();
         }
-        public frmPopup(String title,  UserControl uc, Control caller)
+        public frmPopup(String title,  UserControl userControl, Control caller)
         {
             InitializeComponent();
+            uc = userControl;
+            callingControl = caller;
             Text = title;
-            pnlContent.Controls.Add(uc);
-            positionForm(caller);
-            
+            //Add the Specified User Control to the form
+            pnlContent.Controls.Add(userControl);
+        }
+        private void frmPopup_Load(object sender, EventArgs e)
+        {
+            positionForm(callingControl);
         }
         private void positionForm(Control caller)
         {
-            //this.Top = caller.Top;
-            //this.Left = caller.Left;
+            this.Top = caller.Top + 100;
+            this.Left = caller.Left + 100;
 
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            //Need to validate before closing
+            //bool validated = uc.Validate();
+
             this.Close();
             DialogResult = DialogResult.OK;
         }
+
+
     }
 }

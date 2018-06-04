@@ -38,6 +38,7 @@
             this.tbBudgetTotal = new System.Windows.Forms.TextBox();
             this.lblAccount1 = new System.Windows.Forms.Label();
             this.lblAccount2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // flpBills
@@ -134,11 +135,22 @@
             this.lblAccount2.TabIndex = 10;
             this.lblAccount2.Text = "C Checking";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(57, 32);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 11;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1167, 950);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.lblAccount2);
             this.Controls.Add(this.lblAccount1);
             this.Controls.Add(this.tbBudgetTotal);
@@ -170,6 +182,7 @@
         private System.Windows.Forms.TextBox tbBudgetTotal;
         private System.Windows.Forms.Label lblAccount1;
         private System.Windows.Forms.Label lblAccount2;
+        private System.Windows.Forms.Button button1;
     }
 }
 
