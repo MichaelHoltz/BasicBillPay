@@ -53,12 +53,25 @@ namespace BasicBillPay.Models
         {
             return Accounts.FirstOrDefault(o => o.Name == name);
         }
+        public float GetAccountTotal(String name, TransactionPeriod period)
+        {
+            Account a = GetAccount(name);
+            float total = 0f;
+            foreach (Payment p in Payments)
+            {
+                if (p.PayFromId == a.Id)
+                {
+                    total += p.GetAmount(p.PaymentAmount, period);
+                }
+            }
+            return total;
+        }
         #endregion Account Functions
 
         #region Payment Functions
-        public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount)
+        public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, TransactionPeriod paymentFrequency)
         {
-            Payment p = new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount);
+            Payment p = new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount, paymentFrequency);
             bool retVal = Payments.Add(p);
             if (!retVal)
             {
@@ -66,6 +79,27 @@ namespace BasicBillPay.Models
             }
             return p;
         }
+        
         #endregion Payment Functions
+        #region Budget Item Functions
+        /// <summary>
+        /// Add Basic non-split Budget Item..
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="amount"></param>
+        /// <param name="paidFrequency"></param>
+        /// <returns></returns>
+        public BudgetItem AddBudgetItem(String name, float amount, TransactionPeriod paidFrequency)
+        {
+            BudgetItem b = new BudgetItem(NextBudgetItemId++, name, amount, paidFrequency); // new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount);
+            bool retVal = BudgetItems.Add(b);
+            if (!retVal)
+            {
+                b = BudgetItems.FirstOrDefault(o => o.Id == b.Id); // Payments.FirstOrDefault(o => o.PayToId == payToId && o.PayFromId == payFromId);
+            }
+            return b;
+
+        }
+        #endregion Budget Item Functions
     }
 }

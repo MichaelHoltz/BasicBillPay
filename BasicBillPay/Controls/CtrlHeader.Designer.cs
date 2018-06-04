@@ -33,12 +33,14 @@
             // 
             // lblDelete
             // 
-            this.lblDelete.AutoSize = true;
-            this.lblDelete.Location = new System.Drawing.Point(5, 3);
+            this.lblDelete.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblDelete.Location = new System.Drawing.Point(0, 0);
+            this.lblDelete.Margin = new System.Windows.Forms.Padding(0);
             this.lblDelete.Name = "lblDelete";
-            this.lblDelete.Size = new System.Drawing.Size(33, 13);
+            this.lblDelete.Size = new System.Drawing.Size(95, 22);
             this.lblDelete.TabIndex = 0;
             this.lblDelete.Text = "Order";
+            this.lblDelete.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // CtrlHeader
             // 
@@ -49,9 +51,9 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CtrlHeader";
-            this.Size = new System.Drawing.Size(1000, 20);
+            this.Size = new System.Drawing.Size(1000, 22);
+            this.Load += new System.EventHandler(this.CtrlHeader_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

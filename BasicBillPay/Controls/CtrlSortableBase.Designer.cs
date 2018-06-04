@@ -49,6 +49,7 @@
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(20, 20);
             this.btnDelete.TabIndex = 8;
+            this.btnDelete.TabStop = false;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
@@ -63,7 +64,7 @@
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.Name = "CtrlSortableBase";
-            this.Size = new System.Drawing.Size(1000, 20);
+            this.Size = new System.Drawing.Size(1000, 24);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.CtrlSortableBase_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.CtrlSortableBase_DragEnter);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.CtrlSortableBase_MouseDown);

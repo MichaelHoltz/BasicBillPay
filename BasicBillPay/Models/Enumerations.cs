@@ -20,6 +20,6 @@ namespace BasicBillPay.Models
         Weekly = 52,
         Biweekly = 26,
         Monthly = 12,
-        Yearly = 1
+        Yearly = 1,
     }
 }

@@ -26,20 +26,56 @@ namespace BasicBillPay.Controls
         public CtrlBudget(BudgetItem budgetItem, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
+            //Bind to Source List FIRST
+            cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
             b = budgetItem;
-            tbName.Text = b.Name;
+
             Total = b.Amount;
             Split1 = b.Split1Amount;
             Split2 = b.Split2Amount;
-            cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
+
+
 
         }
         private void CtrlBudget_Load(object sender, EventArgs e)
         {
+
+            //Budget Item Name
+            tbName.DataBindings.Clear();
+            tbName.DataBindings.Add("Text", b.Name, "");
+
+            //Couldn't get Binding to work right so doing it manually
             cbPaidFrequency.Text = b.PaidFrequency.ToString();
-            tbAmount.Text = Total.ToString("c");
-            tbSplit1Amount.Text = Split1.ToString("c");
-            tbSplit2Amount.Text = Split2.ToString("c");
+            //cbPaidFrequency.DataBindings.Clear();
+            //cbPaidFrequency.DataBindings.Add("SelectedItem", b, "PaidFrequency"); //Issues
+            //cbPaidFrequency.DataBindings.Add("SelectedText", b.PaidFrequency.ToString(), "");
+            //cbPaidFrequency.DisplayMember
+
+            //Total Budget Amount
+            tbAmount.DataBindings.Clear();
+            Binding bb = new Binding("Text", b.Amount, "");
+            //// Add the delegates to the event.
+            bb.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
+            bb.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
+            tbAmount.DataBindings.Add(bb);
+
+            //Split1Amount
+            tbSplit1Amount.DataBindings.Clear();
+            Binding bb2 = new Binding("Text", b.Split1Amount, "");
+            // Add the delegates to the event.
+            bb2.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
+            bb2.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
+            tbSplit1Amount.DataBindings.Add(bb2);
+
+            ////Split2Amount
+            tbSplit2Amount.DataBindings.Clear();
+            Binding bb3 = new Binding("Text", b.Split2Amount, "");
+            //// Add the delegates to the event.
+            bb3.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
+            bb3.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
+            tbSplit2Amount.DataBindings.Add(bb3);
+
+            //Set in Constructor
             splitPercentage = (Split1 / Total);
             CalculateSplit(0);
         }
@@ -81,22 +117,37 @@ namespace BasicBillPay.Controls
         private void tbSplit1Amount_Leave(object sender, EventArgs e)
         {
             Split1 = float.Parse(tbSplit1Amount.Text, NumberStyles.Currency, null);
-            tbSplit1Amount.Text = ((float)Split1).ToString("c");
+            //tbSplit1Amount.Text = ((float)Split1).ToString("c");
             CalculateSplit(1);
         }
 
         private void tbSplit2Amount_Leave(object sender, EventArgs e)
         {
             Split2 = float.Parse(tbSplit2Amount.Text, NumberStyles.Currency, null);
-            tbSplit2Amount.Text = ((float)Split2).ToString("c");
+            //tbSplit2Amount.Text = ((float)Split2).ToString("c");
             CalculateSplit(2);
         }
         private void tbAmount_Leave(object sender, EventArgs e)
         {
             Total = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-            tbAmount.Text = ((float)Total).ToString("c");
+            //tbAmount.Text = ((float)Total).ToString("c");
             CalculateSplit(0);
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            object cpfSI = cbPaidFrequency.SelectedItem;
+            String cpfStr = cbPaidFrequency.SelectedText;
+            object cpfSV = cbPaidFrequency.SelectedValue;
+        }
+
+        private void cbPaidFrequency_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cbPaidFrequency.SelectedIndex > -1 && b!=null)
+            {
+                b.PaidFrequency = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
+                cbPaidFrequency.Text = b.PaidFrequency.ToString();
+            }
+        }
     }
 }

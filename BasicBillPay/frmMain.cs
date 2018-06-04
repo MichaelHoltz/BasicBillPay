@@ -27,27 +27,55 @@ namespace BasicBillPay
             //Add Bill Header
             CtrlHeader ch = new CtrlHeader();
             flpBills.Controls.Add(ch);
+
+            //Add Budget Header
+            CtrlHeader chBudget = new CtrlHeader();
+            flpBudget.Controls.Add(chBudget);
+
             //Load the Database
             db = PersistenceBase.Load<Database>(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"));
             //Need to Load all Controls
-
             foreach (Payment pItem in db.Payments)
             {
-                
-                CtrlPayment cp = new CtrlPayment(ref db, pItem, paymentItemIndex++);
-                cp.ItemDeleted += Cp_ItemDeleted;
-                flpBills.Controls.Add(cp);
-
+                AddPaymentCtrl(pItem);
             }
             foreach (BudgetItem bItem in db.BudgetItems)
             {
-                CtrlBudget cb = new CtrlBudget(bItem, budgetItemIndex++);
-                cb.ItemDeleted += Cb_ItemDeleted;
-                flpBudget.Controls.Add(cb);
+                AddBudgetCtrl(bItem);
             }
+            CalculateTotals();
+           // ctrlDateTimePicker1.BackColor = Color.Red;
+            //ctrlDateTimePicker1.Invalidate();
+
+
+        }
+        private void CalculateTotals()
+        {
+            //float Total = 0f;
+            //float Total2 = 0f;
+            float BudgetTotal = 0f;
+            //foreach (Payment pItem in db.Payments)
+            //{
+            //    if (pItem.PayFromId == 0)
+            //        Total += pItem.PaymentAmount; // Todo-add and account for normalized Payment Frequency
+            //    if (pItem.PayFromId == 1)
+            //        Total2 += pItem.PaymentAmount; // Todo-add and account for normalized Payment Frequency
+            //}
+            foreach (BudgetItem bItem in db.BudgetItems)
+            {
+
+                BudgetTotal += bItem.Amount; // Todo-add and account for normalized Payment Frequency
+            }
+            tbTotal.Text = db.GetAccountTotal("M Checking", TransactionPeriod.Monthly).ToString("c");
+            tbTotal2.Text = db.GetAccountTotal("C Checking", TransactionPeriod.Monthly).ToString("c");
+            tbBudgetTotal.Text = BudgetTotal.ToString("c");
 
         }
 
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveData();
+        }
         private void Cb_ItemDeleted(object sender, EventArgs e)
         {
             if (sender is CtrlSortableBase)
@@ -64,25 +92,58 @@ namespace BasicBillPay
                 budgetItemIndex = i;
             }
         }
-
-        private void btnAddBill_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Adds a visual Control Linked to the provided Payment
+        /// </summary>
+        /// <param name="p"></param>
+        private void AddPaymentCtrl(Payment p)
         {
-            ////Tryout only
-            ////Add Payment Account
-            //Account pTo = db.AddAccount("Water / Sewer / Trash", "123", "https://www.oxnard.org/online-payments/", "wst.oxnard");
-            ////Add Source Account
-            //Account pFrom = db.AddAccount("M Checking", "123", "www.encryptme.com", "mUserName");
-
-            ////Add Payment
-            //Payment p = db.AddPayment(-1, -1, DateTime.Parse("6/15/18"), DateTime.Parse("4/30/2018"), 0.00f);
-            Payment p = db.AddPayment(-1, -1, DateTime.Now, DateTime.Now, 0.00f);
-
-            //End Tryout
             CtrlPayment cp = new CtrlPayment(ref db, p, paymentItemIndex++);
             cp.ItemDeleted += Cp_ItemDeleted;
+            cp.AccountSelected += Cp_AccountSelected;
+            cp.AmountChanged += Cp_AmountChanged;
             flpBills.Controls.Add(cp);
+
         }
 
+        private void Cp_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
+        {
+            CalculateTotals();
+        }
+
+        private void Cp_AccountSelected(object sender, CtrlPayment.AccountSelectedEventArgs e)
+        {
+            //BudgetItem b = 
+            CtrlAccount ca = new CtrlAccount(e.SelectedAccount);
+            frmPopup fp = new frmPopup("Account", ca, sender as Control);
+            fp.ShowDialog();
+        }
+
+
+
+        /// <summary>
+        /// Adds a visual Control Linked to the provied Budget Item
+        /// </summary>
+        /// <param name="b"></param>
+        private void AddBudgetCtrl(BudgetItem b)
+        {
+            CtrlBudget cb = new CtrlBudget(b, budgetItemIndex++);
+            cb.ItemDeleted += Cb_ItemDeleted;
+            flpBudget.Controls.Add(cb);
+        }
+        private void btnAddBill_Click(object sender, EventArgs e)
+        {
+            ////Add Payment
+            //Payment p = db.AddPayment(-1, -1, DateTime.Parse("6/15/18"), DateTime.Parse("4/30/2018"), 0.00f);
+            Payment p = db.AddPayment(-1, -1, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
+            //End Tryout
+            AddPaymentCtrl(p);
+        }
+        private void btnAddBudget_Click(object sender, EventArgs e)
+        {
+            BudgetItem b = db.AddBudgetItem("", 0.0f, TransactionPeriod.Monthly);
+            AddBudgetCtrl(b);
+        }
         private void Cp_ItemDeleted(object sender, EventArgs e)
         {
             if (sender is CtrlSortableBase)
@@ -109,10 +170,7 @@ namespace BasicBillPay
             PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"), db);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            frmSplitItemTest fsit = new frmSplitItemTest();
-            fsit.ShowDialog();
-        }
+
+
     }
 }

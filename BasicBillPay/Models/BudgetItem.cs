@@ -13,7 +13,7 @@ namespace BasicBillPay.Models
     /// Ex. Family Food, Family Clothing, Medical 
     /// Also Yearly 
     /// </summary>
-    public class BudgetItem
+    public class BudgetItem:PeriodicBase
     {
         public int Id { get; set; }
         public String Name { get; set; }
@@ -23,7 +23,17 @@ namespace BasicBillPay.Models
         public int Split1AccountId { get; set; }
         public float Split2Amount { get; set; }
         public int Split2AccountId { get; set; }
-        
+
+        public BudgetItem()
+        {
+        }
+        public BudgetItem(int id, String name, float amount, TransactionPeriod paidFrequency):base(paidFrequency)
+        {
+            Id = id;
+            Name = name;
+            PaidFrequency = paidFrequency;
+            Amount = amount;
+        }
 
     }
 }

@@ -9,7 +9,7 @@ namespace BasicBillPay.Models
     /// <summary>
     /// 
     /// </summary>
-    public class Payment
+    public class Payment:PeriodicBase
     {
         public int Id { get; set; }
         /// <summary>
@@ -17,44 +17,6 @@ namespace BasicBillPay.Models
         /// </summary>
         public int PayToId { get; set; }
         public int PayFromId { get; set; }
-        //[JsonIgnore]
-        //public Account PayTo
-        //{
-        //    get
-        //    {
-        //        if (databaseFunctions != null)
-        //        {
-        //            return databaseFunctions.GetAccount(PayToId);
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        PayToId = value.Id;
-        //    }
-        //}
-        //[JsonIgnore]
-        //public Account PayFrom
-        //{
-        //    get
-        //    {
-        //        if (databaseFunctions != null)
-        //        {
-        //            return databaseFunctions.GetAccount(PayFromId);
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        PayFromId = value.Id;
-        //    }
-        //}
 
         public DateTime DateDue { get; set; } // Normalization Violation
 
@@ -70,7 +32,7 @@ namespace BasicBillPay.Models
         public Payment()
         {
         }
-        public Payment(int id, int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount)
+        public Payment(int id, int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, TransactionPeriod paymentSchedule):base(paymentSchedule)
         {
             Id = id;
             PayToId = payToId;
