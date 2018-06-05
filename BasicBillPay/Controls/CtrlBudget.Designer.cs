@@ -39,7 +39,7 @@
             // 
             // tbName
             // 
-            this.tbName.Location = new System.Drawing.Point(28, 0);
+            this.tbName.Location = new System.Drawing.Point(49, 0);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(241, 20);
             this.tbName.TabIndex = 0;
@@ -48,7 +48,7 @@
             // 
             this.cbPaidFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPaidFrequency.FormattingEnabled = true;
-            this.cbPaidFrequency.Location = new System.Drawing.Point(272, 0);
+            this.cbPaidFrequency.Location = new System.Drawing.Point(293, 0);
             this.cbPaidFrequency.Margin = new System.Windows.Forms.Padding(0);
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
@@ -57,7 +57,7 @@
             // 
             // tbAmount
             // 
-            this.tbAmount.Location = new System.Drawing.Point(349, 0);
+            this.tbAmount.Location = new System.Drawing.Point(370, 0);
             this.tbAmount.Name = "tbAmount";
             this.tbAmount.Size = new System.Drawing.Size(64, 20);
             this.tbAmount.TabIndex = 2;
@@ -66,7 +66,7 @@
             // 
             // tbSplit1Amount
             // 
-            this.tbSplit1Amount.Location = new System.Drawing.Point(564, 0);
+            this.tbSplit1Amount.Location = new System.Drawing.Point(585, 0);
             this.tbSplit1Amount.Name = "tbSplit1Amount";
             this.tbSplit1Amount.Size = new System.Drawing.Size(57, 20);
             this.tbSplit1Amount.TabIndex = 3;
@@ -75,7 +75,7 @@
             // 
             // tbSplit2Amount
             // 
-            this.tbSplit2Amount.Location = new System.Drawing.Point(778, 0);
+            this.tbSplit2Amount.Location = new System.Drawing.Point(799, 0);
             this.tbSplit2Amount.Name = "tbSplit2Amount";
             this.tbSplit2Amount.Size = new System.Drawing.Size(57, 20);
             this.tbSplit2Amount.TabIndex = 4;
@@ -84,14 +84,14 @@
             // 
             // tbSplit1Account
             // 
-            this.tbSplit1Account.Location = new System.Drawing.Point(427, 0);
+            this.tbSplit1Account.Location = new System.Drawing.Point(448, 0);
             this.tbSplit1Account.Name = "tbSplit1Account";
             this.tbSplit1Account.Size = new System.Drawing.Size(131, 20);
             this.tbSplit1Account.TabIndex = 9;
             // 
             // tbSplit2Account
             // 
-            this.tbSplit2Account.Location = new System.Drawing.Point(628, -1);
+            this.tbSplit2Account.Location = new System.Drawing.Point(649, 0);
             this.tbSplit2Account.Name = "tbSplit2Account";
             this.tbSplit2Account.Size = new System.Drawing.Size(131, 20);
             this.tbSplit2Account.TabIndex = 10;

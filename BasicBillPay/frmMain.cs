@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using BasicBillPay.Controls;
 using BasicBillPay.Models;
 using BasicBillPay.Tools;
+using BasicBillPay.Tools.Encryption;
 using System.Security;
 using System.Security.Cryptography;
 
@@ -25,21 +26,29 @@ namespace BasicBillPay
         {
             InitializeComponent();
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
-
-            appSettings = PersistenceBase.Load<ApplicationSettings>(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.json"));
-            //appSettings.Password = "This is a test Password69";
-            //Get Password for settings and data
-            //frmPopup fp = new frmPopup("System Password", new CtrlPassword(), this);
-            //fp.ShowDialog();
-            MessageBox.Show(appSettings.Password);
-
-            // ctrlDateTimePicker1.BackColor = Color.Red;
-            //ctrlDateTimePicker1.Invalidate();
-            PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.json"), appSettings);
+            appSettings = PersistenceBase.Load<ApplicationSettings>(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"));
+            if (appSettings.Password == null)
+            {
+                //Get Password for settings and data
+                UserControl cp = new CtrlPassword();
+                frmPopup fp = new frmPopup("System Password", ref cp, this);
+                fp.ShowDialog();
+                appSettings.Password = AESGCM.Password;
+            }
+            else
+            {
+                AESGCM.Password = appSettings.Password; // Set for Shortened function calls
+            }
+            //Assign a default path if one doesn't exist.
+            if (appSettings.DbPath == null)
+            {
+                appSettings.DbPath = PersistenceBase.GetAbsolutePath(@"\Data\mybills.bbp");
+            }
+            
             LoadData();
-
         }
 
         /// <summary>
@@ -56,18 +65,24 @@ namespace BasicBillPay
             flpBudget.Controls.Add(chBudget);
 
             //Load the Database
-            db = PersistenceBase.Load<Database>(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"));
+            //db = PersistenceBase.Load<Database>(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"));
+            db = PersistenceBase.Load<Database>(appSettings.DbPath);
             //Need to Load all Controls
-            foreach (Payment pItem in db.Payments)
+            foreach (Payment pItem in db.Payments.OrderBy(o=>o.Index))
             {
+                
                 AddPaymentCtrl(pItem);
             }
-            foreach (BudgetItem bItem in db.BudgetItems)
+            foreach (BudgetItem bItem in db.BudgetItems.OrderBy(o=>o.Index))
             {
                 AddBudgetCtrl(bItem);
             }
             CalculateTotals();
 
+        }
+        public HashSet<Payment> GetPayments()
+        {
+            return db.Payments;
         }
         private void CalculateTotals()
         {
@@ -118,13 +133,16 @@ namespace BasicBillPay
         /// <param name="p"></param>
         private void AddPaymentCtrl(Payment p)
         {
-            CtrlPayment ctrlPayment = new CtrlPayment(ref db, p, paymentItemIndex++);
-            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeleted;
+            CtrlPayment ctrlPayment = new CtrlPayment(ref db, ref p, paymentItemIndex++);
+            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeletedOrIndexChanged;
             ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
             ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
+            ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
             flpBills.Controls.Add(ctrlPayment);
 
         }
+
+
 
         private void CtrlPayment_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
         {
@@ -134,8 +152,8 @@ namespace BasicBillPay
         private void CtrlPayment_AccountSelected(object sender, CtrlPayment.AccountSelectedEventArgs e)
         {
             //BudgetItem b = 
-            CtrlAccount ca = new CtrlAccount(e.SelectedAccount);
-            frmPopup fp = new frmPopup("Account", ca, sender as Control);
+            UserControl ca = new CtrlAccount(e.SelectedAccount);
+            frmPopup fp = new frmPopup("Account", ref ca, sender as Control);
             fp.ShowDialog();
         }
 
@@ -164,7 +182,7 @@ namespace BasicBillPay
             BudgetItem b = db.AddBudgetItem("", 0.0f, TransactionPeriod.Monthly);
             AddBudgetCtrl(b);
         }
-        private void CtrlPayment_ItemDeleted(object sender, EventArgs e)
+        private void CtrlPayment_ItemDeletedOrIndexChanged(object sender, EventArgs e)
         {
             if (sender is CtrlSortableBase)
             {
@@ -172,12 +190,12 @@ namespace BasicBillPay
                 int i = 0;
                 foreach (Control c in flpBills.Controls)
                 {
-                    if (c is CtrlSortableBase && csb != c)
+                    if (c is CtrlSortableBase && csb != c) // Doesn't equal Self
                     {
                         (c as CtrlSortableBase).UpdateIndex(i++);
                     }
                 }
-                paymentItemIndex = i;
+                paymentItemIndex = i++;
             }
         }
 
@@ -187,14 +205,16 @@ namespace BasicBillPay
         }
         private void SaveData()
         {
-            PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"), db);
+            //PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"), db); // Todo - use app Settings path!!
+            PersistenceBase.Save(appSettings.DbPath, db); 
+            PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             //string password = "This is a password";
             //SecureString test = "dd";
-            SecureString password = Tools.Encryption.AESGCM.Password;
+            //SecureString password = Tools.Encryption.AESGCM.Password;
             string insecurePayload = "Non-secure payload";
             byte[] insecurePayloadBytes = Encoding.ASCII.GetBytes(insecurePayload);
             int insecurePayloadByteCount = insecurePayload.Length;
@@ -220,6 +240,15 @@ namespace BasicBillPay
             String ct = Encoding.UTF8.GetString(ciphertext);
             byte[] plaintext2 = ProtectedData.Unprotect(ciphertext, entropy, DataProtectionScope.CurrentUser);
             String pt = Encoding.UTF8.GetString(plaintext2);
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            frmSettings fs = new frmSettings(appSettings);
+            if (fs.ShowDialog() == DialogResult.OK)
+            {
+                PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
+            }
         }
     }
 }

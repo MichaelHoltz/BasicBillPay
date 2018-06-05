@@ -6,12 +6,15 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BasicBillPay.Models;
 using System.Windows.Forms;
 
 namespace BasicBillPay.Controls
 {
     public partial class CtrlSortableBase : UserControl
     {
+        public event EventHandler IndexChanged;
+        public event EventHandler ReorderIndexes;
         public event EventHandler ItemDeleted;
         public int ItemIndex { get; set; }
         /// <summary>
@@ -41,6 +44,9 @@ namespace BasicBillPay.Controls
         {
             ItemIndex = newIndex;
             lblIndex.Text = (ItemIndex + 1).ToString();
+            ReorderIndexes?.Invoke(this, new EventArgs());
+
+
         }
         private void CtrlSortableBase_MouseDown(object sender, MouseEventArgs e)
         {
@@ -62,17 +68,20 @@ namespace BasicBillPay.Controls
 
                 CtrlSortableBase ctrlToMove = (o as CtrlSortableBase);    //Object being Dragged 
                 //FrameCommand dataToMove = ctrlToMove.Cmd;
-                //int parentFrameIndex = ctrlToMove.ParentFrameIndex;   //Get the previous Control  Parent Frame Index.
 
                 int lastCtrlIndex = this.Parent.Controls.IndexOf(ctrlToMove);   //Get the previous Control Index.
                 int destIndex = this.Parent.Controls.IndexOf(this);             //Index of the Control we are dropping "On"
                 if (lastCtrlIndex != destIndex)
                 {
-                  //  List<FrameCommand> masterList = (this.Parent.Parent as frmFrameEditor).frames[parentFrameIndex].Commands;     //Need the Parent list.. could be passed in to the Control or found this way
+                    //List<CtrlSortableBase> masterList = (this.Parent.Parent as frmFrameEditor).frames[parentFrameIndex].Commands;     //Need the Parent list.. could be passed in to the Control or found this way
+                    //HashSet<Payment> masterList = (this.Parent.Parent as frmMain).GetPayments()// .frames[parentFrameIndex].Commands;     //Need the Parent list.. could be passed in to the Control or found this way
                     ctrlToMove.Parent.Controls.SetChildIndex(ctrlToMove, destIndex);                // Physically Move Control
+
                     //masterList.RemoveAt(lastCtrlIndex);                                             // Remove list item at the old location (Its the old object)
                     //masterList.Insert(destIndex, dataToMove);                                       // Insert to the List
+                    IndexChanged?.Invoke(this, new EventArgs()); // Only fire if there is a listener
                 }
+                
             }
         }
 

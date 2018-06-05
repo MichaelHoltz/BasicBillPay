@@ -24,7 +24,7 @@ namespace BasicBillPay.Controls
             InitializeComponent();
 
         }
-        public CtrlPayment(ref Database db, Payment payment, int itemIndex) : base(itemIndex)
+        public CtrlPayment(ref Database db, ref Payment payment, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
             //Bind to Source List FIRST
@@ -37,8 +37,22 @@ namespace BasicBillPay.Controls
             tbName.BackColor = BackColor;
             tbPayFrom.BackColor = BackColor;
             tbAmount.BackColor = BackColor;
-            
+            base.ReorderIndexes -= CtrlPayment_ReorderIndexes;
+            base.ReorderIndexes += CtrlPayment_ReorderIndexes;
+            //base.IndexChanged -= CtrlPayment_IndexChanged;
+            //base.IndexChanged += CtrlPayment_IndexChanged;
 
+        }
+
+        private void CtrlPayment_ReorderIndexes(object sender, EventArgs e)
+        {
+            p.Index = ItemIndex;
+        }
+
+        private void CtrlPayment_IndexChanged(object sender, EventArgs e)
+        {
+           // p.Index = ItemIndex;
+           // throw new NotImplementedException();
         }
 
         private void CtrlPayment_Load(object sender, EventArgs e)

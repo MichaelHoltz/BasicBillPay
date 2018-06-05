@@ -39,6 +39,7 @@
             this.lblAccount1 = new System.Windows.Forms.Label();
             this.lblAccount2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnSettings = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // flpBills
@@ -137,7 +138,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(57, 32);
+            this.button1.Location = new System.Drawing.Point(119, 36);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 11;
@@ -145,11 +146,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnSettings
+            // 
+            this.btnSettings.Location = new System.Drawing.Point(12, 3);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(55, 23);
+            this.btnSettings.TabIndex = 12;
+            this.btnSettings.Text = "Settings";
+            this.btnSettings.UseVisualStyleBackColor = true;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1167, 950);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.lblAccount2);
             this.Controls.Add(this.lblAccount1);
@@ -183,6 +195,7 @@
         private System.Windows.Forms.Label lblAccount1;
         private System.Windows.Forms.Label lblAccount2;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSettings;
     }
 }
 

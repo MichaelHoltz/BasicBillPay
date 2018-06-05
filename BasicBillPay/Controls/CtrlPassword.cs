@@ -22,7 +22,7 @@ namespace BasicBillPay.Controls
 
         private void tbPassword_TextChanged(object sender, EventArgs e)
         {
-            AESGCM.Password = convertToSecureString( tbPassword.Text);
+            AESGCM.Password = tbPassword.Text;
         }
         SecureString securePwd = new SecureString();
 
@@ -53,7 +53,7 @@ namespace BasicBillPay.Controls
         public bool ValidPassword(String password, out String errorMessage)
         {
             bool retVal = false;
-            if (password.Length >= 12)
+            if (password.Length >= 4)
             {
                 errorMessage = "";
                 retVal = true;

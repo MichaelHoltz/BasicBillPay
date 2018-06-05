@@ -4,147 +4,90 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 using System.Threading.Tasks;
 
 namespace BasicBillPay.Tools.Encryption
 {
-    public class Crypto
+    /// <summary>
+    /// Just for making it simpler for using a master password.
+    /// For best security the Password should not be saved and should be at strong password entered every time.
+    /// 
+    /// </summary>
+    public static class CryptoPassword
     {
+        /// <summary>
+        /// Similar but different Example
+        /// </summary>
+        private static void CodeHolder()
+        {
+            string password = "This is a password";
+            string cipher = AESGCM.SimpleEncryptWithPassword("This is a test", password);
+            MessageBox.Show(cipher);
+            string plainText = AESGCM.SimpleDecryptWithPassword(cipher, password);
+            MessageBox.Show(plainText);
+        }
 
-        ////While an app specific salt is not the best practice for
-        ////password based encryption, it's probably safe enough as long as
-        ////it is truly uncommon. Also too much work to alter this answer otherwise.
-        //private static byte[] _salt = __To_Do__("Add a app specific salt here");
+        private const int SINDEX = 25;
+        private static byte[] Entropy { get; set; }
+        private static byte[] Cypher { get; set; }
+        public static byte[] EPassword { get; set; }
+        public static void Encrypt(string plainText)
+        {
+            ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
+            // Data to protect. Convert a string to a byte[] using Encoding.UTF8.GetBytes().
+            byte[] plaintextBytes = Encoding.UTF8.GetBytes(plainText);
 
-        ///// <summary>
-        ///// Encrypt the given string using AES.  The string can be decrypted using 
-        ///// DecryptStringAES().  The sharedSecret parameters must match.
-        ///// </summary>
-        ///// <param name="plainText">The text to encrypt.</param>
-        ///// <param name="sharedSecret">A password used to generate a key for encryption.</param>
-        //public static string EncryptStringAES(string plainText, string sharedSecret)
-        //{
-        //    if (string.IsNullOrEmpty(plainText))
-        //        throw new ArgumentNullException("plainText");
-        //    if (string.IsNullOrEmpty(sharedSecret))
-        //        throw new ArgumentNullException("sharedSecret");
+            // Generate additional entropy (will be used as the Initialization vector)
+            byte[] entropy = new byte[SINDEX];
+            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(entropy);
+            }
+            byte[] ciphertext = ProtectedData.Protect(plaintextBytes, entropy, DataProtectionScope.CurrentUser);
+            //Save for decrypt
+            Entropy = entropy;
+            //SINDEX = Entropy.Length;
+            Cypher = ciphertext;
+            EPassword = new byte[SINDEX + Cypher.Length];
+            System.Buffer.BlockCopy(Entropy, 0, EPassword, 0, SINDEX);
+            System.Buffer.BlockCopy(Cypher, 0, EPassword, SINDEX, Cypher.Length);
+            SplitFields();
+        }
+        public static String Decrypt()
+        {
+            String pt = null;
+            if (EPassword != null)
+            {
+                SplitFields();  //Get Cypher and Entropy
+                                ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
+                byte[] plaintext = ProtectedData.Unprotect(Cypher, Entropy, DataProtectionScope.CurrentUser);
+                //Convert.ToBase64String(cipherText);
+                pt = Encoding.UTF8.GetString(plaintext);
+            }
+            return pt;
+        }
+        /// <summary>
+        /// Used to Split one Encrypted Field into its parts.
+        /// </summary>
+        private static void SplitFields()
+        {
+            int j = 0;
+            int i = 0;
+            Entropy = new byte[SINDEX];
+            Cypher = new byte[EPassword.Length - SINDEX];
+            for (i = 0; i < SINDEX; i++)
+            {
+                Entropy[i] = EPassword[i];
 
-        //    string outStr = null;                       // Encrypted string to return
-        //    RijndaelManaged aesAlg = null;              // RijndaelManaged object used to encrypt the data.
+            }
+            j = i;
+            i = 0;
+            for (; j < EPassword.Length; j++)
+            {
+                Cypher[i++] = EPassword[j];
+            }
+        }
 
-        //    try
-        //    {
-        //        // generate the key from the shared secret and the salt
-        //        Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(sharedSecret, _salt);
-
-        //        // Create a RijndaelManaged object
-        //        aesAlg = new RijndaelManaged();
-        //        aesAlg.Key = key.GetBytes(aesAlg.KeySize / 8);
-
-        //        // Create a decryptor to perform the stream transform.
-        //        ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-        //        // Create the streams used for encryption.
-        //        using (MemoryStream msEncrypt = new MemoryStream())
-        //        {
-        //            // prepend the IV
-        //            msEncrypt.Write(BitConverter.GetBytes(aesAlg.IV.Length), 0, sizeof(int));
-        //            msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
-        //            using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-        //            {
-        //                using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-        //                {
-        //                    //Write all data to the stream.
-        //                    swEncrypt.Write(plainText);
-        //                }
-        //            }
-        //            outStr = Convert.ToBase64String(msEncrypt.ToArray());
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        // Clear the RijndaelManaged object.
-        //        if (aesAlg != null)
-        //            aesAlg.Clear();
-        //    }
-
-        //    // Return the encrypted bytes from the memory stream.
-        //    return outStr;
-        //}
-
-        ///// <summary>
-        ///// Decrypt the given string.  Assumes the string was encrypted using 
-        ///// EncryptStringAES(), using an identical sharedSecret.
-        ///// </summary>
-        ///// <param name="cipherText">The text to decrypt.</param>
-        ///// <param name="sharedSecret">A password used to generate a key for decryption.</param>
-        //public static string DecryptStringAES(string cipherText, string sharedSecret)
-        //{
-        //    if (string.IsNullOrEmpty(cipherText))
-        //        throw new ArgumentNullException("cipherText");
-        //    if (string.IsNullOrEmpty(sharedSecret))
-        //        throw new ArgumentNullException("sharedSecret");
-
-        //    // Declare the RijndaelManaged object
-        //    // used to decrypt the data.
-        //    RijndaelManaged aesAlg = null;
-
-        //    // Declare the string used to hold
-        //    // the decrypted text.
-        //    string plaintext = null;
-
-        //    try
-        //    {
-        //        // generate the key from the shared secret and the salt
-        //        Rfc2898DeriveBytes key = new Rfc2898DeriveBytes(sharedSecret, _salt);
-
-        //        // Create the streams used for decryption.                
-        //        byte[] bytes = Convert.FromBase64String(cipherText);
-        //        using (MemoryStream msDecrypt = new MemoryStream(bytes))
-        //        {
-        //            // Create a RijndaelManaged object
-        //            // with the specified key and IV.
-        //            aesAlg = new RijndaelManaged();
-        //            aesAlg.Key = key.GetBytes(aesAlg.KeySize / 8);
-        //            // Get the initialization vector from the encrypted stream
-        //            aesAlg.IV = ReadByteArray(msDecrypt);
-        //            // Create a decrytor to perform the stream transform.
-        //            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-        //            using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-        //            {
-        //                using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-
-        //                    // Read the decrypted bytes from the decrypting stream
-        //                    // and place them in a string.
-        //                    plaintext = srDecrypt.ReadToEnd();
-        //            }
-        //        }
-        //    }
-        //    finally
-        //    {
-        //        // Clear the RijndaelManaged object.
-        //        if (aesAlg != null)
-        //            aesAlg.Clear();
-        //    }
-
-        //    return plaintext;
-        //}
-
-        //private static byte[] ReadByteArray(Stream s)
-        //{
-        //    byte[] rawLength = new byte[sizeof(int)];
-        //    if (s.Read(rawLength, 0, rawLength.Length) != rawLength.Length)
-        //    {
-        //        throw new SystemException("Stream did not contain properly formatted byte array");
-        //    }
-
-        //    byte[] buffer = new byte[BitConverter.ToInt32(rawLength, 0)];
-        //    if (s.Read(buffer, 0, buffer.Length) != buffer.Length)
-        //    {
-        //        throw new SystemException("Did not read byte array properly");
-        //    }
-
-        //    return buffer;
-        //}
     }
 }

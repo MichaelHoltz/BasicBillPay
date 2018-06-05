@@ -18,7 +18,7 @@ namespace BasicBillPay
         {
             InitializeComponent();
         }
-        public frmPopup(String title,  UserControl userControl, Control caller)
+        public frmPopup(String title, ref UserControl userControl, Control caller)
         {
             InitializeComponent();
             uc = userControl;

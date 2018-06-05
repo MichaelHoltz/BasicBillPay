@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using BasicBillPay.Tools.Encryption;
 namespace BasicBillPay.Models
 {
     /// <summary>
@@ -21,20 +22,78 @@ namespace BasicBillPay.Models
         /// Spreadsheet Source = What
         /// </summary>
         public String Name { get; set; }
+
+        /// <summary>
+        /// Index for sorting
+        /// </summary>
+        public int Index { get; set; }
+
         /// <summary>
         /// Account Number
         /// </summary>
-        public String Number { get; set; }
+        /// 
+        public String ENumber { get; set; }
+        private String _number = null;
+        [JsonIgnore]
+        public String Number
+        {
+            get
+            {
+                if (_number == null)
+                    _number = AESGCM.SimpleDecryptWithPassword(ENumber);
+                return _number;
+            }
+            set
+            {
+                ENumber = AESGCM.SimpleEncryptWithPassword(value);
+                _number = value;
+            }
+        }
+
+
         /// <summary>
         /// Where to Access Account
         /// 
         /// Spreadsheet Source = Where
         /// </summary>
-        public String Link { get; set; }
+        public String ELink { get; set; }
+        private String _link = null;
+        [JsonIgnore]
+        public String Link
+        {
+            get
+            {
+                if(_link == null)
+                    _link = AESGCM.SimpleDecryptWithPassword(ELink);
+                return _link;
+            }
+            set
+            {
+                ELink = AESGCM.SimpleEncryptWithPassword(value);
+                _link = value;
+            }
+        }
+
         /// <summary>
         /// UserName for Account - Will be encrypted (if not all fields)
         /// </summary>
-        public String UserName { get; set; }
+        public String EUserName { get; set; }
+        private String _userName = null;
+        [JsonIgnore]
+        public String UserName
+        {
+            get
+            {
+                if(_userName == null)
+                    _userName = AESGCM.SimpleDecryptWithPassword(EUserName);
+                return _userName;
+            }
+            set
+            {
+                EUserName = AESGCM.SimpleEncryptWithPassword(value);
+                _userName = value;
+            }
+        }
         /// <summary>
         /// Calculated based on Date...
         /// </summary>

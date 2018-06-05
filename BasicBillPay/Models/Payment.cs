@@ -12,6 +12,7 @@ namespace BasicBillPay.Models
     public class Payment:PeriodicBase
     {
         public int Id { get; set; }
+        public int Index { get; set; }
         /// <summary>
         /// Where to pay 
         /// </summary>

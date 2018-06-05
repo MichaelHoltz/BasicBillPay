@@ -27,12 +27,12 @@ namespace BasicBillPay.Tools.Encryption
         //Preconfigured Password Key Derivation Parameters
         public static readonly int SaltBitSize = 128;
         public static readonly int Iterations = 10000;
-        public static readonly int MinPasswordLength = 12;
+        public static readonly int MinPasswordLength = 4;
 
         /// <summary>
         /// User Set Password.
         /// </summary>
-        public static SecureString Password { get; set; }
+        public static String Password { get; set; }
         /// <summary>
         /// Helper that generates a random new key on each call.
         /// </summary>
@@ -99,17 +99,23 @@ namespace BasicBillPay.Tools.Encryption
         /// Significantly less secure than using random binary keys.
         /// Adds additional non secret payload for key generation parameters.
         /// </remarks>
-        public static string SimpleEncryptWithPassword(string secretMessage, string password,
-                                 byte[] nonSecretPayload = null)
+        public static string SimpleEncryptWithPassword(string secretMessage, string password, byte[] nonSecretPayload = null)
         {
             if (string.IsNullOrEmpty(secretMessage))
-                throw new ArgumentException("Secret Message Required!", "secretMessage");
+            {
+                return secretMessage;
+                //throw new ArgumentException("Secret Message Required!", "secretMessage");
+            }
 
             var plainText = Encoding.UTF8.GetBytes(secretMessage);
             var cipherText = SimpleEncryptWithPassword(plainText, password, nonSecretPayload);
             return Convert.ToBase64String(cipherText);
         }
-
+        public static string SimpleEncryptWithPassword(string secretMessage)
+        {
+            Console.WriteLine("Encrypt: " + secretMessage);
+            return SimpleEncryptWithPassword(secretMessage, Password, null);
+        }
 
         /// <summary>
         /// Simple Decryption and Authentication (AES-GCM) of a UTF8 message
@@ -125,15 +131,23 @@ namespace BasicBillPay.Tools.Encryption
         /// <remarks>
         /// Significantly less secure than using random binary keys.
         /// </remarks>
-        public static string SimpleDecryptWithPassword(string encryptedMessage, string password,
-                                 int nonSecretPayloadLength = 0)
+        public static string SimpleDecryptWithPassword(string encryptedMessage, string password, int nonSecretPayloadLength = 0)
         {
             if (string.IsNullOrWhiteSpace(encryptedMessage))
-                throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");
+            {
+                return encryptedMessage;
+                //throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");
+            }
+                
 
             var cipherText = Convert.FromBase64String(encryptedMessage);
             var plainText = SimpleDecryptWithPassword(cipherText, password, nonSecretPayloadLength);
             return plainText == null ? null : Encoding.UTF8.GetString(plainText);
+        }
+        public static string SimpleDecryptWithPassword(string encryptedMessage)
+        {
+            Console.WriteLine("Decrypt: " + encryptedMessage);
+            return SimpleDecryptWithPassword(encryptedMessage, Password, 0);
         }
 
         public static byte[] SimpleEncrypt(byte[] secretMessage, byte[] key, byte[] nonSecretPayload = null)
