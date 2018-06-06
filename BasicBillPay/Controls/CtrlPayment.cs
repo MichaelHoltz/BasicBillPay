@@ -183,5 +183,43 @@ namespace BasicBillPay.Controls
             p.PaymentAmount = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
             AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
         }
+
+        /// <summary>
+        /// Update the Dates and order
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPay_Click(object sender, EventArgs e)
+        {
+            //Need to adjust DateDue by Pay Frequency and  Paid Date to now.
+            p.DatePaid = DateTime.Now;
+            //Adjusting the DateDue is not going to be simple
+            switch (p.PayPeriod)
+            {
+                case TransactionPeriod.Hourly:
+                    p.DateDue = p.DateDue.AddHours(1); // This is Very unlikely to work in any way useful
+                    break;
+                case TransactionPeriod.Daily:
+                    p.DateDue = p.DateDue.AddDays(1); //unlikely scenario
+                    break;
+                case TransactionPeriod.Weekly:
+                    p.DateDue = p.DateDue.AddDays(7);
+                    break;
+                case TransactionPeriod.Biweekly:
+                    p.DateDue = p.DateDue.AddDays(14);
+                    break;
+                case TransactionPeriod.Monthly:
+                    p.DateDue =  p.DateDue.AddMonths(1);
+                    break;
+                case TransactionPeriod.Yearly:
+                    p.DateDue = p.DateDue.AddYears(1);
+                    break;
+                default:
+                    break;
+            }
+
+            
+        
+        }
     }
 }

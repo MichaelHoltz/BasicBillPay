@@ -53,6 +53,7 @@
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
             this.cbPaidFrequency.TabIndex = 1;
+            this.cbPaidFrequency.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPaidFrequency_DrawItem);
             this.cbPaidFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPaidFrequency_SelectedIndexChanged);
             // 
             // tbAmount

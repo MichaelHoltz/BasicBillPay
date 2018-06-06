@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using BasicBillPay.Controls;
 using BasicBillPay.Models;
 using BasicBillPay.Tools;
 using BasicBillPay.Tools.Encryption;
 using System.Security;
 using System.Security.Cryptography;
+using System.Globalization;
 
 namespace BasicBillPay
 {
@@ -50,33 +52,86 @@ namespace BasicBillPay
             
             LoadData();
         }
-
-        /// <summary>
-        /// Function to LoadData
-        /// </summary>
-        private void LoadData()
+        private void InitializeCharts()
         {
-            //Add Bill Header
+            chartAccount1.Series.Clear();
+            chartAccount1.Series.Add("Account1");
+            chartAccount1.Series[0].ChartType = SeriesChartType.Pie;
+
+            chartAccount2.Series.Clear();
+            chartAccount2.Series.Add("Account");
+            chartAccount2.Series[0].ChartType = SeriesChartType.Pie;
+
+
+            chartBudget.Series.Clear();
+            chartBudget.Series.Add("Budget");
+            chartBudget.Series[0].ChartType = SeriesChartType.Pie;
+
+        }
+        private void InitializeFlowLayout()
+        {
+            //Add Bill Header for First Account
             CtrlHeader ch = new CtrlHeader();
             flpBills.Controls.Add(ch);
+
+            //Add Bill Header for Second Account
+            CtrlHeader ch2 = new CtrlHeader();
+            flpBills2.Controls.Add(ch2);
+
 
             //Add Budget Header
             CtrlHeader chBudget = new CtrlHeader();
             flpBudget.Controls.Add(chBudget);
 
+        }
+        /// <summary>
+        /// Function to LoadData
+        /// </summary>
+        private void LoadData()
+        {
+            InitializeCharts();
+            InitializeFlowLayout();
             //Load the Database
             //db = PersistenceBase.Load<Database>(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"));
             db = PersistenceBase.Load<Database>(appSettings.DbPath);
+
+            //Income Totals
+            float iTotal1 = 0f;
+            float iTotal2 = 0f;
+
+
             //Need to Load all Controls
-            foreach (Payment pItem in db.Payments.OrderBy(o=>o.Index))
+            foreach (Payment pItem in db.Payments.OrderBy(o=>o.DateDue))
             {
                 
                 AddPaymentCtrl(pItem);
+
+                //Need to find transfers from one account to another. (but I have all accounts as the same so need to identify income vs expense)
+                if (pItem.PayToId == 1 && pItem.PayFromId == 0) // Stupid hardcoded Transfer
+                {
+                    iTotal2 += pItem.GetMonthlyAmount(pItem.PaymentAmount);
+                }
             }
             foreach (BudgetItem bItem in db.BudgetItems.OrderBy(o=>o.Index))
             {
                 AddBudgetCtrl(bItem);
             }
+
+            foreach (PayCheck item in db.PayChecks)
+            {
+                if (item.AccountId == 0) // stupid hard coded knowing account ID
+                {
+                    iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
+                }
+                if (item.AccountId == 2)
+                {
+                    iTotal2 += item.GetMonthlyAmount(item.NetPayPerPayPeriod);
+                }
+
+            }
+            tbIncome1.Text = iTotal1.ToString("c");
+            tbIncome2.Text = iTotal2.ToString("c");
+            
             CalculateTotals();
 
         }
@@ -86,24 +141,29 @@ namespace BasicBillPay
         }
         private void CalculateTotals()
         {
-            //float Total = 0f;
-            //float Total2 = 0f;
+            //TODO - Get Budget Items like Account Total
             float BudgetTotal = 0f;
-            //foreach (Payment pItem in db.Payments)
-            //{
-            //    if (pItem.PayFromId == 0)
-            //        Total += pItem.PaymentAmount; // Todo-add and account for normalized Payment Frequency
-            //    if (pItem.PayFromId == 1)
-            //        Total2 += pItem.PaymentAmount; // Todo-add and account for normalized Payment Frequency
-            //}
+            float split1Total = 0f;
+            float split2Total = 0f;
             foreach (BudgetItem bItem in db.BudgetItems)
             {
 
-                BudgetTotal += bItem.Amount; // Todo-add and account for normalized Payment Frequency
+                BudgetTotal += bItem.GetMonthlyAmount(bItem.Amount); 
+                split1Total += bItem.GetMonthlyAmount(bItem.Split1Amount);
+                split2Total += bItem.GetMonthlyAmount(bItem.Split2Amount);
             }
             tbTotal.Text = db.GetAccountTotal("M Checking", TransactionPeriod.Monthly).ToString("c");
+
             tbTotal2.Text = db.GetAccountTotal("C Checking", TransactionPeriod.Monthly).ToString("c");
             tbBudgetTotal.Text = BudgetTotal.ToString("c");
+            tbSplit1Total.Text = split1Total.ToString("c"); //Account 2 (Reversed)
+            
+
+            tbSplit2Total.Text = split2Total.ToString("c");
+            
+            tbTotalBillBudgetAccount1.Text = (db.GetAccountTotal("M Checking", TransactionPeriod.Monthly) + split2Total).ToString("c");
+            tbTotalBillBudgetAccount2.Text = (db.GetAccountTotal("C Checking", TransactionPeriod.Monthly) + split1Total).ToString("c");
+
 
         }
 
@@ -127,6 +187,66 @@ namespace BasicBillPay
                 budgetItemIndex = i;
             }
         }
+        private void AddChartPoint(Chart c, String name, float Amount)
+        {
+            DataPoint dp = new DataPoint(0, Amount);
+            dp.IsValueShownAsLabel = true;
+            dp.LabelFormat = "C0";
+            dp.Name = name;
+            dp.LegendText = name;
+            dp.LabelToolTip = name; // Amount.ToString("C0");
+            dp.LegendToolTip = Amount.ToString("C0");
+            //dp.Label = name;
+            //bool found = false;
+            //DataPoint odp = null;
+            //foreach (DataPoint item in c.Series[0].Points)
+            //{
+            //    if (item.LegendText == name)
+            //    {
+            //        odp = item;
+            //        break;
+            //    }
+            //}
+            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.LegendText == name);
+            if (odp == null)
+            {
+                c.Series[0].Points.Add(dp);
+            }
+            else
+            {
+                odp = dp;
+            }
+
+        }
+        private void tbSplit2Total_TextChanged(object sender, EventArgs e)
+        {
+            AddChartPoint(chartAccount1, "Budget Split Items", float.Parse(tbSplit2Total.Text, NumberStyles.Currency, null));
+        }
+        private void tbSplit1Total_TextChanged(object sender, EventArgs e)
+        {
+            AddChartPoint(chartAccount2, "Budget Split Items", float.Parse(tbSplit1Total.Text, NumberStyles.Currency, null));
+        }
+        private void UpdateChartPoint(Chart c, String name, float Amount)
+        {
+            DataPoint dp = new DataPoint(0, Amount);
+            dp.IsValueShownAsLabel = true;
+            dp.LabelFormat = "C0";
+            dp.Name = name;
+            dp.LegendText = name;
+            dp.LabelToolTip = name; // Amount.ToString("C0");
+            dp.LegendToolTip = Amount.ToString("C0");
+            //dp.Label = name;
+            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.Name == name);
+            if (odp == null)
+            {
+                c.Series[0].Points.Add(dp);
+            }
+            else
+            {
+                odp = dp;
+            }
+
+        }
         /// <summary>
         /// Adds a visual Control Linked to the provided Payment
         /// </summary>
@@ -138,8 +258,20 @@ namespace BasicBillPay
             ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
             ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
             ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
-            flpBills.Controls.Add(ctrlPayment);
-
+            if (p.PayFromId == 0)
+            {
+                flpBills.Controls.Add(ctrlPayment);
+                String name = db.GetAccount(p.PayToId).Name;
+                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
+                AddChartPoint(chartAccount1, name, Amount);
+            }
+            else if (p.PayFromId == 1)
+            {
+                flpBills2.Controls.Add(ctrlPayment);
+                String name = db.GetAccount(p.PayToId).Name;
+                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
+                AddChartPoint(chartAccount2, name, Amount);
+            }
         }
 
 
@@ -165,9 +297,13 @@ namespace BasicBillPay
         /// <param name="b"></param>
         private void AddBudgetCtrl(BudgetItem b)
         {
-            CtrlBudget ctrlBudget = new CtrlBudget(b, budgetItemIndex++);
+            CtrlBudget ctrlBudget = new CtrlBudget(ref b, budgetItemIndex++);
             ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
             flpBudget.Controls.Add(ctrlBudget);
+
+            String name = b.Name;
+            float Amount = b.GetMonthlyAmount(b.Amount);
+            AddChartPoint(chartBudget, name, Amount);
         }
         private void btnAddBill_Click(object sender, EventArgs e)
         {
@@ -210,38 +346,6 @@ namespace BasicBillPay
             PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //string password = "This is a password";
-            //SecureString test = "dd";
-            //SecureString password = Tools.Encryption.AESGCM.Password;
-            string insecurePayload = "Non-secure payload";
-            byte[] insecurePayloadBytes = Encoding.ASCII.GetBytes(insecurePayload);
-            int insecurePayloadByteCount = insecurePayload.Length;
-            ////string cipher = Tools.Encryption.AESGCM.SimpleEncryptWithPassword("This is a test", password, insecurePayloadBytes);
-            //string cipher = Tools.Encryption.AESGCM.SimpleEncryptWithPassword("This is a test", password);
-            //MessageBox.Show(cipher);
-            ////string plainText = Tools.Encryption.AESGCM.SimpleDecryptWithPassword(cipher, password, insecurePayloadByteCount);
-            //string plainText = Tools.Encryption.AESGCM.SimpleDecryptWithPassword(cipher, password);
-            //MessageBox.Show(plainText);
-
-
-            ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
-            // Data to protect. Convert a string to a byte[] using Encoding.UTF8.GetBytes().
-            byte[] plaintext = Encoding.UTF8.GetBytes("Test secure String");
-
-            // Generate additional entropy (will be used as the Initialization vector)
-            byte[] entropy = new byte[20];
-            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(entropy);
-            }
-            byte[] ciphertext = ProtectedData.Protect(plaintext, entropy,  DataProtectionScope.CurrentUser);
-            String ct = Encoding.UTF8.GetString(ciphertext);
-            byte[] plaintext2 = ProtectedData.Unprotect(ciphertext, entropy, DataProtectionScope.CurrentUser);
-            String pt = Encoding.UTF8.GetString(plaintext2);
-        }
-
         private void btnSettings_Click(object sender, EventArgs e)
         {
             frmSettings fs = new frmSettings(appSettings);
@@ -249,6 +353,12 @@ namespace BasicBillPay
             {
                 PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
             }
+        }
+
+        private void btnPeople_Click(object sender, EventArgs e)
+        {
+            frmPeopleManager fpm = new frmPeopleManager(ref db);
+            fpm.ShowDialog();
         }
     }
 }

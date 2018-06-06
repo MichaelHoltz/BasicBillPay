@@ -20,6 +20,10 @@ namespace BasicBillPay.Models
         public int NextBudgetItemId { get; set; }
         public HashSet<BudgetItem> BudgetItems { get; set; }
 
+        /// <summary>
+        /// People relevant to this system.
+        /// </summary>
+        public HashSet<Person> People { get; set; }
         public Database()
         {
             //Initialize HashSets so they can be added to.
@@ -27,6 +31,7 @@ namespace BasicBillPay.Models
             Payments = new HashSet<Payment>();
             BudgetItems = new HashSet<BudgetItem>();
             PayChecks = new HashSet<PayCheck>();
+            People = new HashSet<Person>();
         }
 
         #region Account Functions
@@ -53,6 +58,65 @@ namespace BasicBillPay.Models
         {
             return Accounts.FirstOrDefault(o => o.Name == name);
         }
+        public List<Account> GetAccounts(AccountType type)
+        {
+            return Accounts.Where(o => o.Type == type).ToList();
+        }
+        /// <summary>
+        /// Get Managed or Unmanaged Accounts
+        /// </summary>
+        /// <param name="p">if not null then all accounts managed by this person</param>
+        /// <returns></returns>
+        public List<Account> GetManagedIncomeAccounts(Person p)
+        {
+            List<Account> retVal = new List<Account>();
+           // Dictionary<Account, String> managed = new Dictionary<Account, String>();
+            //Sort out who manages what accounts
+            //For Each Account
+            foreach (Account a in GetAccounts(AccountType.Income))
+            {
+                //For Each Person
+                foreach (Person checkPerson in People)
+                {
+                    
+                    if (checkPerson.AccountIds.Contains(a.Id) && checkPerson.Name == p.Name)
+                    {
+                        //Save the relationship
+                        //managed.Add(a, checkPerson.Name);
+                        retVal.Add(a);
+                    }
+                }
+            }
+            //foreach (KeyValuePair<Account, String> item in managed)
+            //{
+            //    if (item.Value == p.Name )
+            //    {
+            //        retVal.Add(item.Key);
+            //    }
+            //}
+            return retVal;
+        }
+        public List<Account> GetUnmanagedIncomeAccounts()
+        {
+            List<Account> unManaged = new List<Account>();
+
+            //Sort out who manages what accounts
+            //For Each Account
+            foreach (Account a in GetAccounts(AccountType.Income))
+            {
+                unManaged.Add(a);
+                //For Each Person
+                foreach (Person checkPerson in People)
+                {
+                    if (checkPerson.AccountIds.Contains(a.Id))
+                    {
+                        unManaged.Remove(a);
+                    }
+                }
+            }
+            return unManaged;
+        }
+
         public float GetAccountTotal(String name, TransactionPeriod period)
         {
             Account a = GetAccount(name);
@@ -67,7 +131,6 @@ namespace BasicBillPay.Models
             return total;
         }
         #endregion Account Functions
-
         #region Payment Functions
         public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, TransactionPeriod paymentFrequency)
         {
@@ -101,5 +164,65 @@ namespace BasicBillPay.Models
 
         }
         #endregion Budget Item Functions
+        #region People Functions
+        public Person GetPerson(String name)
+        {
+            return People.FirstOrDefault(o => o.Name == name);
+        }
+        #endregion People Functions
+        #region Paycheck Functions
+        public HashSet<PayCheck> GetPayChecks()
+        {
+            return PayChecks;
+        }
+        public List<PayCheck> GetManagedPayChecks(Person p)
+        {
+            List<PayCheck> retVal = new List<PayCheck>();
+            //Dictionary<PayCheck, String> managed = new Dictionary<PayCheck, String>();
+            //Sort out who manages what accounts
+            //For Each Account
+            foreach (PayCheck pc in GetPayChecks())
+            {
+                //For Each Person
+                foreach (Person checkPerson in People)
+                {
+
+                    if (checkPerson.PaycheckIds.Contains(pc.Id) && checkPerson.Name == p.Name)
+                    {
+                        //Save the relationship
+                        retVal.Add(pc);
+                        //managed.Add(pc, checkPerson.Name); 
+                    }
+                }
+            }
+            //foreach (KeyValuePair<PayCheck, String> item in managed)
+            //{
+            //    if (item.Value == p.Name)
+            //    {
+            //        retVal.Add(item.Key);
+            //    }
+            //}
+            return retVal;
+        }
+        public List<PayCheck> GetUnmanagedPayChecks()
+        {
+            List<PayCheck> unManaged = new List<PayCheck>();
+            //Sort out who manages what accounts
+            //For Each Account
+            foreach (PayCheck pc in GetPayChecks())
+            {
+                unManaged.Add(pc);
+                //For Each Person
+                foreach (Person checkPerson in People)
+                {
+                    if (checkPerson.PaycheckIds.Contains(pc.Id))
+                    {
+                        unManaged.Remove(pc);
+                    }
+                }
+            }
+            return unManaged;
+        }
+        #endregion
     }
 }

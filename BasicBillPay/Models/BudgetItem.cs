@@ -18,7 +18,6 @@ namespace BasicBillPay.Models
         public int Id { get; set; }
         public int Index { get; set; }
         public String Name { get; set; }
-        public TransactionPeriod PaidFrequency { get; set; }
         public float Amount { get; set; }
         public float Split1Amount { get; set; }
         public int Split1AccountId { get; set; }
@@ -32,7 +31,6 @@ namespace BasicBillPay.Models
         {
             Id = id;
             Name = name;
-            PaidFrequency = paidFrequency;
             Amount = amount;
         }
 

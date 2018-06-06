@@ -23,7 +23,7 @@ namespace BasicBillPay.Controls
         {
             InitializeComponent();
         }
-        public CtrlBudget(BudgetItem budgetItem, int itemIndex) : base(itemIndex)
+        public CtrlBudget(ref BudgetItem budgetItem, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
             //Bind to Source List FIRST
@@ -45,7 +45,7 @@ namespace BasicBillPay.Controls
             tbName.DataBindings.Add("Text", b.Name, "");
 
             //Couldn't get Binding to work right so doing it manually
-            cbPaidFrequency.Text = b.PaidFrequency.ToString();
+            cbPaidFrequency.Text = b.PayPeriod.ToString();
             //cbPaidFrequency.DataBindings.Clear();
             //cbPaidFrequency.DataBindings.Add("SelectedItem", b, "PaidFrequency"); //Issues
             //cbPaidFrequency.DataBindings.Add("SelectedText", b.PaidFrequency.ToString(), "");
@@ -117,20 +117,23 @@ namespace BasicBillPay.Controls
         private void tbSplit1Amount_Leave(object sender, EventArgs e)
         {
             Split1 = float.Parse(tbSplit1Amount.Text, NumberStyles.Currency, null);
-            //tbSplit1Amount.Text = ((float)Split1).ToString("c");
+            tbSplit1Amount.Text = ((float)Split1).ToString("c");
             CalculateSplit(1);
+            b.Split1Amount = Split1;
         }
 
         private void tbSplit2Amount_Leave(object sender, EventArgs e)
         {
             Split2 = float.Parse(tbSplit2Amount.Text, NumberStyles.Currency, null);
-            //tbSplit2Amount.Text = ((float)Split2).ToString("c");
+            tbSplit2Amount.Text = ((float)Split2).ToString("c");
+            b.Split2Amount = Split2;
             CalculateSplit(2);
         }
         private void tbAmount_Leave(object sender, EventArgs e)
         {
             Total = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-            //tbAmount.Text = ((float)Total).ToString("c");
+            tbAmount.Text = ((float)Total).ToString("c");
+            b.Amount = Total;
             CalculateSplit(0);
         }
 
@@ -145,9 +148,64 @@ namespace BasicBillPay.Controls
         {
             if(cbPaidFrequency.SelectedIndex > -1 && b!=null)
             {
-                b.PaidFrequency = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
-                cbPaidFrequency.Text = b.PaidFrequency.ToString();
+                b.PayPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
+                cbPaidFrequency.Text = b.PayPeriod.ToString();
+                ColorCodePayPeriod();
             }
+        }
+        private void ColorCodePayPeriod()
+        {
+            switch (b.PayPeriod)
+            {
+                case TransactionPeriod.Hourly:
+                    break;
+                case TransactionPeriod.Daily:
+                    break;
+                case TransactionPeriod.Weekly:
+                    break;
+                case TransactionPeriod.Biweekly:
+                    cbPaidFrequency.BackColor = Color.LightGreen;
+                    break;
+                case TransactionPeriod.Monthly:
+                    cbPaidFrequency.BackColor = Color.LightBlue;
+                    break;
+                case TransactionPeriod.Yearly:
+                    cbPaidFrequency.BackColor = Color.LightYellow;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void cbPaidFrequency_DrawItem(object sender, DrawItemEventArgs e)
+        {
+
+            // Define the default color of the brush as black.
+            Brush myBrush = Brushes.Black;
+
+            // Determine the color of the brush to draw each item based 
+            // on the index of the item to draw.
+            switch (e.Index)
+            {
+                case 0:
+                    myBrush = Brushes.Red;
+                    
+                    break;
+                case 1:
+                    myBrush = Brushes.Orange;
+                    break;
+                case 2:
+                    myBrush = Brushes.Purple;
+                    break;
+            }
+            // Draw the background of the ListBox control for each item.
+            //e.DrawBackground();
+            // Draw the current item text based on the current Font 
+            // and the custom brush settings.
+            e.Graphics.DrawString(cbPaidFrequency.Items[e.Index].ToString(),
+                e.Font, myBrush, e.Bounds, StringFormat.GenericDefault);
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
         }
     }
 }

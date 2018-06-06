@@ -34,6 +34,7 @@
             this.tbName = new System.Windows.Forms.TextBox();
             this.tbPayFrom = new System.Windows.Forms.TextBox();
             this.cbPaidFrequency = new System.Windows.Forms.ComboBox();
+            this.btnPay = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // dtpDateDue
@@ -97,11 +98,22 @@
             this.cbPaidFrequency.TabIndex = 9;
             this.cbPaidFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPaidFrequency_SelectedIndexChanged);
             // 
+            // btnPay
+            // 
+            this.btnPay.Location = new System.Drawing.Point(960, -1);
+            this.btnPay.Name = "btnPay";
+            this.btnPay.Size = new System.Drawing.Size(39, 23);
+            this.btnPay.TabIndex = 10;
+            this.btnPay.Text = "Pay";
+            this.btnPay.UseVisualStyleBackColor = true;
+            this.btnPay.Click += new System.EventHandler(this.btnPay_Click);
+            // 
             // CtrlPayment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.Controls.Add(this.btnPay);
             this.Controls.Add(this.cbPaidFrequency);
             this.Controls.Add(this.tbPayFrom);
             this.Controls.Add(this.tbName);
@@ -118,6 +130,7 @@
             this.Controls.SetChildIndex(this.tbName, 0);
             this.Controls.SetChildIndex(this.tbPayFrom, 0);
             this.Controls.SetChildIndex(this.cbPaidFrequency, 0);
+            this.Controls.SetChildIndex(this.btnPay, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,5 +144,6 @@
         private System.Windows.Forms.TextBox tbName;
         private System.Windows.Forms.TextBox tbPayFrom;
         private System.Windows.Forms.ComboBox cbPaidFrequency;
+        private System.Windows.Forms.Button btnPay;
     }
 }

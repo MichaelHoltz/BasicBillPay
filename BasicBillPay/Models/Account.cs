@@ -27,7 +27,10 @@ namespace BasicBillPay.Models
         /// Index for sorting
         /// </summary>
         public int Index { get; set; }
-
+        /// <summary>
+        /// Account Type
+        /// </summary>
+        public AccountType Type { get; set; }
         /// <summary>
         /// Account Number
         /// </summary>

@@ -4,49 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+
 namespace BasicBillPay.Models
 {
-    public class PayCheck:PeriodicBase
+    /// <summary>
+    /// Class to group Income and Expenses
+    /// </summary>
+    public class Person
     {
-        /// <summary>
-        /// Id of this PayCheck Information
-        /// </summary>
         public int Id { get; set; }
-        /// <summary>
-        /// Account this is tied to
-        /// </summary>
-        public int AccountId { get; set; }
         public String Name { get; set; }
-
-        /// How much you keep when paid
-        /// Direct Set
-        /// (Net Pay)
-        /// </summary>
-        public float NetPayPerPayPeriod { get; set; }
-        public float GrossPayPerPayPeriod { get; set; }
-        public float TaxPerPayPeriod { get; set; }
-        public float BenifitCostPerPayPeriod { get; set; }
-        public float GarnishmentCostPerPayPeriod { get; set; }
-        public float OtherCostPerPayPeriod { get; set; }
         /// <summary>
-        /// Start Date to Establish proper frequency
+        /// Account Ids associated with this person
         /// </summary>
-        public DateTime PayDayStart { get; set; }
+        public HashSet<int> AccountIds { get; set; }
+        /// <summary>
+        /// Paycheck Ids associated with this person
+        /// </summary>
+        public HashSet<int> PaycheckIds { get; set; }
 
-        public PayCheck()
+        public Person()
         {
+            AccountIds = new HashSet<int>();
+            PaycheckIds = new HashSet<int>();
         }
-        public PayCheck(TransactionPeriod payFrequency) : base(payFrequency)
+        public Person(String name)
         {
+            Name = name;
+            AccountIds = new HashSet<int>();
+            PaycheckIds = new HashSet<int>();
 
         }
-        #region Pay Calculations
-        public float TotalDeductionsPerPayPeriod()
-        {
-            return TaxPerPayPeriod + BenifitCostPerPayPeriod + GarnishmentCostPerPayPeriod + OtherCostPerPayPeriod;
-        }
-        #endregion Pay Calculations
-
         #region Overrides
         /// <summary>
         /// Returns this instance ToString
@@ -77,7 +65,7 @@ namespace BasicBillPay.Models
         {
             //THis is expensive and should be done only once since it will not be changing
             //TODO - use / include the "correct" id..
-            String key = this.GetType().Name + Name + AccountId;
+            String key = this.GetType().Name + Name + Id;
             //Google: "disable fips mode" if the line below fails
             System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
             var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
