@@ -38,6 +38,7 @@ namespace BasicBillPay
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            appSet.DbPath = tbDataFile.Text.Trim(); // If the user typed in a change
             DialogResult = DialogResult.OK;
             Close();
         }

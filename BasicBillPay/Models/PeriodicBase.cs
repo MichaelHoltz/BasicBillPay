@@ -15,7 +15,7 @@ namespace BasicBillPay.Models
         /// How often you are paid
         /// Direct Set
         /// </summary>
-        public TransactionPeriod PayPeriod { get; set; }
+        public TransactionPeriod PayPeriod { get; set; } = TransactionPeriod.Biweekly; // Default to Every two Weeeks
         /// <summary>
         /// 
         public PeriodicBase()

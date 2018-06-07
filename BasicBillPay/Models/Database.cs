@@ -12,7 +12,7 @@ namespace BasicBillPay.Models
     public class Database
     {
         public int NextPayCheckId { get; set; }
-        public HashSet<PayCheck> PayChecks { get; set; }
+        public HashSet<Paycheck> PayChecks { get; set; }
         public int NextAccountId { get; set; }
         public HashSet<Account> Accounts { get; set; }
         public int NextPaymentId { get; set; }
@@ -30,18 +30,19 @@ namespace BasicBillPay.Models
             Accounts = new HashSet<Account>();
             Payments = new HashSet<Payment>();
             BudgetItems = new HashSet<BudgetItem>();
-            PayChecks = new HashSet<PayCheck>();
+            PayChecks = new HashSet<Paycheck>();
             People = new HashSet<Person>();
         }
 
         #region Account Functions
-        public Account AddAccount(String name, String number, String link, String userName)
+        public Account AddAccount(String name, AccountType type, String number, String link, String userName)
         {
-            Account account = new Account(NextAccountId++, name, number, link, userName );
+            Account account = new Account(NextAccountId++, name, type, number, link, userName );
             bool retVal = Accounts.Add(account); // Need to implement Hashing to prevent duplicates..
             if (!retVal) // Failed To add so get.
             {
-                account = Accounts.FirstOrDefault(o => o.Id == account.Id);
+                NextAccountId--; // Remove to not have gaps
+                account = Accounts.FirstOrDefault(o => o.Name == account.Name);
             }
             return account;
         }
@@ -169,19 +170,38 @@ namespace BasicBillPay.Models
         {
             return People.FirstOrDefault(o => o.Name == name);
         }
+        public Person AddPerson(String name)
+        {
+            Person p = new Person(name);
+            People.Add(p);
+            return p;
+        }
+
         #endregion People Functions
         #region Paycheck Functions
-        public HashSet<PayCheck> GetPayChecks()
+        public Paycheck AddPayCheck(String name, TransactionPeriod payFrequency)
+        {
+            Paycheck pc = new Paycheck(NextPayCheckId++, name, payFrequency);
+            bool retVal = PayChecks.Add(pc);
+            if (!retVal)
+            {
+                NextPayCheckId--; // Remove one
+                pc = PayChecks.FirstOrDefault(o => o.Name == pc.Name);
+            }
+            return pc;
+        }
+
+        public HashSet<Paycheck> GetPayChecks()
         {
             return PayChecks;
         }
-        public List<PayCheck> GetManagedPayChecks(Person p)
+        public List<Paycheck> GetManagedPayChecks(Person p)
         {
-            List<PayCheck> retVal = new List<PayCheck>();
+            List<Paycheck> retVal = new List<Paycheck>();
             //Dictionary<PayCheck, String> managed = new Dictionary<PayCheck, String>();
             //Sort out who manages what accounts
             //For Each Account
-            foreach (PayCheck pc in GetPayChecks())
+            foreach (Paycheck pc in GetPayChecks())
             {
                 //For Each Person
                 foreach (Person checkPerson in People)
@@ -204,12 +224,12 @@ namespace BasicBillPay.Models
             //}
             return retVal;
         }
-        public List<PayCheck> GetUnmanagedPayChecks()
+        public List<Paycheck> GetUnmanagedPayChecks()
         {
-            List<PayCheck> unManaged = new List<PayCheck>();
+            List<Paycheck> unManaged = new List<Paycheck>();
             //Sort out who manages what accounts
             //For Each Account
-            foreach (PayCheck pc in GetPayChecks())
+            foreach (Paycheck pc in GetPayChecks())
             {
                 unManaged.Add(pc);
                 //For Each Person

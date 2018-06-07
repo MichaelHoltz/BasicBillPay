@@ -28,4 +28,10 @@ namespace BasicBillPay.Models
         Expense=1,
         Credit =2 
     }
+    public enum EncryptionLevel
+    {
+        None=0,
+        Auto=1,
+        Full=2
+    }
 }

@@ -21,27 +21,73 @@ namespace BasicBillPay.Controls
     public partial class CtrlPerson : UserControl
     {
         Database db = null;
+        Person person = null;
+        TransactionPeriod currentTransactionPeriod = TransactionPeriod.Monthly; // Default Period
         int paymentItemIndex = 0;
         public CtrlPerson()
         {
             InitializeComponent();
         }
-        public CtrlPerson(ref Database database, ref int pii)
+        public CtrlPerson(ref Database database, ref int pii, ref Person person)
         {
             InitializeComponent();
+            //Bind to Source List FIRST
+            cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
+            cbPaidFrequency.Text = currentTransactionPeriod.ToString();
             db = database;
             paymentItemIndex = pii;
+            this.person = person;
         }
 
         private void CtrlPerson_Load(object sender, EventArgs e)
         {
+            String ending = "'s Bills";
+            if (person.Name.EndsWith("s"))
+            {
+                ending = "' Bills";
+            }
+            lblAccount1.Text = person.Name + ending;
+            LoadData();
+        }
+        /// <summary>
+        /// Function to LoadData
+        /// </summary>
+        private void LoadData()
+        {
+            InitializeCharts();
+            InitializeFlowLayout();
+
+            //Income Totals
+            float iTotal1 = 0f;
+
+            //Need to Load all Controls
+            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
+            {
+
+                AddPaymentCtrl(pItem);
+                //Need to find transfers into one of my accounts
+                if (person.AccountIds.Contains(pItem.PayToId))
+                {
+                    iTotal1 += pItem.GetMonthlyAmount(pItem.PaymentAmount);
+                }
+            }
+
+            foreach (Paycheck item in db.PayChecks)
+            {
+                if (person.PaycheckIds.Contains(item.Id)) // One of my Paychecks
+                {
+                    iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
+                }
+
+            }
+            tbIncome1.Text = iTotal1.ToString("c");
+
+            CalculateTotals();
 
         }
         private void InitializeCharts()
         {
-            chartAccount1.Series.Clear();
-            chartAccount1.Series.Add("Account1");
-            chartAccount1.Series[0].ChartType = SeriesChartType.Pie;
+            Charts.InitializeChart(chartAccount1, "Account1");
         }
         private void InitializeFlowLayout()
         {
@@ -52,58 +98,36 @@ namespace BasicBillPay.Controls
         private void btnAddBill_Click(object sender, EventArgs e)
         {
             ////Add Payment
+            //BUG BUG BUG.. not Person ID  I need the Person's Account ID.. (But since they can have more than one account this is going to be a problem.)
             //Payment p = db.AddPayment(-1, -1, DateTime.Parse("6/15/18"), DateTime.Parse("4/30/2018"), 0.00f);
-            Payment p = db.AddPayment(-1, -1, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
+            Payment p = db.AddPayment(-1, person.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
             //End Tryout
             AddPaymentCtrl(p);
         }
         private void AddPaymentCtrl(Payment p)
         {
+            //Add an account for the New Payment
+            if (p.PayToId == -1)
+            {
+                Account a = db.AddAccount("New Payment", AccountType.Expense, null, null, null);
+                p.PayToId = a.Id;
+            }
+
+
             CtrlPayment ctrlPayment = new CtrlPayment(ref db, ref p, paymentItemIndex++);
-            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeletedOrIndexChanged;
+            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeleted;
             ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
             ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
-            ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
-            if (p.PayFromId == 0)
+            //ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
+            //Only Add Accounts this person is paying directly to.
+            if (person.AccountIds.Contains( p.PayFromId))
             {
                 flpBills.Controls.Add(ctrlPayment);
                 String name = db.GetAccount(p.PayToId).Name;
                 float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-                AddChartPoint(chartAccount1, name, Amount);
-            }
-            //else if (p.PayFromId == 1)
-            //{
-            //    flpBills2.Controls.Add(ctrlPayment);
-            //    String name = db.GetAccount(p.PayToId).Name;
-            //    float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-            //    AddChartPoint(chartAccount2, name, Amount);
-            //}
-        }
-        /// <summary>
-        /// Adds a Chart Point only if it doesn't exist, otherwise it updates.
-        /// </summary>
-        /// <param name="c"></param>
-        /// <param name="name"></param>
-        /// <param name="Amount"></param>
-        private void AddChartPoint(Chart c, String name, float Amount)
-        {
-            DataPoint dp = new DataPoint(0, Amount);
-            dp.IsValueShownAsLabel = true;
-            dp.LabelFormat = "C0";
-            dp.Name = name;
-            dp.LegendText = name;
-            dp.LabelToolTip = name; // Amount.ToString("C0");
-            dp.LegendToolTip = Amount.ToString("C0");
-            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.LegendText == name);
-            if (odp == null)
-            {
-                c.Series[0].Points.Add(dp);
-            }
-            else
-            {
-                odp = dp;
-            }
+                Charts.AddChartPoint(chartAccount1, name, Amount);
 
+            }
         }
         private void CtrlPayment_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
         {
@@ -113,26 +137,27 @@ namespace BasicBillPay.Controls
         {
             //TODO - Get Budget Items like Account Total
             float BudgetTotal = 0f;
-            float split1Total = 0f;
-            float split2Total = 0f;
+            float splitTotal = 0f;
             foreach (BudgetItem bItem in db.BudgetItems)
             {
 
                 BudgetTotal += bItem.GetMonthlyAmount(bItem.Amount);
-                split1Total += bItem.GetMonthlyAmount(bItem.Split1Amount);
-                split2Total += bItem.GetMonthlyAmount(bItem.Split2Amount);
+                if(person.AccountIds.Contains(bItem.Split1AccountId))
+                    splitTotal += bItem.GetMonthlyAmount(bItem.Split1Amount); // Tied to specific accounts.. need to fix
+                if (person.AccountIds.Contains(bItem.Split2AccountId))
+                    splitTotal += bItem.GetMonthlyAmount(bItem.Split2Amount);
             }
-            tbTotal.Text = db.GetAccountTotal("M Checking", TransactionPeriod.Monthly).ToString("c");
+            float Total = 0f;
+            foreach (int item in person.AccountIds)
+            {
+                
+                Total += db.GetAccountTotal(db.GetAccount(item).Name, TransactionPeriod.Monthly);
+            }
+            tbTotal.Text = Total.ToString("c");
 
-            //tbTotal2.Text = db.GetAccountTotal("C Checking", TransactionPeriod.Monthly).ToString("c");
-            //tbBudgetTotal.Text = BudgetTotal.ToString("c");
-            //tbSplit1Total.Text = split1Total.ToString("c"); //Account 2 (Reversed)
+            tbSplitTotal.Text = splitTotal.ToString("c");
 
-
-            tbSplit2Total.Text = split2Total.ToString("c");
-
-            tbTotalBillBudgetAccount1.Text = (db.GetAccountTotal("M Checking", TransactionPeriod.Monthly) + split2Total).ToString("c");
-            //tbTotalBillBudgetAccount2.Text = (db.GetAccountTotal("C Checking", TransactionPeriod.Monthly) + split1Total).ToString("c");
+            tbTotalBillBudgetAccount1.Text = (Total + splitTotal).ToString("c");
 
 
         }
@@ -142,12 +167,23 @@ namespace BasicBillPay.Controls
             UserControl ca = new CtrlAccount(e.SelectedAccount);
             frmPopup fp = new frmPopup("Account", ref ca, sender as Control);
             fp.ShowDialog();
+            (sender as TextBox).Text = e.SelectedAccount.Name;
+            
         }
-        private void CtrlPayment_ItemDeletedOrIndexChanged(object sender, EventArgs e)
+        private void CtrlPayment_ItemDeleted(object sender, EventArgs e)
         {
             if (sender is CtrlSortableBase)
             {
+
                 CtrlSortableBase csb = (sender as CtrlSortableBase);
+                CtrlPayment cp = (sender as CtrlPayment);
+                Payment p = cp.GetPayment();
+                db.Payments.Remove(p);
+                //WARNING - need to make sure the Account isn't being used by other payments and is an Expense Account
+                Account a = db.GetAccount(p.PayToId);
+                if(a.Type == AccountType.Expense)
+                    db.Accounts.Remove(db.GetAccount(p.PayToId));
+                //Need to know which Payment was Deleted.
                 int i = 0;
                 foreach (Control c in flpBills.Controls)
                 {
@@ -158,6 +194,11 @@ namespace BasicBillPay.Controls
                 }
                 paymentItemIndex = i++;
             }
+        }
+
+        private void tbSplitTotal_TextChanged(object sender, EventArgs e)
+        {
+            Charts.AddChartPoint(chartAccount1, "Budget Split Items", float.Parse(tbSplitTotal.Text, NumberStyles.Currency, null));
         }
     }
 }

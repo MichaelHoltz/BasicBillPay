@@ -24,6 +24,7 @@ namespace BasicBillPay.Controls
         public CtrlAccount(Account account)
         {
             InitializeComponent();
+            cbAccountType.DataSource = Enum.GetNames(typeof(AccountType));
             a = account;
 
                
@@ -40,6 +41,8 @@ namespace BasicBillPay.Controls
             b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
             b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
             tbBalance.DataBindings.Add(b);
+
+            cbAccountType.Text = a.Type.ToString();
 
             tbNumber.DataBindings.Clear();
             tbNumber.DataBindings.Add("Text", a, "Number");
@@ -67,6 +70,14 @@ namespace BasicBillPay.Controls
             {
                 balance = float.Parse(tbBalance.Text, NumberStyles.Currency, null);
                 tbBalance.Text = ((float)balance).ToString("c");
+            }
+        }
+
+        private void cbAccountType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbAccountType.SelectedIndex >= 0 && a!= null)
+            {
+                a.Type = (AccountType)Enum.Parse(typeof(AccountType), cbAccountType.SelectedItem.ToString());
             }
         }
     }

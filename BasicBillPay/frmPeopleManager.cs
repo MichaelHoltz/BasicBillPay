@@ -61,13 +61,13 @@ namespace BasicBillPay
         private void LoadPaychecks(Person p = null)
         {
             clbPaychecks.Items.Clear();
-            foreach (PayCheck pc in db.GetUnmanagedPayChecks())
+            foreach (Paycheck pc in db.GetUnmanagedPayChecks())
             {
                 clbPaychecks.Items.Add(pc);
             }
             if (p != null)
             {
-                foreach (PayCheck pc in db.GetManagedPayChecks(p))
+                foreach (Paycheck pc in db.GetManagedPayChecks(p))
                 {
                     clbPaychecks.Items.Add(pc, true);
                 }
@@ -118,7 +118,7 @@ namespace BasicBillPay
             p.PaycheckIds.Clear(); // Clear PayChecks so they can be unselected.
             foreach (var item in clbPaychecks.CheckedItems)
             {
-                PayCheck pc = item as PayCheck;
+                Paycheck pc = item as Paycheck;
                 p.PaycheckIds.Add(pc.Id);
             }
 

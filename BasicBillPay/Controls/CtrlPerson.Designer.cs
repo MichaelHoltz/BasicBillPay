@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
             this.chartAccount1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tbIncome1 = new System.Windows.Forms.TextBox();
             this.tbTotalBillBudgetAccount1 = new System.Windows.Forms.TextBox();
-            this.tbSplit2Total = new System.Windows.Forms.TextBox();
+            this.tbSplitTotal = new System.Windows.Forms.TextBox();
             this.lblAccount1 = new System.Windows.Forms.Label();
             this.tbTotal = new System.Windows.Forms.TextBox();
             this.btnAddBill = new System.Windows.Forms.Button();
@@ -55,36 +55,36 @@
             // chartAccount1
             // 
             this.chartAccount1.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.Area3DStyle.Enable3D = true;
-            chartArea2.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.Name = "ChartArea1";
-            this.chartAccount1.ChartAreas.Add(chartArea2);
-            legend2.BackColor = System.Drawing.Color.Transparent;
-            legend2.Name = "Legend1";
-            this.chartAccount1.Legends.Add(legend2);
-            this.chartAccount1.Location = new System.Drawing.Point(1108, 40);
+            chartArea1.Area3DStyle.Enable3D = true;
+            chartArea1.BackColor = System.Drawing.Color.Transparent;
+            chartArea1.Name = "ChartArea1";
+            this.chartAccount1.ChartAreas.Add(chartArea1);
+            legend1.BackColor = System.Drawing.Color.Transparent;
+            legend1.Name = "Legend1";
+            this.chartAccount1.Legends.Add(legend1);
+            this.chartAccount1.Location = new System.Drawing.Point(1023, 40);
             this.chartAccount1.Name = "chartAccount1";
             this.chartAccount1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            dataPoint3.IsValueShownAsLabel = true;
-            dataPoint3.Label = "";
-            dataPoint3.LabelFormat = "c0";
-            dataPoint4.IsValueShownAsLabel = true;
-            dataPoint4.LabelFormat = "c";
-            dataPoint4.LegendText = "P1";
-            series2.Points.Add(dataPoint3);
-            series2.Points.Add(dataPoint4);
-            this.chartAccount1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            dataPoint1.IsValueShownAsLabel = true;
+            dataPoint1.Label = "";
+            dataPoint1.LabelFormat = "c0";
+            dataPoint2.IsValueShownAsLabel = true;
+            dataPoint2.LabelFormat = "c";
+            dataPoint2.LegendText = "P1";
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
+            this.chartAccount1.Series.Add(series1);
             this.chartAccount1.Size = new System.Drawing.Size(476, 254);
             this.chartAccount1.TabIndex = 27;
             this.chartAccount1.Text = "chart1";
             // 
             // tbIncome1
             // 
-            this.tbIncome1.Location = new System.Drawing.Point(709, 41);
+            this.tbIncome1.Location = new System.Drawing.Point(624, 41);
             this.tbIncome1.Name = "tbIncome1";
             this.tbIncome1.Size = new System.Drawing.Size(72, 20);
             this.tbIncome1.TabIndex = 26;
@@ -92,24 +92,25 @@
             // 
             // tbTotalBillBudgetAccount1
             // 
-            this.tbTotalBillBudgetAccount1.Location = new System.Drawing.Point(947, 40);
+            this.tbTotalBillBudgetAccount1.Location = new System.Drawing.Point(862, 40);
             this.tbTotalBillBudgetAccount1.Name = "tbTotalBillBudgetAccount1";
             this.tbTotalBillBudgetAccount1.Size = new System.Drawing.Size(72, 20);
             this.tbTotalBillBudgetAccount1.TabIndex = 25;
             this.tbTotalBillBudgetAccount1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // tbSplit2Total
+            // tbSplitTotal
             // 
-            this.tbSplit2Total.Location = new System.Drawing.Point(865, 40);
-            this.tbSplit2Total.Name = "tbSplit2Total";
-            this.tbSplit2Total.Size = new System.Drawing.Size(72, 20);
-            this.tbSplit2Total.TabIndex = 24;
-            this.tbSplit2Total.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbSplitTotal.Location = new System.Drawing.Point(780, 40);
+            this.tbSplitTotal.Name = "tbSplitTotal";
+            this.tbSplitTotal.Size = new System.Drawing.Size(72, 20);
+            this.tbSplitTotal.TabIndex = 24;
+            this.tbSplitTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbSplitTotal.TextChanged += new System.EventHandler(this.tbSplitTotal_TextChanged);
             // 
             // lblAccount1
             // 
             this.lblAccount1.AutoSize = true;
-            this.lblAccount1.Location = new System.Drawing.Point(17, 11);
+            this.lblAccount1.Location = new System.Drawing.Point(11, 9);
             this.lblAccount1.Name = "lblAccount1";
             this.lblAccount1.Size = new System.Drawing.Size(64, 13);
             this.lblAccount1.TabIndex = 23;
@@ -117,7 +118,7 @@
             // 
             // tbTotal
             // 
-            this.tbTotal.Location = new System.Drawing.Point(787, 40);
+            this.tbTotal.Location = new System.Drawing.Point(702, 40);
             this.tbTotal.Name = "tbTotal";
             this.tbTotal.Size = new System.Drawing.Size(72, 20);
             this.tbTotal.TabIndex = 22;
@@ -126,7 +127,7 @@
             // btnAddBill
             // 
             this.btnAddBill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.btnAddBill.Location = new System.Drawing.Point(4, 70);
+            this.btnAddBill.Location = new System.Drawing.Point(14, 35);
             this.btnAddBill.Name = "btnAddBill";
             this.btnAddBill.Size = new System.Drawing.Size(89, 31);
             this.btnAddBill.TabIndex = 21;
@@ -139,7 +140,7 @@
             this.flpBills.AllowDrop = true;
             this.flpBills.AutoScroll = true;
             this.flpBills.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flpBills.Location = new System.Drawing.Point(99, 70);
+            this.flpBills.Location = new System.Drawing.Point(14, 70);
             this.flpBills.Name = "flpBills";
             this.flpBills.Size = new System.Drawing.Size(1003, 224);
             this.flpBills.TabIndex = 20;
@@ -147,7 +148,7 @@
             // lblTotalIncome
             // 
             this.lblTotalIncome.AutoSize = true;
-            this.lblTotalIncome.Location = new System.Drawing.Point(710, 24);
+            this.lblTotalIncome.Location = new System.Drawing.Point(625, 24);
             this.lblTotalIncome.Name = "lblTotalIncome";
             this.lblTotalIncome.Size = new System.Drawing.Size(69, 13);
             this.lblTotalIncome.TabIndex = 28;
@@ -157,7 +158,7 @@
             // 
             this.cbPaidFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPaidFrequency.FormattingEnabled = true;
-            this.cbPaidFrequency.Location = new System.Drawing.Point(599, 40);
+            this.cbPaidFrequency.Location = new System.Drawing.Point(514, 40);
             this.cbPaidFrequency.Margin = new System.Windows.Forms.Padding(0);
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
@@ -166,7 +167,7 @@
             // lblTimePeriod
             // 
             this.lblTimePeriod.AutoSize = true;
-            this.lblTimePeriod.Location = new System.Drawing.Point(601, 22);
+            this.lblTimePeriod.Location = new System.Drawing.Point(516, 22);
             this.lblTimePeriod.Name = "lblTimePeriod";
             this.lblTimePeriod.Size = new System.Drawing.Size(63, 13);
             this.lblTimePeriod.TabIndex = 31;
@@ -175,7 +176,7 @@
             // lblTotalBills
             // 
             this.lblTotalBills.AutoSize = true;
-            this.lblTotalBills.Location = new System.Drawing.Point(789, 25);
+            this.lblTotalBills.Location = new System.Drawing.Point(704, 25);
             this.lblTotalBills.Name = "lblTotalBills";
             this.lblTotalBills.Size = new System.Drawing.Size(52, 13);
             this.lblTotalBills.TabIndex = 32;
@@ -184,7 +185,7 @@
             // lblBudgetTotal
             // 
             this.lblBudgetTotal.AutoSize = true;
-            this.lblBudgetTotal.Location = new System.Drawing.Point(868, 25);
+            this.lblBudgetTotal.Location = new System.Drawing.Point(783, 25);
             this.lblBudgetTotal.Name = "lblBudgetTotal";
             this.lblBudgetTotal.Size = new System.Drawing.Size(68, 13);
             this.lblBudgetTotal.TabIndex = 33;
@@ -193,7 +194,7 @@
             // lblExpenseTotal
             // 
             this.lblExpenseTotal.AutoSize = true;
-            this.lblExpenseTotal.Location = new System.Drawing.Point(951, 25);
+            this.lblExpenseTotal.Location = new System.Drawing.Point(866, 25);
             this.lblExpenseTotal.Name = "lblExpenseTotal";
             this.lblExpenseTotal.Size = new System.Drawing.Size(75, 13);
             this.lblExpenseTotal.TabIndex = 34;
@@ -202,7 +203,7 @@
             // lblSavings
             // 
             this.lblSavings.AutoSize = true;
-            this.lblSavings.Location = new System.Drawing.Point(1031, 23);
+            this.lblSavings.Location = new System.Drawing.Point(946, 23);
             this.lblSavings.Name = "lblSavings";
             this.lblSavings.Size = new System.Drawing.Size(51, 13);
             this.lblSavings.TabIndex = 36;
@@ -210,7 +211,7 @@
             // 
             // tbSavings
             // 
-            this.tbSavings.Location = new System.Drawing.Point(1030, 40);
+            this.tbSavings.Location = new System.Drawing.Point(945, 40);
             this.tbSavings.Name = "tbSavings";
             this.tbSavings.Size = new System.Drawing.Size(72, 20);
             this.tbSavings.TabIndex = 35;
@@ -232,14 +233,14 @@
             this.Controls.Add(this.chartAccount1);
             this.Controls.Add(this.tbIncome1);
             this.Controls.Add(this.tbTotalBillBudgetAccount1);
-            this.Controls.Add(this.tbSplit2Total);
+            this.Controls.Add(this.tbSplitTotal);
             this.Controls.Add(this.lblAccount1);
             this.Controls.Add(this.tbTotal);
             this.Controls.Add(this.btnAddBill);
             this.Controls.Add(this.flpBills);
             this.DoubleBuffered = true;
             this.Name = "CtrlPerson";
-            this.Size = new System.Drawing.Size(1598, 302);
+            this.Size = new System.Drawing.Size(1520, 302);
             this.Load += new System.EventHandler(this.CtrlPerson_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chartAccount1)).EndInit();
             this.ResumeLayout(false);
@@ -252,7 +253,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartAccount1;
         private System.Windows.Forms.TextBox tbIncome1;
         private System.Windows.Forms.TextBox tbTotalBillBudgetAccount1;
-        private System.Windows.Forms.TextBox tbSplit2Total;
+        private System.Windows.Forms.TextBox tbSplitTotal;
         private System.Windows.Forms.Label lblAccount1;
         private System.Windows.Forms.TextBox tbTotal;
         private System.Windows.Forms.Button btnAddBill;

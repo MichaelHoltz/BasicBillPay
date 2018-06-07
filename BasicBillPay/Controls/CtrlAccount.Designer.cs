@@ -40,6 +40,7 @@
             this.tbBalance = new System.Windows.Forms.TextBox();
             this.lblBalance = new System.Windows.Forms.Label();
             this.lblIdValue = new System.Windows.Forms.Label();
+            this.cbAccountType = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // lblId
@@ -144,10 +145,22 @@
             this.lblIdValue.Text = "00";
             this.lblIdValue.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // cbAccountType
+            // 
+            this.cbAccountType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbAccountType.FormattingEnabled = true;
+            this.cbAccountType.Location = new System.Drawing.Point(254, 58);
+            this.cbAccountType.Margin = new System.Windows.Forms.Padding(0);
+            this.cbAccountType.Name = "cbAccountType";
+            this.cbAccountType.Size = new System.Drawing.Size(71, 21);
+            this.cbAccountType.TabIndex = 33;
+            this.cbAccountType.SelectedIndexChanged += new System.EventHandler(this.cbAccountType_SelectedIndexChanged);
+            // 
             // CtrlAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cbAccountType);
             this.Controls.Add(this.lblIdValue);
             this.Controls.Add(this.tbBalance);
             this.Controls.Add(this.lblBalance);
@@ -182,5 +195,6 @@
         private System.Windows.Forms.TextBox tbBalance;
         private System.Windows.Forms.Label lblBalance;
         private System.Windows.Forms.Label lblIdValue;
+        private System.Windows.Forms.ComboBox cbAccountType;
     }
 }

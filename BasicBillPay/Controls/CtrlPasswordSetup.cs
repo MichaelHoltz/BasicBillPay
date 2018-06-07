@@ -12,14 +12,20 @@ using BasicBillPay.Tools.Encryption;
 
 namespace BasicBillPay.Controls
 {
-    public partial class CtrlPassword : UserControl
+    public partial class CtrlPasswordSetup : UserControl
     {
-        
-        public CtrlPassword()
+        public String Password { get; set; }
+        public CtrlPasswordSetup()
         {
             InitializeComponent();
+            
         }
+        private void CtrlPassword_Load(object sender, EventArgs e)
+        {
+            Icon i = new Icon(SystemIcons.Warning, new Size(8, 8));
+            epPasswordLength.Icon = i;
 
+        }
         private void tbPassword_TextChanged(object sender, EventArgs e)
         {
             AESGCM.Password = tbPassword.Text;
@@ -42,13 +48,15 @@ namespace BasicBillPay.Controls
             {
                 e.Cancel = true;
                 tbPassword.Select(0, tbPassword.Text.Length);
-                this.errorProvider1.SetError(tbPassword, errorMsg);
+                this.epPasswordLength.SetError(tbPassword, errorMsg);
             }
         }
 
         private void tbPassword_Validated(object sender, EventArgs e)
         {
-            this.errorProvider1.SetError(tbPassword, "");
+            this.epPasswordLength.SetError(tbPassword, "");
+            AESGCM.Password = tbPassword.Text;
+            Password = tbPassword.Text;
         }
         public bool ValidPassword(String password, out String errorMessage)
         {
@@ -60,9 +68,21 @@ namespace BasicBillPay.Controls
             }
             else
             {
-                errorMessage = "Password must be at least 12 characters long.";
+                errorMessage = "Password must be at least 4 characters long.";
             }
             return retVal;
+        }
+
+
+
+        private void tbPasswordConfirm_Validated(object sender, EventArgs e)
+        {
+            epMatchingPasswords.SetError(tbPasswordConfirm, ""); 
+        }
+
+        private void tbPasswordConfirm_Validating(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }

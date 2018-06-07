@@ -43,7 +43,10 @@ namespace BasicBillPay.Controls
             //base.IndexChanged += CtrlPayment_IndexChanged;
 
         }
-
+        public Payment GetPayment()
+        {
+            return p;
+        }
         private void CtrlPayment_ReorderIndexes(object sender, EventArgs e)
         {
             p.Index = ItemIndex;
@@ -133,11 +136,13 @@ namespace BasicBillPay.Controls
         private void tbName_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             AccountSelected?.Invoke(sender, new AccountSelectedEventArgs(databaseFunctions.GetAccount(p.PayToId))); // Only fire if there is a listener
+            //If they change the account name I need to update it though!!!
         }
 
         private void tbPayFrom_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             AccountSelected?.Invoke(sender, new AccountSelectedEventArgs(databaseFunctions.GetAccount(p.PayFromId))); // Only fire if there is a listener
+            //If they change the account name I need to update it though!!! 
         }
         public class AccountSelectedEventArgs : EventArgs
         {

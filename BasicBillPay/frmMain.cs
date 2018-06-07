@@ -27,56 +27,27 @@ namespace BasicBillPay
         public frmMain()
         {
             InitializeComponent();
+            db = PersistenceBase.Load<Database>(appSettings.DbPath);
+            appSettings = PersistenceBase.GetApplicationSettings(this);
+
+        }
+        public frmMain(ApplicationSettings appSettings, Database database)
+        {
+            InitializeComponent();
+            this.appSettings = appSettings;
+            db = database;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            appSettings = PersistenceBase.Load<ApplicationSettings>(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"));
-            if (appSettings.Password == null)
-            {
-                //Get Password for settings and data
-                UserControl cp = new CtrlPassword();
-                frmPopup fp = new frmPopup("System Password", ref cp, this);
-                fp.ShowDialog();
-                appSettings.Password = AESGCM.Password;
-            }
-            else
-            {
-                AESGCM.Password = appSettings.Password; // Set for Shortened function calls
-            }
-            //Assign a default path if one doesn't exist.
-            if (appSettings.DbPath == null)
-            {
-                appSettings.DbPath = PersistenceBase.GetAbsolutePath(@"\Data\mybills.bbp");
-            }
-            
             LoadData();
         }
         private void InitializeCharts()
         {
-            chartAccount1.Series.Clear();
-            chartAccount1.Series.Add("Account1");
-            chartAccount1.Series[0].ChartType = SeriesChartType.Pie;
-
-            chartAccount2.Series.Clear();
-            chartAccount2.Series.Add("Account");
-            chartAccount2.Series[0].ChartType = SeriesChartType.Pie;
-
-
-            chartBudget.Series.Clear();
-            chartBudget.Series.Add("Budget");
-            chartBudget.Series[0].ChartType = SeriesChartType.Pie;
-
+            Charts.InitializeChart(chartBudget, "Budget");
         }
         private void InitializeFlowLayout()
         {
-            //Add Bill Header for First Account
-            CtrlHeader ch = new CtrlHeader();
-            flpBills.Controls.Add(ch);
-
-            //Add Bill Header for Second Account
-            CtrlHeader ch2 = new CtrlHeader();
-            flpBills2.Controls.Add(ch2);
 
 
             //Add Budget Header
@@ -91,20 +62,25 @@ namespace BasicBillPay
         {
             InitializeCharts();
             InitializeFlowLayout();
-            //Load the Database
-            //db = PersistenceBase.Load<Database>(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"));
-            db = PersistenceBase.Load<Database>(appSettings.DbPath);
 
+
+            foreach (Person p in db.People)
+            {
+                Person rp = p;
+                CtrlPerson cp = new CtrlPerson(ref db, ref paymentItemIndex, ref rp);
+                flpPeopleBills.Controls.Add(cp);
+
+            }
             //Income Totals
             float iTotal1 = 0f;
             float iTotal2 = 0f;
 
 
             //Need to Load all Controls
-            foreach (Payment pItem in db.Payments.OrderBy(o=>o.DateDue))
+            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
             {
-                
-                AddPaymentCtrl(pItem);
+
+                //AddPaymentCtrl(pItem);
 
                 //Need to find transfers from one account to another. (but I have all accounts as the same so need to identify income vs expense)
                 if (pItem.PayToId == 1 && pItem.PayFromId == 0) // Stupid hardcoded Transfer
@@ -117,20 +93,20 @@ namespace BasicBillPay
                 AddBudgetCtrl(bItem);
             }
 
-            foreach (PayCheck item in db.PayChecks)
+            foreach (Paycheck item in db.PayChecks)
             {
-                if (item.AccountId == 0) // stupid hard coded knowing account ID
+                if (item.Id == 0) // stupid hard coded knowing account ID
                 {
                     iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
                 }
-                if (item.AccountId == 2)
+                if (item.Id == 2) //I think this is wrong also...
                 {
                     iTotal2 += item.GetMonthlyAmount(item.NetPayPerPayPeriod);
                 }
 
             }
-            tbIncome1.Text = iTotal1.ToString("c");
-            tbIncome2.Text = iTotal2.ToString("c");
+            //tbIncome1.Text = iTotal1.ToString("c");
+            //tbIncome2.Text = iTotal2.ToString("c");
             
             CalculateTotals();
 
@@ -147,24 +123,11 @@ namespace BasicBillPay
             float split2Total = 0f;
             foreach (BudgetItem bItem in db.BudgetItems)
             {
-
                 BudgetTotal += bItem.GetMonthlyAmount(bItem.Amount); 
                 split1Total += bItem.GetMonthlyAmount(bItem.Split1Amount);
                 split2Total += bItem.GetMonthlyAmount(bItem.Split2Amount);
             }
-            tbTotal.Text = db.GetAccountTotal("M Checking", TransactionPeriod.Monthly).ToString("c");
-
-            tbTotal2.Text = db.GetAccountTotal("C Checking", TransactionPeriod.Monthly).ToString("c");
             tbBudgetTotal.Text = BudgetTotal.ToString("c");
-            tbSplit1Total.Text = split1Total.ToString("c"); //Account 2 (Reversed)
-            
-
-            tbSplit2Total.Text = split2Total.ToString("c");
-            
-            tbTotalBillBudgetAccount1.Text = (db.GetAccountTotal("M Checking", TransactionPeriod.Monthly) + split2Total).ToString("c");
-            tbTotalBillBudgetAccount2.Text = (db.GetAccountTotal("C Checking", TransactionPeriod.Monthly) + split1Total).ToString("c");
-
-
         }
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -187,109 +150,6 @@ namespace BasicBillPay
                 budgetItemIndex = i;
             }
         }
-        private void AddChartPoint(Chart c, String name, float Amount)
-        {
-            DataPoint dp = new DataPoint(0, Amount);
-            dp.IsValueShownAsLabel = true;
-            dp.LabelFormat = "C0";
-            dp.Name = name;
-            dp.LegendText = name;
-            dp.LabelToolTip = name; // Amount.ToString("C0");
-            dp.LegendToolTip = Amount.ToString("C0");
-            //dp.Label = name;
-            //bool found = false;
-            //DataPoint odp = null;
-            //foreach (DataPoint item in c.Series[0].Points)
-            //{
-            //    if (item.LegendText == name)
-            //    {
-            //        odp = item;
-            //        break;
-            //    }
-            //}
-            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.LegendText == name);
-            if (odp == null)
-            {
-                c.Series[0].Points.Add(dp);
-            }
-            else
-            {
-                odp = dp;
-            }
-
-        }
-        private void tbSplit2Total_TextChanged(object sender, EventArgs e)
-        {
-            AddChartPoint(chartAccount1, "Budget Split Items", float.Parse(tbSplit2Total.Text, NumberStyles.Currency, null));
-        }
-        private void tbSplit1Total_TextChanged(object sender, EventArgs e)
-        {
-            AddChartPoint(chartAccount2, "Budget Split Items", float.Parse(tbSplit1Total.Text, NumberStyles.Currency, null));
-        }
-        private void UpdateChartPoint(Chart c, String name, float Amount)
-        {
-            DataPoint dp = new DataPoint(0, Amount);
-            dp.IsValueShownAsLabel = true;
-            dp.LabelFormat = "C0";
-            dp.Name = name;
-            dp.LegendText = name;
-            dp.LabelToolTip = name; // Amount.ToString("C0");
-            dp.LegendToolTip = Amount.ToString("C0");
-            //dp.Label = name;
-            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.Name == name);
-            if (odp == null)
-            {
-                c.Series[0].Points.Add(dp);
-            }
-            else
-            {
-                odp = dp;
-            }
-
-        }
-        /// <summary>
-        /// Adds a visual Control Linked to the provided Payment
-        /// </summary>
-        /// <param name="p"></param>
-        private void AddPaymentCtrl(Payment p)
-        {
-            CtrlPayment ctrlPayment = new CtrlPayment(ref db, ref p, paymentItemIndex++);
-            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeletedOrIndexChanged;
-            ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
-            ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
-            ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
-            if (p.PayFromId == 0)
-            {
-                flpBills.Controls.Add(ctrlPayment);
-                String name = db.GetAccount(p.PayToId).Name;
-                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-                AddChartPoint(chartAccount1, name, Amount);
-            }
-            else if (p.PayFromId == 1)
-            {
-                flpBills2.Controls.Add(ctrlPayment);
-                String name = db.GetAccount(p.PayToId).Name;
-                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-                AddChartPoint(chartAccount2, name, Amount);
-            }
-        }
-
-
-
-        private void CtrlPayment_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
-        {
-            CalculateTotals();
-        }
-
-        private void CtrlPayment_AccountSelected(object sender, CtrlPayment.AccountSelectedEventArgs e)
-        {
-            //BudgetItem b = 
-            UserControl ca = new CtrlAccount(e.SelectedAccount);
-            frmPopup fp = new frmPopup("Account", ref ca, sender as Control);
-            fp.ShowDialog();
-        }
-
-
 
         /// <summary>
         /// Adds a visual Control Linked to the provided Budget Item
@@ -303,36 +163,13 @@ namespace BasicBillPay
 
             String name = b.Name;
             float Amount = b.GetMonthlyAmount(b.Amount);
-            AddChartPoint(chartBudget, name, Amount);
+            Charts.AddChartPoint(chartBudget, name, Amount);
         }
-        private void btnAddBill_Click(object sender, EventArgs e)
-        {
-            ////Add Payment
-            //Payment p = db.AddPayment(-1, -1, DateTime.Parse("6/15/18"), DateTime.Parse("4/30/2018"), 0.00f);
-            Payment p = db.AddPayment(-1, -1, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
-            //End Tryout
-            AddPaymentCtrl(p);
-        }
+
         private void btnAddBudget_Click(object sender, EventArgs e)
         {
             BudgetItem b = db.AddBudgetItem("", 0.0f, TransactionPeriod.Monthly);
             AddBudgetCtrl(b);
-        }
-        private void CtrlPayment_ItemDeletedOrIndexChanged(object sender, EventArgs e)
-        {
-            if (sender is CtrlSortableBase)
-            {
-                CtrlSortableBase csb = (sender as CtrlSortableBase);
-                int i = 0;
-                foreach (Control c in flpBills.Controls)
-                {
-                    if (c is CtrlSortableBase && csb != c) // Doesn't equal Self
-                    {
-                        (c as CtrlSortableBase).UpdateIndex(i++);
-                    }
-                }
-                paymentItemIndex = i++;
-            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -341,9 +178,7 @@ namespace BasicBillPay
         }
         private void SaveData()
         {
-            //PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\mybills.json"), db); // Todo - use app Settings path!!
-            PersistenceBase.Save(appSettings.DbPath, db); 
-            PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
+            PersistenceBase.SaveData(appSettings, db);
         }
 
         private void btnSettings_Click(object sender, EventArgs e)

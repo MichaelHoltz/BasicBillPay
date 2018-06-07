@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using BasicBillPay.Models;
+using BasicBillPay.Controls;
+using BasicBillPay.Tools.Encryption;
 using System.Windows.Forms;
 using Newtonsoft.Json;
 
@@ -76,6 +79,56 @@ namespace BasicBillPay.Tools
             string[] s = { "\\bin" };
             string path = Application.StartupPath.Split(s, StringSplitOptions.None)[0] + filePath;
             return path;
+        }
+
+        internal static ApplicationSettings GetApplicationSettings(Control controlToCenterPopupOn)
+        {
+            ApplicationSettings appSettings = Load<ApplicationSettings>(GetAbsolutePath(@"\Data\ApplicationSettings.bbp"));
+            bool needPassword = true;
+            bool needUserPassword = false;
+            switch (appSettings.EncryptionLevel)
+            {
+                case EncryptionLevel.None:
+                    needPassword = false;
+                    break;
+                case EncryptionLevel.Auto:
+                    needPassword = true;
+                    break;
+                case EncryptionLevel.Full:
+                    needPassword = true;
+                    needUserPassword = true; //Need to Ask For the Password Every time
+                    break;
+                default:
+                    break;
+            }
+            if (needPassword)
+            {
+                if (appSettings.Password == null)
+                {
+                    //Get Password for settings and data
+                    Forms.ShowPopupControl(new CtrlPasswordSetup(), "System Password", controlToCenterPopupOn);
+                    appSettings.Password = AESGCM.Password;
+                }
+                else
+                {
+                    AESGCM.Password = appSettings.Password; // Set for Shortened function calls
+                }
+            }
+            //Assign a default path if one doesn't exist.
+            if (appSettings.DbPath == null)
+            {
+                appSettings.DbPath = PersistenceBase.GetAbsolutePath(@"\Data\mybills.bbp");
+            }
+            return appSettings;
+        }
+        internal static Database LoadDatabase(String dbPath)
+        {
+            return PersistenceBase.Load<Database>(dbPath);
+        }
+        internal static void SaveData(ApplicationSettings appSettings, Database db)
+        {
+            Save(appSettings.DbPath, db);
+            Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
         }
     }
 }

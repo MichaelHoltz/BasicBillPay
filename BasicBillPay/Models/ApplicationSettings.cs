@@ -18,6 +18,7 @@ namespace BasicBillPay.Models
     /// </summary>
     public class ApplicationSettings
     {
+        public EncryptionLevel EncryptionLevel {get; set;} = EncryptionLevel.None;
 
         /// <summary>
         /// ONLY secure in a controlled environment with permission only for the current intended user. 
@@ -26,11 +27,14 @@ namespace BasicBillPay.Models
         {
             get
             {
+                if (EncryptionLevel == EncryptionLevel.None)
+                    return null;
                 return Convert.ToBase64String(CryptoPassword.EPassword);
             } 
             set
             {
-                CryptoPassword.EPassword = Convert.FromBase64String(value); 
+                if (EncryptionLevel != EncryptionLevel.None)
+                    CryptoPassword.EPassword = Convert.FromBase64String(value); 
             }
         }
 
@@ -55,13 +59,14 @@ namespace BasicBillPay.Models
         {
             get
             {
-                if(_dbPath == null)
+                if(_dbPath == null && EncryptionLevel != EncryptionLevel.None)
                     _dbPath = AESGCM.SimpleDecryptWithPassword(EDbPath);
                 return _dbPath;
             }
             set
             {
-                EDbPath = AESGCM.SimpleEncryptWithPassword(value);
+                if(EncryptionLevel != EncryptionLevel.None)
+                    EDbPath = AESGCM.SimpleEncryptWithPassword(value);
                 _dbPath = value;
             }
         }

@@ -24,7 +24,7 @@ namespace BasicBillPay.Models
         public String Name { get; set; }
 
         /// <summary>
-        /// Index for sorting
+        /// Index for sorting (All are Zero unless sorted)
         /// </summary>
         public int Index { get; set; }
         /// <summary>
@@ -106,10 +106,11 @@ namespace BasicBillPay.Models
         {
 
         }
-        public Account(int accountId, String name, String number, String link, String userName)
+        public Account(int accountId, String name, AccountType type, String number, String link, String userName)
         {
             Id = accountId;
             Name = name;
+            Type = type;
             Number = number;
             Link = link;
             UserName = userName;

@@ -37,7 +37,7 @@
             // btnOk
             // 
             this.btnOk.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnOk.Location = new System.Drawing.Point(94, 3);
+            this.btnOk.Location = new System.Drawing.Point(92, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(39, 23);
             this.btnOk.TabIndex = 0;
@@ -50,9 +50,9 @@
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.pnlFooter.Controls.Add(this.btnOk);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 127);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 123);
             this.pnlFooter.Name = "pnlFooter";
-            this.pnlFooter.Size = new System.Drawing.Size(226, 30);
+            this.pnlFooter.Size = new System.Drawing.Size(222, 30);
             this.pnlFooter.TabIndex = 2;
             // 
             // pnlContent
@@ -61,7 +61,7 @@
             this.pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlContent.Location = new System.Drawing.Point(0, 0);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(226, 127);
+            this.pnlContent.Size = new System.Drawing.Size(222, 123);
             this.pnlContent.TabIndex = 3;
             // 
             // frmPopup
@@ -70,7 +70,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(226, 157);
+            this.ClientSize = new System.Drawing.Size(222, 153);
             this.ControlBox = false;
             this.Controls.Add(this.pnlContent);
             this.Controls.Add(this.pnlFooter);
