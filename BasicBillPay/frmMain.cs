@@ -31,7 +31,7 @@ namespace BasicBillPay
             appSettings = PersistenceBase.GetApplicationSettings(this);
 
         }
-        public frmMain(ApplicationSettings appSettings, Database database)
+        internal frmMain(ApplicationSettings appSettings, Database database)
         {
             InitializeComponent();
             this.appSettings = appSettings;
@@ -194,6 +194,12 @@ namespace BasicBillPay
         {
             frmPeopleManager fpm = new frmPeopleManager(ref db);
             fpm.ShowDialog();
+        }
+
+        private void systemPasswordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmWelcomePassword fwp = new frmWelcomePassword(appSettings, db);
+            fwp.ShowDialog();
         }
     }
 }

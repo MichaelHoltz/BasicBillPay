@@ -16,5 +16,13 @@ namespace BasicBillPay.Controls
         {
             InitializeComponent();
         }
+
+        public String Password
+        {
+            get
+            {
+                return tbPassword.Text;
+            }
+        }
     }
 }

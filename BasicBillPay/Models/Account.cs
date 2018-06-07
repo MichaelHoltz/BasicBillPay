@@ -10,8 +10,9 @@ namespace BasicBillPay.Models
     /// <summary>
     /// Account - Rent, Car Payment, Utility, etc.
     /// </summary>
-    public class Account
+    public class Account:EncryptedModel
     {
+
         /// <summary>
         /// Account Id for normalization
         /// </summary>
@@ -35,23 +36,22 @@ namespace BasicBillPay.Models
         /// Account Number
         /// </summary>
         /// 
-        public String ENumber { get; set; }
-        private String _number = null;
-        [JsonIgnore]
-        public String Number
-        {
-            get
-            {
-                if (_number == null)
-                    _number = AESGCM.SimpleDecryptWithPassword(ENumber);
-                return _number;
-            }
-            set
-            {
-                ENumber = AESGCM.SimpleEncryptWithPassword(value);
-                _number = value;
-            }
-        }
+        //public String ENumber { get; set; }
+        //private String _number = null;
+        public String Number { get; set; }
+        //{
+        //    get
+        //    {
+        //        if (_number == null)
+        //            _number = AESGCM.SimpleDecryptWithPassword(ENumber);
+        //        return _number;
+        //    }
+        //    set
+        //    {
+        //        ENumber = AESGCM.SimpleEncryptWithPassword(value);
+        //        _number = value;
+        //    }
+        //}
 
 
         /// <summary>
@@ -59,49 +59,61 @@ namespace BasicBillPay.Models
         /// 
         /// Spreadsheet Source = Where
         /// </summary>
-        public String ELink { get; set; }
-        private String _link = null;
-        [JsonIgnore]
-        public String Link
-        {
-            get
-            {
-                if(_link == null)
-                    _link = AESGCM.SimpleDecryptWithPassword(ELink);
-                return _link;
-            }
-            set
-            {
-                ELink = AESGCM.SimpleEncryptWithPassword(value);
-                _link = value;
-            }
-        }
+       // public String ELink { get; set; }
+       // private String _link = null;
+        public String Link { get; set; }
+        //{
+        //    get
+        //    {
+        //        if(_link == null)
+        //            _link = AESGCM.SimpleDecryptWithPassword(ELink);
+        //        return _link;
+        //    }
+        //    set
+        //    {
+        //        ELink = AESGCM.SimpleEncryptWithPassword(value);
+        //        _link = value;
+        //    }
+        //}
 
         /// <summary>
         /// UserName for Account - Will be encrypted (if not all fields)
         /// </summary>
-        public String EUserName { get; set; }
-        private String _userName = null;
-        [JsonIgnore]
-        public String UserName
-        {
-            get
-            {
-                if(_userName == null)
-                    _userName = AESGCM.SimpleDecryptWithPassword(EUserName);
-                return _userName;
-            }
-            set
-            {
-                EUserName = AESGCM.SimpleEncryptWithPassword(value);
-                _userName = value;
-            }
-        }
+        //public String EUserName { get; set; }
+        //private String _userName = null;
+        
+        public String UserName { get; set; }
+        //{
+        //    get
+        //    {
+        //        if(_userName == null)
+        //            _userName = AESGCM.SimpleDecryptWithPassword(EUserName);
+        //        return _userName;
+        //    }
+        //    set
+        //    {
+        //        EUserName = AESGCM.SimpleEncryptWithPassword(value);
+        //        _userName = value;
+        //    }
+        //}
         /// <summary>
         /// Calculated based on Date...
         /// </summary>
         public float Balance { get; set; }
+        public void Encrypt()
+        {
 
+            Number = AESGCM.SimpleEncryptWithPassword(Number);
+            Link = AESGCM.SimpleEncryptWithPassword(Link);
+            UserName = AESGCM.SimpleEncryptWithPassword(UserName);
+        }
+        public void Decrypt()
+        {
+            Number = AESGCM.SimpleDecryptWithPassword(Number);
+            Link = AESGCM.SimpleDecryptWithPassword(Link);
+            UserName = AESGCM.SimpleDecryptWithPassword(UserName);
+
+        }
         public Account()
         {
 
@@ -161,6 +173,8 @@ namespace BasicBillPay.Models
         {
             return obj.GetHashCode().Equals(HashCode); // == this.GetHashCode();
         }
+
+
         #endregion
     }
 }

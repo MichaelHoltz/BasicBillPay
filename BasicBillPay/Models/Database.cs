@@ -9,7 +9,7 @@ namespace BasicBillPay.Models
     /// <summary>
     /// All Data
     /// </summary>
-    public class Database
+    public class Database:EncryptedModel
     {
         public int NextPayCheckId { get; set; }
         public HashSet<Paycheck> PayChecks { get; set; }
@@ -24,6 +24,21 @@ namespace BasicBillPay.Models
         /// People relevant to this system.
         /// </summary>
         public HashSet<Person> People { get; set; }
+        public void Encrypt()
+        {
+            foreach (Account a in Accounts)
+            {
+                a.Encrypt();
+            }
+        }
+
+        public void Decrypt()
+        {
+            foreach (Account a in Accounts)
+            {
+                a.Decrypt();
+            }
+        }
         public Database()
         {
             //Initialize HashSets so they can be added to.
@@ -243,6 +258,8 @@ namespace BasicBillPay.Models
             }
             return unManaged;
         }
+
+
         #endregion
     }
 }

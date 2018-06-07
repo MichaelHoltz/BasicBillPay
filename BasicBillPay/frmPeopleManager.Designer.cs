@@ -135,6 +135,7 @@
             this.Controls.Add(this.lbPeople);
             this.DoubleBuffered = true;
             this.Name = "frmPeopleManager";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "People Manager";
             this.Load += new System.EventHandler(this.frmPeopleManager_Load);
             this.ResumeLayout(false);

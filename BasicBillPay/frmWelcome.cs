@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using BasicBillPay.Tools;
 using BasicBillPay.Controls;
 using BasicBillPay.Models;
+using BasicBillPay.Tools.Encryption;
 namespace BasicBillPay
 {
     /// <summary>
@@ -33,7 +34,7 @@ namespace BasicBillPay
                 
             }
         }
-        public frmWelcome(ApplicationSettings appSettings, Database database)
+        internal frmWelcome(ApplicationSettings appSettings, Database database)
         {
             InitializeComponent();
             this.appSettings = appSettings;
@@ -48,16 +49,8 @@ namespace BasicBillPay
 
         private void btnBegin_Click(object sender, EventArgs e)
         {
-            if (rbStoreUserPassword.Checked)
-            {
-                appSettings.EncryptionLevel = EncryptionLevel.Full;
-                appSettings.Password = ctrlPassword1.Password; 
-            }
-            if (rbAutoEncrypt.Checked)
-            {
-                appSettings.EncryptionLevel = EncryptionLevel.Auto;
-            }
 
+            
             Person person = db.AddPerson(tbName.Text.Trim());
             //Get Proper Ending
             String ending = "'s ";
@@ -87,6 +80,21 @@ namespace BasicBillPay
             Paycheck pc = db.AddPayCheck(payCheckName, TransactionPeriod.Biweekly); // Need to Ask
             //Associate the paycheck with this person
             person.PaycheckIds.Add(pc.Id);
+            String testDebugDBPath = appSettings.DbPath;
+            
+            //Deal with Encryption Last 
+            if (rbStoreUserPassword.Checked)
+            {
+                appSettings.EncryptionLevel = EncryptionLevel.Full;
+                appSettings.Password = ctrlPassword1.Password;
+
+            }
+            if (rbAutoEncrypt.Checked)
+            {
+                appSettings.EncryptionLevel = EncryptionLevel.Auto;
+                appSettings.Password = Tools.Encryption.CryptoPassword.GetMAC();
+            }
+            AESGCM.Password = appSettings.Password; //Changing the Password from nothing to something breaks it all!!
             //Forms.ShowPopupControl(new CtrlPaycheck(pc), payCheckName, btnBegin);
             this.Close(); // Move On
         }

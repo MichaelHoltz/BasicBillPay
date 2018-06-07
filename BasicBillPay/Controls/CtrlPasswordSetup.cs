@@ -28,7 +28,7 @@ namespace BasicBillPay.Controls
         }
         private void tbPassword_TextChanged(object sender, EventArgs e)
         {
-            AESGCM.Password = tbPassword.Text;
+            AESGCM.Password = tbPassword.Text; //BAD BAD - Can't go switching the Password until the right time!!
         }
         SecureString securePwd = new SecureString();
 
@@ -55,7 +55,7 @@ namespace BasicBillPay.Controls
         private void tbPassword_Validated(object sender, EventArgs e)
         {
             this.epPasswordLength.SetError(tbPassword, "");
-            AESGCM.Password = tbPassword.Text;
+            //AESGCM.Password = tbPassword.Text;  //BAD BAD - Can't go switching the Password until the right time!!
             Password = tbPassword.Text;
         }
         public bool ValidPassword(String password, out String errorMessage)

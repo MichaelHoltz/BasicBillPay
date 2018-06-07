@@ -26,6 +26,15 @@ namespace BasicBillPay
             Text = title;
             //Add the Specified User Control to the form
             pnlContent.Controls.Add(userControl);
+            if (caller == null)
+            {
+                StartPosition = FormStartPosition.CenterScreen; // Easy Center  // But Doesn't work..
+            }
+            else if (caller is Form)
+            {
+                StartPosition = FormStartPosition.CenterParent; // Easy Center 
+            }
+
         }
         private void frmPopup_Load(object sender, EventArgs e)
         {
@@ -34,15 +43,7 @@ namespace BasicBillPay
         private void positionForm(Control caller)
         {
             //If I sent in a form I want it to center on the form
-            if (caller == null)
-            {
-                StartPosition = FormStartPosition.CenterScreen; // Easy Center 
-            }
-            else if (caller is Form)
-            {
-                StartPosition = FormStartPosition.CenterParent; // Easy Center 
-            }
-            else // Center it under the Control (Nested Controls cause problems)
+            if (caller != null && !(caller is Form))
             {
                 StartPosition = FormStartPosition.Manual;
                 int startLeft = 0;

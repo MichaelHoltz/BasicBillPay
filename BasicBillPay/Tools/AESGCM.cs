@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
@@ -111,6 +112,11 @@ namespace BasicBillPay.Tools.Encryption
             var cipherText = SimpleEncryptWithPassword(plainText, password, nonSecretPayload);
             return Convert.ToBase64String(cipherText);
         }
+        /// <summary>
+        /// IF no password, this is just the Base64 String
+        /// </summary>
+        /// <param name="secretMessage"></param>
+        /// <returns></returns>
         public static string SimpleEncryptWithPassword(string secretMessage)
         {
             Console.WriteLine("Encrypt: " + secretMessage);
@@ -144,10 +150,31 @@ namespace BasicBillPay.Tools.Encryption
             var plainText = SimpleDecryptWithPassword(cipherText, password, nonSecretPayloadLength);
             return plainText == null ? null : Encoding.UTF8.GetString(plainText);
         }
+        /// <summary>
+        /// If No Password this it the Base64Encoded String
+        /// </summary>
+        /// <param name="encryptedMessage"></param>
+        /// <returns></returns>
         public static string SimpleDecryptWithPassword(string encryptedMessage)
         {
-            Console.WriteLine("Decrypt: " + encryptedMessage);
-            return SimpleDecryptWithPassword(encryptedMessage, Password, 0);
+            String retVal = null;
+            //Console.WriteLine("Decrypt: " + encryptedMessage);
+            try
+            {
+                retVal = SimpleDecryptWithPassword(encryptedMessage, Password, 0);
+            }
+            catch (Exception err)
+            {
+                if (err.Message.Contains("Invalid length"))
+                {
+                    MessageBox.Show("Data File is corrupt!", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("Unexpected File Error", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            return retVal;
         }
 
         public static byte[] SimpleEncrypt(byte[] secretMessage, byte[] key, byte[] nonSecretPayload = null)
@@ -240,9 +267,19 @@ namespace BasicBillPay.Tools.Encryption
         {
             nonSecretPayload = nonSecretPayload ?? new byte[] { };
 
-            //User Error Checks
+            //User Error Checks 
             if (string.IsNullOrWhiteSpace(password) || password.Length < MinPasswordLength)
-                throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            {
+                //Case where user is not securing data - If the data is actually encrypted it will end up being corrupted.
+                if (String.IsNullOrWhiteSpace(password))
+                {
+                    return secretMessage; // Return what is supposed to be Plain Text
+                }
+                else
+                {
+                    throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+                }
+            }
 
             if (secretMessage == null || secretMessage.Length == 0)
                 throw new ArgumentException("Secret Message Required!", "secretMessage");
@@ -273,7 +310,16 @@ namespace BasicBillPay.Tools.Encryption
         {
             //User Error Checks
             if (string.IsNullOrWhiteSpace(password) || password.Length < MinPasswordLength)
-                throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+            {
+                if (string.IsNullOrWhiteSpace(password))
+                {
+                    return encryptedMessage; // Case where no password is being used.
+                }
+                else
+                {
+                    throw new ArgumentException(String.Format("Must have a password of at least {0} characters!", MinPasswordLength), "password");
+                }
+            }
 
             if (encryptedMessage == null || encryptedMessage.Length == 0)
                 throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");

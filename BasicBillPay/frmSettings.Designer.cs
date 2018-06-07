@@ -72,7 +72,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(474, 226);
+            this.btnOk.Location = new System.Drawing.Point(353, 95);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(39, 23);
             this.btnOk.TabIndex = 3;
@@ -83,7 +83,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(535, 226);
+            this.btnCancel.Location = new System.Drawing.Point(414, 95);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(61, 23);
             this.btnCancel.TabIndex = 4;
@@ -97,7 +97,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(636, 261);
+            this.ClientSize = new System.Drawing.Size(486, 137);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
@@ -106,6 +106,7 @@
             this.Controls.Add(this.lblDataFile);
             this.DoubleBuffered = true;
             this.Name = "frmSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Application Settings";
             this.Load += new System.EventHandler(this.frmSettings_Load);
             this.ResumeLayout(false);

@@ -98,10 +98,11 @@ namespace BasicBillPay.Controls
         private void btnAddBill_Click(object sender, EventArgs e)
         {
             ////Add Payment
-            //BUG BUG BUG.. not Person ID  I need the Person's Account ID.. (But since they can have more than one account this is going to be a problem.)
-            //Payment p = db.AddPayment(-1, -1, DateTime.Parse("6/15/18"), DateTime.Parse("4/30/2018"), 0.00f);
-            Payment p = db.AddPayment(-1, person.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
-            //End Tryout
+            // Big problem if they don't have an account.. They should always have one though, also the first account MUST be an income account
+            int firstAccountId = person.AccountIds.FirstOrDefault(); 
+            Account a = db.GetAccount(firstAccountId);
+            //Minus 1 indicates a new Account.. Which Means Transfers from one existing income account to another will not be possible (nor will use of orphaned expense accounts).
+            Payment p = db.AddPayment(-1, a.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
             AddPaymentCtrl(p);
         }
         private void AddPaymentCtrl(Payment p)

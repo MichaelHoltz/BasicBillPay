@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using System.Management; //Requires reference to System.Management for ManagementClass
 using System.Threading.Tasks;
 
 namespace BasicBillPay.Tools.Encryption
@@ -32,8 +33,10 @@ namespace BasicBillPay.Tools.Encryption
         private static byte[] Entropy { get; set; }
         private static byte[] Cypher { get; set; }
         public static byte[] EPassword { get; set; }
-        public static void Encrypt(string plainText)
+        public static String Encrypt(string plainText)
         {
+            if (String.IsNullOrEmpty(plainText))
+                return plainText;
             ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
             // Data to protect. Convert a string to a byte[] using Encoding.UTF8.GetBytes().
             byte[] plaintextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -53,11 +56,13 @@ namespace BasicBillPay.Tools.Encryption
             System.Buffer.BlockCopy(Entropy, 0, EPassword, 0, SINDEX);
             System.Buffer.BlockCopy(Cypher, 0, EPassword, SINDEX, Cypher.Length);
             SplitFields();
+            
+            return Convert.ToBase64String(EPassword);
         }
         public static String Decrypt()
         {
             String pt = null;
-            if (EPassword != null)
+            if ( EPassword != null)
             {
                 SplitFields();  //Get Cypher and Entropy
                                 ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
@@ -87,6 +92,28 @@ namespace BasicBillPay.Tools.Encryption
             {
                 Cypher[i++] = EPassword[j];
             }
+        }
+        /// <summary>
+        /// Used as a way of generating an auto password that is unique to each machine..
+        /// Problem if user replaces network card..  or want's to use on a different machine if used otherwise.
+        /// </summary>
+        /// <returns></returns>
+        internal static String GetMAC()
+        {
+            String firstMAC = null;
+            using (var mc = new ManagementClass("Win32_NetworkAdapterConfiguration"))
+            {
+                foreach (ManagementObject mo in mc.GetInstances())
+                {
+                    if (mo["MacAddress"] != null)
+                    {
+                        firstMAC = mo["MacAddress"].ToString();
+                        break;
+                    }
+                    //Console.WriteLine(mo["MacAddress"].ToString());
+                }
+            }
+            return firstMAC;
         }
 
     }
