@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea14 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend14 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series14 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint27 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint28 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
             this.lblIdValue = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.lblName = new System.Windows.Forms.Label();
@@ -73,7 +73,7 @@
             this.tbName.Location = new System.Drawing.Point(6, 16);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(233, 20);
-            this.tbName.TabIndex = 13;
+            this.tbName.TabIndex = 1;
             // 
             // lblName
             // 
@@ -107,7 +107,9 @@
             this.tbNetPay.Location = new System.Drawing.Point(9, 71);
             this.tbNetPay.Name = "tbNetPay";
             this.tbNetPay.Size = new System.Drawing.Size(64, 20);
-            this.tbNetPay.TabIndex = 17;
+            this.tbNetPay.TabIndex = 2;
+            this.tbNetPay.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbNetPay_KeyUp);
+            this.tbNetPay.Leave += new System.EventHandler(this.tbNetPay_Leave);
             // 
             // lblTimePeriod
             // 
@@ -126,7 +128,7 @@
             this.cbPaidFrequency.Margin = new System.Windows.Forms.Padding(0);
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
-            this.cbPaidFrequency.TabIndex = 32;
+            this.cbPaidFrequency.TabIndex = 3;
             this.cbPaidFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPaidFrequency_SelectedIndexChanged);
             // 
             // gbDetails
@@ -153,7 +155,9 @@
             this.tbOther.Location = new System.Drawing.Point(244, 91);
             this.tbOther.Name = "tbOther";
             this.tbOther.Size = new System.Drawing.Size(64, 20);
-            this.tbOther.TabIndex = 27;
+            this.tbOther.TabIndex = 9;
+            this.tbOther.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbOther_KeyUp);
+            this.tbOther.Leave += new System.EventHandler(this.tbOther_Leave);
             // 
             // lblOther
             // 
@@ -169,7 +173,9 @@
             this.tbGarnishment.Location = new System.Drawing.Point(169, 91);
             this.tbGarnishment.Name = "tbGarnishment";
             this.tbGarnishment.Size = new System.Drawing.Size(64, 20);
-            this.tbGarnishment.TabIndex = 25;
+            this.tbGarnishment.TabIndex = 8;
+            this.tbGarnishment.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbGarnishment_KeyUp);
+            this.tbGarnishment.Leave += new System.EventHandler(this.tbGarnishment_Leave);
             // 
             // lblGarnishmentCost
             // 
@@ -185,7 +191,9 @@
             this.tbBenefitCost.Location = new System.Drawing.Point(90, 91);
             this.tbBenefitCost.Name = "tbBenefitCost";
             this.tbBenefitCost.Size = new System.Drawing.Size(64, 20);
-            this.tbBenefitCost.TabIndex = 23;
+            this.tbBenefitCost.TabIndex = 7;
+            this.tbBenefitCost.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbBenefitCost_KeyUp);
+            this.tbBenefitCost.Leave += new System.EventHandler(this.tbBenefitCost_Leave);
             // 
             // lblBenifitCost
             // 
@@ -201,7 +209,9 @@
             this.tbTax.Location = new System.Drawing.Point(10, 91);
             this.tbTax.Name = "tbTax";
             this.tbTax.Size = new System.Drawing.Size(64, 20);
-            this.tbTax.TabIndex = 21;
+            this.tbTax.TabIndex = 6;
+            this.tbTax.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbTax_KeyUp);
+            this.tbTax.Leave += new System.EventHandler(this.tbTax_Leave);
             // 
             // lblTax
             // 
@@ -217,7 +227,9 @@
             this.tbGrossPay.Location = new System.Drawing.Point(6, 37);
             this.tbGrossPay.Name = "tbGrossPay";
             this.tbGrossPay.Size = new System.Drawing.Size(64, 20);
-            this.tbGrossPay.TabIndex = 19;
+            this.tbGrossPay.TabIndex = 5;
+            this.tbGrossPay.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbGrossPay_KeyUp);
+            this.tbGrossPay.Leave += new System.EventHandler(this.tbGrossPay_Leave);
             // 
             // lblGrossPay
             // 
@@ -234,34 +246,34 @@
             this.dtpPayDayStart.Location = new System.Drawing.Point(253, 72);
             this.dtpPayDayStart.Name = "dtpPayDayStart";
             this.dtpPayDayStart.Size = new System.Drawing.Size(107, 20);
-            this.dtpPayDayStart.TabIndex = 35;
+            this.dtpPayDayStart.TabIndex = 4;
             // 
-            // chartAccount1
+            // chartPayCheck
             // 
             this.chartPayCheck.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.Area3DStyle.Enable3D = true;
-            chartArea1.BackColor = System.Drawing.Color.Transparent;
-            chartArea1.Name = "ChartArea1";
-            this.chartPayCheck.ChartAreas.Add(chartArea1);
-            legend1.BackColor = System.Drawing.Color.Transparent;
-            legend1.Name = "Legend1";
-            this.chartPayCheck.Legends.Add(legend1);
+            chartArea14.Area3DStyle.Enable3D = true;
+            chartArea14.BackColor = System.Drawing.Color.Transparent;
+            chartArea14.Name = "ChartArea1";
+            this.chartPayCheck.ChartAreas.Add(chartArea14);
+            legend14.BackColor = System.Drawing.Color.Transparent;
+            legend14.Name = "Legend1";
+            this.chartPayCheck.Legends.Add(legend14);
             this.chartPayCheck.Location = new System.Drawing.Point(375, 3);
-            this.chartPayCheck.Name = "chartAccount1";
+            this.chartPayCheck.Name = "chartPayCheck";
             this.chartPayCheck.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            dataPoint1.IsValueShownAsLabel = true;
-            dataPoint1.Label = "";
-            dataPoint1.LabelFormat = "c0";
-            dataPoint2.IsValueShownAsLabel = true;
-            dataPoint2.LabelFormat = "c";
-            dataPoint2.LegendText = "P1";
-            series1.Points.Add(dataPoint1);
-            series1.Points.Add(dataPoint2);
-            this.chartPayCheck.Series.Add(series1);
+            series14.ChartArea = "ChartArea1";
+            series14.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series14.Legend = "Legend1";
+            series14.Name = "Series1";
+            dataPoint27.IsValueShownAsLabel = true;
+            dataPoint27.Label = "";
+            dataPoint27.LabelFormat = "c0";
+            dataPoint28.IsValueShownAsLabel = true;
+            dataPoint28.LabelFormat = "c";
+            dataPoint28.LegendText = "P1";
+            series14.Points.Add(dataPoint27);
+            series14.Points.Add(dataPoint28);
+            this.chartPayCheck.Series.Add(series14);
             this.chartPayCheck.Size = new System.Drawing.Size(476, 254);
             this.chartPayCheck.TabIndex = 36;
             this.chartPayCheck.Text = "chart1";

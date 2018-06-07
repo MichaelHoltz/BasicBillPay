@@ -30,6 +30,11 @@ namespace BasicBillPay.Models
             {
                 a.Encrypt();
             }
+            foreach (Paycheck p in PayChecks)
+            {
+                p.Encrypt();
+            }
+
         }
 
         public void Decrypt()
@@ -38,6 +43,11 @@ namespace BasicBillPay.Models
             {
                 a.Decrypt();
             }
+            foreach (Paycheck p in PayChecks)
+            {
+                p.Decrypt();
+            }
+
         }
         public Database()
         {

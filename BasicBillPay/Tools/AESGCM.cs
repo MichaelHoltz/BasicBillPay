@@ -119,7 +119,7 @@ namespace BasicBillPay.Tools.Encryption
         /// <returns></returns>
         public static string SimpleEncryptWithPassword(string secretMessage)
         {
-            Console.WriteLine("Encrypt: " + secretMessage);
+            //Console.WriteLine("Encrypt: " + secretMessage);
             return SimpleEncryptWithPassword(secretMessage, Password, null);
         }
 

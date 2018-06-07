@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using BasicBillPay.Tools.Encryption;
 namespace BasicBillPay.Models
 {
-    public class Paycheck:PeriodicBase
+    public class Paycheck:PeriodicBase, EncryptedModel
     {
         /// <summary>
         /// Id of this PayCheck Information
@@ -46,6 +47,20 @@ namespace BasicBillPay.Models
             Id = id;
             Name = name;
             PayDayStart = DateTime.Now; // Default to something close.
+        }
+        public void Encrypt()
+        {
+            //Hmm probably need to store floats as byte array so they can be encrypted and decrypted .. Another day because all would need to change.
+            byte[] byteArray = BitConverter.GetBytes(NetPayPerPayPeriod);
+
+            
+            //NetPayPerPayPeriod = AESGCM.SimpleEncryptWithPassword(NetPayPerPayPeriod.ToString());
+        }
+
+        public void Decrypt()
+        {
+            float myFloat = System.BitConverter.ToSingle(BitConverter.GetBytes(NetPayPerPayPeriod), 0);
+            //throw new NotImplementedException();
         }
         #region Pay Calculations
         public float TotalDeductionsPerPayPeriod()
@@ -100,6 +115,8 @@ namespace BasicBillPay.Models
         {
             return obj.GetHashCode().Equals(HashCode); // == this.GetHashCode();
         }
+
+
         #endregion
     }
 }

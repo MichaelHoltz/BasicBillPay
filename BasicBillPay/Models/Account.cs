@@ -35,67 +35,17 @@ namespace BasicBillPay.Models
         /// <summary>
         /// Account Number
         /// </summary>
-        /// 
-        //public String ENumber { get; set; }
-        //private String _number = null;
         public String Number { get; set; }
-        //{
-        //    get
-        //    {
-        //        if (_number == null)
-        //            _number = AESGCM.SimpleDecryptWithPassword(ENumber);
-        //        return _number;
-        //    }
-        //    set
-        //    {
-        //        ENumber = AESGCM.SimpleEncryptWithPassword(value);
-        //        _number = value;
-        //    }
-        //}
-
-
         /// <summary>
         /// Where to Access Account
         /// 
         /// Spreadsheet Source = Where
         /// </summary>
-       // public String ELink { get; set; }
-       // private String _link = null;
         public String Link { get; set; }
-        //{
-        //    get
-        //    {
-        //        if(_link == null)
-        //            _link = AESGCM.SimpleDecryptWithPassword(ELink);
-        //        return _link;
-        //    }
-        //    set
-        //    {
-        //        ELink = AESGCM.SimpleEncryptWithPassword(value);
-        //        _link = value;
-        //    }
-        //}
-
         /// <summary>
-        /// UserName for Account - Will be encrypted (if not all fields)
+        /// UserName for Account 
         /// </summary>
-        //public String EUserName { get; set; }
-        //private String _userName = null;
-        
         public String UserName { get; set; }
-        //{
-        //    get
-        //    {
-        //        if(_userName == null)
-        //            _userName = AESGCM.SimpleDecryptWithPassword(EUserName);
-        //        return _userName;
-        //    }
-        //    set
-        //    {
-        //        EUserName = AESGCM.SimpleEncryptWithPassword(value);
-        //        _userName = value;
-        //    }
-        //}
         /// <summary>
         /// Calculated based on Date...
         /// </summary>

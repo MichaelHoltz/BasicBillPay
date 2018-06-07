@@ -37,18 +37,17 @@
             this.flpBudget = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddBudget = new System.Windows.Forms.Button();
             this.tbBudgetTotal = new System.Windows.Forms.TextBox();
-            this.btnSettings = new System.Windows.Forms.Button();
             this.chartBudget = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.btnPeople = new System.Windows.Forms.Button();
             this.flpPeopleBills = new System.Windows.Forms.FlowLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.systemPasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.manageAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.peopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.managePeopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.systemPasswordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.managePayChecksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chartBudget)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,16 +91,6 @@
             this.tbBudgetTotal.TabIndex = 8;
             this.tbBudgetTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // btnSettings
-            // 
-            this.btnSettings.Location = new System.Drawing.Point(473, 27);
-            this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(55, 23);
-            this.btnSettings.TabIndex = 12;
-            this.btnSettings.Text = "Settings";
-            this.btnSettings.UseVisualStyleBackColor = true;
-            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
-            // 
             // chartBudget
             // 
             this.chartBudget.BackColor = System.Drawing.Color.Transparent;
@@ -131,16 +120,6 @@
             this.chartBudget.Size = new System.Drawing.Size(476, 239);
             this.chartBudget.TabIndex = 20;
             this.chartBudget.Text = "chart2";
-            // 
-            // btnPeople
-            // 
-            this.btnPeople.Location = new System.Drawing.Point(534, 27);
-            this.btnPeople.Name = "btnPeople";
-            this.btnPeople.Size = new System.Drawing.Size(57, 23);
-            this.btnPeople.TabIndex = 22;
-            this.btnPeople.Text = "People";
-            this.btnPeople.UseVisualStyleBackColor = true;
-            this.btnPeople.Click += new System.EventHandler(this.btnPeople_Click);
             // 
             // flpPeopleBills
             // 
@@ -175,13 +154,22 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
+            // systemPasswordToolStripMenuItem
+            // 
+            this.systemPasswordToolStripMenuItem.Name = "systemPasswordToolStripMenuItem";
+            this.systemPasswordToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
+            this.systemPasswordToolStripMenuItem.Text = "System Password";
+            this.systemPasswordToolStripMenuItem.Click += new System.EventHandler(this.systemPasswordToolStripMenuItem_Click);
             // 
             // accountsToolStripMenuItem
             // 
             this.accountsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageAccountsToolStripMenuItem});
+            this.manageAccountsToolStripMenuItem,
+            this.managePayChecksToolStripMenuItem});
             this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
             this.accountsToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.accountsToolStripMenuItem.Text = "Accounts";
@@ -205,13 +193,14 @@
             this.managePeopleToolStripMenuItem.Name = "managePeopleToolStripMenuItem";
             this.managePeopleToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.managePeopleToolStripMenuItem.Text = "Manage People";
+            this.managePeopleToolStripMenuItem.Click += new System.EventHandler(this.managePeopleToolStripMenuItem_Click);
             // 
-            // systemPasswordToolStripMenuItem
+            // managePayChecksToolStripMenuItem
             // 
-            this.systemPasswordToolStripMenuItem.Name = "systemPasswordToolStripMenuItem";
-            this.systemPasswordToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.systemPasswordToolStripMenuItem.Text = "System Password";
-            this.systemPasswordToolStripMenuItem.Click += new System.EventHandler(this.systemPasswordToolStripMenuItem_Click);
+            this.managePayChecksToolStripMenuItem.Name = "managePayChecksToolStripMenuItem";
+            this.managePayChecksToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.managePayChecksToolStripMenuItem.Text = "Manage PayChecks";
+            this.managePayChecksToolStripMenuItem.Click += new System.EventHandler(this.managePayChecksToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -219,9 +208,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1604, 961);
             this.Controls.Add(this.flpPeopleBills);
-            this.Controls.Add(this.btnPeople);
             this.Controls.Add(this.chartBudget);
-            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.tbBudgetTotal);
             this.Controls.Add(this.btnAddBudget);
             this.Controls.Add(this.flpBudget);
@@ -246,9 +233,7 @@
         private System.Windows.Forms.FlowLayoutPanel flpBudget;
         private System.Windows.Forms.Button btnAddBudget;
         private System.Windows.Forms.TextBox tbBudgetTotal;
-        private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartBudget;
-        private System.Windows.Forms.Button btnPeople;
         private System.Windows.Forms.FlowLayoutPanel flpPeopleBills;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -258,6 +243,7 @@
         private System.Windows.Forms.ToolStripMenuItem peopleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem managePeopleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem systemPasswordToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem managePayChecksToolStripMenuItem;
     }
 }
 

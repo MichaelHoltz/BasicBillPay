@@ -183,11 +183,7 @@ namespace BasicBillPay
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            frmSettings fs = new frmSettings(appSettings);
-            if (fs.ShowDialog() == DialogResult.OK)
-            {
-                PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
-            }
+
         }
 
         private void btnPeople_Click(object sender, EventArgs e)
@@ -200,6 +196,27 @@ namespace BasicBillPay
         {
             frmWelcomePassword fwp = new frmWelcomePassword(appSettings, db);
             fwp.ShowDialog();
+        }
+
+        private void managePeopleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPeopleManager fpm = new frmPeopleManager(ref db);
+            fpm.ShowDialog();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmSettings fs = new frmSettings(appSettings);
+            if (fs.ShowDialog() == DialogResult.OK)
+            {
+                PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
+            }
+        }
+
+        private void managePayChecksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPaychecks fpc = new frmPaychecks(db);
+            fpc.ShowDialog();
         }
     }
 }

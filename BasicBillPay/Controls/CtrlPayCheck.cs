@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BasicBillPay.Models;
 using BasicBillPay.Tools;
+using System.Globalization;
+
 namespace BasicBillPay.Controls
 {
     public partial class CtrlPaycheck : UserControl
@@ -84,6 +79,109 @@ namespace BasicBillPay.Controls
             {
                 pc.PayPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.SelectedItem.ToString());
             }
+        }
+
+        private void tbNetPay_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbNetPay.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateNetPay();
+            }
+        }
+        private void tbNetPay_Leave(object sender, EventArgs e)
+        {
+            UpdateNetPay();
+        }
+        private void UpdateNetPay()
+        {
+            pc.NetPayPerPayPeriod = float.Parse(tbNetPay.Text, NumberStyles.Currency, null);
+            tbNetPay.Text = (pc.NetPayPerPayPeriod).ToString("c");
+            Charts.AddChartPoint(chartPayCheck, "Net Pay", pc.NetPayPerPayPeriod);
+        }
+        private void tbGrossPay_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbGrossPay.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateGrossPay();
+            }
+        }
+        private void tbGrossPay_Leave(object sender, EventArgs e)
+        {
+            UpdateGrossPay();
+        }
+        private void UpdateGrossPay()
+        {
+            pc.GrossPayPerPayPeriod = float.Parse(tbGrossPay.Text, NumberStyles.Currency, null);
+            tbGrossPay.Text = (pc.GrossPayPerPayPeriod).ToString("c");
+        }
+        private void tbTax_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbTax.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateTax();
+            }
+        }
+        private void tbTax_Leave(object sender, EventArgs e)
+        {
+            UpdateTax();
+        }
+        private void UpdateTax()
+        {
+            pc.TaxPerPayPeriod = float.Parse(tbTax.Text, NumberStyles.Currency, null);
+            tbTax.Text = (pc.TaxPerPayPeriod).ToString("c");
+            Charts.AddChartPoint(chartPayCheck, "Tax", pc.TaxPerPayPeriod);
+        }
+        private void tbBenefitCost_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbBenefitCost.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateBenefitCost();
+            }
+        }
+        private void tbBenefitCost_Leave(object sender, EventArgs e)
+        {
+            UpdateBenefitCost();
+        }
+        private void UpdateBenefitCost()
+        {
+            pc.BenefitCostPerPayPeriod = float.Parse(tbBenefitCost.Text, NumberStyles.Currency, null);
+            tbBenefitCost.Text = (pc.BenefitCostPerPayPeriod).ToString("c");
+            Charts.AddChartPoint(chartPayCheck, "Benefit Cost", pc.BenefitCostPerPayPeriod);
+        }
+        private void tbGarnishment_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbGarnishment.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateGarnishment();
+            }
+        }
+        private void tbGarnishment_Leave(object sender, EventArgs e)
+        {
+            UpdateGarnishment();
+        }
+        private void UpdateGarnishment()
+        {
+            pc.GarnishmentCostPerPayPeriod = float.Parse(tbGarnishment.Text, NumberStyles.Currency, null);
+            tbGarnishment.Text = (pc.GarnishmentCostPerPayPeriod).ToString("c");
+            Charts.AddChartPoint(chartPayCheck, "Garnishment", pc.GarnishmentCostPerPayPeriod);
+        }
+        private void tbOther_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (tbOther.Text.Length > 0 && e.KeyCode == Keys.Enter)
+            {
+                UpdateOther();
+            }
+        }
+
+        private void tbOther_Leave(object sender, EventArgs e)
+        {
+            UpdateOther();
+        }
+        private void UpdateOther()
+        {
+            pc.OtherCostPerPayPeriod = float.Parse(tbOther.Text, NumberStyles.Currency, null);
+            tbOther.Text = (pc.OtherCostPerPayPeriod).ToString("c");
+            Charts.AddChartPoint(chartPayCheck, "Other", pc.OtherCostPerPayPeriod);
         }
     }
 }

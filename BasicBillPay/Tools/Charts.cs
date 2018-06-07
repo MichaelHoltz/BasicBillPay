@@ -28,14 +28,30 @@ namespace BasicBillPay.Tools
             dp.LegendText = name;
             dp.LabelToolTip = name; // Amount.ToString("C0");
             dp.LegendToolTip = Amount.ToString("C0");
-            DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.LegendText == name);
-            if (odp == null)
+
+            // Can't use because I need to update by index
+            //DataPoint odp = c.Series[0].Points.FirstOrDefault(o => o.LegendText == name);
+            bool found = false;
+            int index = 0;
+            foreach (DataPoint dps in c.Series[0].Points)
+            {
+                if (dps.LegendText == name)
+                {
+                    found = true;
+                    break;
+                }
+                index++;
+            }
+            if (!found)
             {
                 c.Series[0].Points.Add(dp);
             }
             else
             {
-                odp = dp;
+                c.Series[0].Points[index] = dp;
+                //c.Series[0].Points.Remove(odp);
+                //c.Series[0].Points.Add(dp);
+                ////odp = dp;
             }
 
         }
