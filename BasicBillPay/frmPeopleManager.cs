@@ -102,10 +102,14 @@ namespace BasicBillPay
             }
             if (p == null)
             {
-                p = new Person();
-                db.People.Add(p);
+                
+                p = db.AddPerson(tbName.Text.Trim());
+                Account newAct = db.AddAccount(p.Name, AccountType.Income, null, null, null);
+                p.AccountIds.Add(newAct.Id);
+                Paycheck pc = db.AddPayCheck(p.Name, TransactionPeriod.Biweekly);
+                p.PaycheckIds.Add(pc.Id);
+                //db.People.Add(p);
             }
-            p.Name = tbName.Text.Trim(); // Update Name
             p.AccountIds.Clear(); // Clear Accounts so they can be un-checked
             //Add Accounts
             foreach (var item in clbAccounts.CheckedItems)

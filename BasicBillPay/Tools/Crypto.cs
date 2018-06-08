@@ -65,7 +65,8 @@ namespace BasicBillPay.Tools.Encryption
             if ( EPassword != null)
             {
                 SplitFields();  //Get Cypher and Entropy
-                                ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
+                ///Example of "https://stackoverflow.com/questions/12657792/how-to-securely-save-username-password-local?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa"
+                ///Below will error out if tried from anywhere and anyone other than the original user.
                 byte[] plaintext = ProtectedData.Unprotect(Cypher, Entropy, DataProtectionScope.CurrentUser);
                 //Convert.ToBase64String(cipherText);
                 pt = Encoding.UTF8.GetString(plaintext);
