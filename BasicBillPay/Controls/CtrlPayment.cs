@@ -43,6 +43,24 @@ namespace BasicBillPay.Controls
             //base.IndexChanged += CtrlPayment_IndexChanged;
 
         }
+        public List<HeaderItem> GetHeaderItems()
+        {
+            List<HeaderItem> retVal = new List<HeaderItem>();
+            //Want to order by Tab Index
+            foreach (Control item in Controls.OfType<Control>().OrderBy(o=>o.TabIndex))
+            {
+                if (item.Tag.ToString() != "Ignore")
+                {
+                    HeaderItem hi = new HeaderItem();
+                    hi.Title = item.Tag.ToString(); // 
+                    hi.Width = item.Width;
+                    hi.SourceLeft = item.Left;
+
+                    retVal.Add(hi);
+                }
+            }
+            return retVal;
+        }
         public Payment GetPayment()
         {
             return p;

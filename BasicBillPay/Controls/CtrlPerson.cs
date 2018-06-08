@@ -56,44 +56,28 @@ namespace BasicBillPay.Controls
         {
             InitializeCharts();
             InitializeFlowLayout();
-
-            //Income Totals
-            float iTotal1 = 0f;
-
-            //Need to Load all Controls
+            //Need to Load all Controls and order by due date.
             foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
             {
 
                 AddPaymentCtrl(pItem);
-                //Need to find transfers into one of my accounts
-                if (person.AccountIds.Contains(pItem.PayToId))
-                {
-                    iTotal1 += pItem.GetMonthlyAmount(pItem.PaymentAmount);
-                }
             }
-
-            foreach (Paycheck item in db.PayChecks)
-            {
-                if (person.PaycheckIds.Contains(item.Id)) // One of my Paychecks
-                {
-                    iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
-                }
-
-            }
-            tbIncome1.Text = iTotal1.ToString("c");
-
             CalculateTotals();
 
         }
+        
         private void InitializeCharts()
         {
             Charts.InitializeChart(chartAccount1, "Account1");
         }
         private void InitializeFlowLayout()
         {
+            //CtrlPayment firstPayment = flpBills.Controls.OfType<CtrlPayment>().FirstOrDefault();
+            List<HeaderItem> headerItems = new CtrlPayment().GetHeaderItems();
             //Add Bill Header for First Account
-            CtrlHeader ch = new CtrlHeader();
+            CtrlHeader ch = new CtrlHeader(headerItems);
             flpBills.Controls.Add(ch);
+            flpBills.Controls.SetChildIndex(ch, 0); // Put at the top..
         }
         private void btnAddBill_Click(object sender, EventArgs e)
         {
@@ -148,17 +132,41 @@ namespace BasicBillPay.Controls
                 if (person.AccountIds.Contains(bItem.Split2AccountId))
                     splitTotal += bItem.GetMonthlyAmount(bItem.Split2Amount);
             }
-            float Total = 0f;
+            float TotalBills = 0f;
             foreach (int item in person.AccountIds)
             {
                 
-                Total += db.GetAccountTotal(db.GetAccount(item).Name, TransactionPeriod.Monthly);
+                TotalBills += db.GetAccountTotal(db.GetAccount(item).Name, TransactionPeriod.Monthly);
             }
-            tbTotal.Text = Total.ToString("c");
+            tbTotalBills.Text = TotalBills.ToString("c");
 
             tbSplitTotal.Text = splitTotal.ToString("c");
 
-            tbTotalBillBudgetAccount1.Text = (Total + splitTotal).ToString("c");
+            tbTotalBillBudgetAccount1.Text = (TotalBills + splitTotal).ToString("c");
+
+            //INcome Total
+            //Income Totals
+            float iTotal1 = 0f;
+
+            //Need to Load all Controls and order by due date.
+            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
+            {
+                //Need to find transfers into one of my accounts
+                if (person.AccountIds.Contains(pItem.PayToId))
+                {
+                    iTotal1 += pItem.GetMonthlyAmount(pItem.PaymentAmount); // Problem for reCalculating.
+                }
+            }
+            foreach (Paycheck item in db.PayChecks)
+            {
+                if (person.PaycheckIds.Contains(item.Id)) // One of my Paychecks
+                {
+                    iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
+                }
+
+            }
+            tbTotalIncome.Text = iTotal1.ToString("c");
+
 
 
         }
@@ -200,6 +208,15 @@ namespace BasicBillPay.Controls
         private void tbSplitTotal_TextChanged(object sender, EventArgs e)
         {
             Charts.AddChartPoint(chartAccount1, "Budget Split Items", float.Parse(tbSplitTotal.Text, NumberStyles.Currency, null));
+        }
+
+        private void btnPayCheck_Click(object sender, EventArgs e)
+        {
+            frmPaychecks fpc = new frmPaychecks(db, person);
+            fpc.ShowDialog();
+
+            //Need to refresh if they added or changed their paycheck.
+            CalculateTotals(); 
         }
     }
 }

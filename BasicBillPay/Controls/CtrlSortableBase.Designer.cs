@@ -39,7 +39,8 @@
             this.lblIndex.Location = new System.Drawing.Point(27, 2);
             this.lblIndex.Name = "lblIndex";
             this.lblIndex.Size = new System.Drawing.Size(13, 13);
-            this.lblIndex.TabIndex = 7;
+            this.lblIndex.TabIndex = 1;
+            this.lblIndex.Tag = "Ignore";
             this.lblIndex.Text = "0";
             // 
             // btnDelete
@@ -48,8 +49,9 @@
             this.btnDelete.Location = new System.Drawing.Point(1, 0);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(20, 20);
-            this.btnDelete.TabIndex = 8;
+            this.btnDelete.TabIndex = 0;
             this.btnDelete.TabStop = false;
+            this.btnDelete.Tag = "Ignore";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 

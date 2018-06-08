@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
             this.btnSave = new System.Windows.Forms.Button();
             this.flpBudget = new System.Windows.Forms.FlowLayoutPanel();
             this.btnAddBudget = new System.Windows.Forms.Button();
@@ -47,7 +47,6 @@
             this.manageAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.peopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.managePeopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.managePayChecksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.chartBudget)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -94,29 +93,29 @@
             // chartBudget
             // 
             this.chartBudget.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.Area3DStyle.Enable3D = true;
-            chartArea2.BackColor = System.Drawing.Color.Transparent;
-            chartArea2.Name = "ChartArea1";
-            this.chartBudget.ChartAreas.Add(chartArea2);
-            legend2.BackColor = System.Drawing.Color.Transparent;
-            legend2.Name = "Legend1";
-            this.chartBudget.Legends.Add(legend2);
+            chartArea3.Area3DStyle.Enable3D = true;
+            chartArea3.BackColor = System.Drawing.Color.Transparent;
+            chartArea3.Name = "ChartArea1";
+            this.chartBudget.ChartAreas.Add(chartArea3);
+            legend3.BackColor = System.Drawing.Color.Transparent;
+            legend3.Name = "Legend1";
+            this.chartBudget.Legends.Add(legend3);
             this.chartBudget.Location = new System.Drawing.Point(1112, 714);
             this.chartBudget.Name = "chartBudget";
             this.chartBudget.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            dataPoint3.IsValueShownAsLabel = true;
-            dataPoint3.Label = "";
-            dataPoint3.LabelFormat = "c0";
-            dataPoint4.IsValueShownAsLabel = true;
-            dataPoint4.LabelFormat = "c";
-            dataPoint4.LegendText = "P1";
-            series2.Points.Add(dataPoint3);
-            series2.Points.Add(dataPoint4);
-            this.chartBudget.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            dataPoint5.IsValueShownAsLabel = true;
+            dataPoint5.Label = "";
+            dataPoint5.LabelFormat = "c0";
+            dataPoint6.IsValueShownAsLabel = true;
+            dataPoint6.LabelFormat = "c";
+            dataPoint6.LegendText = "P1";
+            series3.Points.Add(dataPoint5);
+            series3.Points.Add(dataPoint6);
+            this.chartBudget.Series.Add(series3);
             this.chartBudget.Size = new System.Drawing.Size(476, 239);
             this.chartBudget.TabIndex = 20;
             this.chartBudget.Text = "chart2";
@@ -168,8 +167,7 @@
             // accountsToolStripMenuItem
             // 
             this.accountsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.manageAccountsToolStripMenuItem,
-            this.managePayChecksToolStripMenuItem});
+            this.manageAccountsToolStripMenuItem});
             this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
             this.accountsToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.accountsToolStripMenuItem.Text = "Accounts";
@@ -194,13 +192,6 @@
             this.managePeopleToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.managePeopleToolStripMenuItem.Text = "Manage People";
             this.managePeopleToolStripMenuItem.Click += new System.EventHandler(this.managePeopleToolStripMenuItem_Click);
-            // 
-            // managePayChecksToolStripMenuItem
-            // 
-            this.managePayChecksToolStripMenuItem.Name = "managePayChecksToolStripMenuItem";
-            this.managePayChecksToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.managePayChecksToolStripMenuItem.Text = "Manage PayChecks";
-            this.managePayChecksToolStripMenuItem.Click += new System.EventHandler(this.managePayChecksToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -243,7 +234,6 @@
         private System.Windows.Forms.ToolStripMenuItem peopleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem managePeopleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem systemPasswordToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem managePayChecksToolStripMenuItem;
     }
 }
 

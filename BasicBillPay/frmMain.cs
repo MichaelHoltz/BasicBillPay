@@ -215,8 +215,8 @@ namespace BasicBillPay
 
         private void managePayChecksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmPaychecks fpc = new frmPaychecks(db);
-            fpc.ShowDialog();
+            //frmPaychecks fpc = new frmPaychecks(db);
+            //fpc.ShowDialog();
         }
     }
 }

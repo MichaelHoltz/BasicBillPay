@@ -40,31 +40,34 @@
             // dtpDateDue
             // 
             this.dtpDateDue.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateDue.Location = new System.Drawing.Point(579, 0);
+            this.dtpDateDue.Location = new System.Drawing.Point(485, 0);
             this.dtpDateDue.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDateDue.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDateDue.Name = "dtpDateDue";
             this.dtpDateDue.Size = new System.Drawing.Size(96, 20);
-            this.dtpDateDue.TabIndex = 3;
+            this.dtpDateDue.TabIndex = 5;
+            this.dtpDateDue.Tag = "Due Date";
             this.dtpDateDue.Value = new System.DateTime(2018, 12, 31, 11, 40, 0, 0);
             // 
             // dtpDatePaid
             // 
             this.dtpDatePaid.CustomFormat = "";
             this.dtpDatePaid.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDatePaid.Location = new System.Drawing.Point(677, 0);
+            this.dtpDatePaid.Location = new System.Drawing.Point(581, 0);
             this.dtpDatePaid.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDatePaid.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDatePaid.Name = "dtpDatePaid";
             this.dtpDatePaid.Size = new System.Drawing.Size(96, 20);
-            this.dtpDatePaid.TabIndex = 4;
+            this.dtpDatePaid.TabIndex = 6;
+            this.dtpDatePaid.Tag = "Last Paid";
             // 
             // tbAmount
             // 
-            this.tbAmount.Location = new System.Drawing.Point(776, 0);
+            this.tbAmount.Location = new System.Drawing.Point(677, 0);
             this.tbAmount.Name = "tbAmount";
             this.tbAmount.Size = new System.Drawing.Size(62, 20);
-            this.tbAmount.TabIndex = 5;
+            this.tbAmount.TabIndex = 7;
+            this.tbAmount.Tag = "Amount";
             this.tbAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.tbAmount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbAmount_KeyUp);
             this.tbAmount.Leave += new System.EventHandler(this.tbAmount_Leave);
@@ -74,7 +77,8 @@
             this.tbName.Location = new System.Drawing.Point(50, 0);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(182, 20);
-            this.tbName.TabIndex = 1;
+            this.tbName.TabIndex = 2;
+            this.tbName.Tag = "Pay To";
             this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
             this.tbName.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbName_MouseDoubleClick);
             // 
@@ -82,8 +86,9 @@
             // 
             this.tbPayFrom.Location = new System.Drawing.Point(232, 0);
             this.tbPayFrom.Name = "tbPayFrom";
-            this.tbPayFrom.Size = new System.Drawing.Size(186, 20);
-            this.tbPayFrom.TabIndex = 2;
+            this.tbPayFrom.Size = new System.Drawing.Size(182, 20);
+            this.tbPayFrom.TabIndex = 3;
+            this.tbPayFrom.Tag = "Pay From";
             this.tbPayFrom.TextChanged += new System.EventHandler(this.tbPayFrom_TextChanged);
             this.tbPayFrom.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbPayFrom_MouseDoubleClick);
             // 
@@ -91,11 +96,12 @@
             // 
             this.cbPaidFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPaidFrequency.FormattingEnabled = true;
-            this.cbPaidFrequency.Location = new System.Drawing.Point(423, 0);
+            this.cbPaidFrequency.Location = new System.Drawing.Point(414, 0);
             this.cbPaidFrequency.Margin = new System.Windows.Forms.Padding(0);
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
-            this.cbPaidFrequency.TabIndex = 9;
+            this.cbPaidFrequency.TabIndex = 4;
+            this.cbPaidFrequency.Tag = "Frequency";
             this.cbPaidFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPaidFrequency_SelectedIndexChanged);
             // 
             // btnPay
@@ -103,7 +109,8 @@
             this.btnPay.Location = new System.Drawing.Point(960, -1);
             this.btnPay.Name = "btnPay";
             this.btnPay.Size = new System.Drawing.Size(39, 23);
-            this.btnPay.TabIndex = 10;
+            this.btnPay.TabIndex = 8;
+            this.btnPay.Tag = "Pay";
             this.btnPay.Text = "Pay";
             this.btnPay.UseVisualStyleBackColor = true;
             this.btnPay.Click += new System.EventHandler(this.btnPay_Click);

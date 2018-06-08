@@ -40,7 +40,7 @@
             this.flpPaychecks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpPaychecks.Location = new System.Drawing.Point(0, 39);
             this.flpPaychecks.Name = "flpPaychecks";
-            this.flpPaychecks.Size = new System.Drawing.Size(983, 563);
+            this.flpPaychecks.Size = new System.Drawing.Size(983, 595);
             this.flpPaychecks.TabIndex = 0;
             // 
             // pnlHeader
@@ -60,12 +60,13 @@
             this.btnAddPayCheck.TabIndex = 0;
             this.btnAddPayCheck.Text = "Add Paycheck";
             this.btnAddPayCheck.UseVisualStyleBackColor = true;
+            this.btnAddPayCheck.Click += new System.EventHandler(this.btnAddPayCheck_Click);
             // 
             // frmPaychecks
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(983, 602);
+            this.ClientSize = new System.Drawing.Size(983, 634);
             this.Controls.Add(this.flpPaychecks);
             this.Controls.Add(this.pnlHeader);
             this.DoubleBuffered = true;

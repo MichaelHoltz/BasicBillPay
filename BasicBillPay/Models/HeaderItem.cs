@@ -10,5 +10,6 @@ namespace BasicBillPay.Models
     {
         public String Title { get; set; }
         public int Width { get; set; }
+        public int SourceLeft { get; set; }
     }
 }

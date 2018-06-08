@@ -12,34 +12,53 @@ namespace BasicBillPay.Controls
 {
     public partial class CtrlHeader : UserControl
     {
+        List<HeaderItem> headerItems = new List<HeaderItem>();
+        Label lastLabel = new Label();
+        bool firstLabel = true;
         public CtrlHeader()
         {
             InitializeComponent();
+        }
+        public CtrlHeader(List<HeaderItem> headerItems)
+        {
+            InitializeComponent();
+            this.headerItems = headerItems;
+            lastLabel.BorderStyle = BorderStyle.FixedSingle;
+            lastLabel.Left = 0;
+            lastLabel.Width = 0; 
 
 
         }
-
         private void CtrlHeader_Load(object sender, EventArgs e)
         {
-            HeaderItem hi1 = new HeaderItem();
-            hi1.Title = "Test 1 2 3";
-            hi1.Width = 60;
-
-            Label lblhi1 = new Label();
-            //Copy / set from previous Label
-            lblhi1.BorderStyle = lblDelete.BorderStyle;
-            lblhi1.Left = lblDelete.Right;
-            lblhi1.Height = lblDelete.Height;
-
-            lblhi1.Text = hi1.Title;
-            lblhi1.Width = hi1.Width;
-            lblhi1.Top = 0;
-            lblhi1.Visible = true;
-            Controls.Add(lblhi1);
+            foreach (HeaderItem item in headerItems)
+            {
+                //if (firstLabel)
+                //{
+                //    item.Width += item.SourceLeft;
+                //    firstLabel = false;
+                //}
+                AddHeaderItem(item);
+            }
         }
-        //public CtrlHeader()
-        //{
+        private void AddHeaderItem(HeaderItem headerItem)
+        {
+            Label lblHeaderItem = new Label();
+            //Copy / set from previous Label
+            lblHeaderItem.BorderStyle = lastLabel.BorderStyle;
 
-        //}
+            int newStart = headerItem.SourceLeft;
+            //Widen the last label 
+            //lastLabel.Right;
+            lblHeaderItem.Left = newStart;
+            lblHeaderItem.Height = this.Height; // lastLabel.Height;
+
+            lblHeaderItem.Text = headerItem.Title;
+            lblHeaderItem.Width = headerItem.Width;
+            lblHeaderItem.Top = 0;
+            lblHeaderItem.Visible = true;
+            Controls.Add(lblHeaderItem);
+            lastLabel = lblHeaderItem;
+        }
     }
 }
