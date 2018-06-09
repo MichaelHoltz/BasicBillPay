@@ -1,6 +1,6 @@
 ﻿namespace BasicBillPay.Controls
 {
-    partial class CtrlPayment
+    partial class CtrlPaymentItem
     {
         /// <summary> 
         /// Required designer variable.
@@ -35,6 +35,7 @@
             this.btnPay = new System.Windows.Forms.Button();
             this.catbPayTo = new BasicBillPay.Controls.CtrlAccountTextBox();
             this.catbPayFrom = new BasicBillPay.Controls.CtrlAccountTextBox();
+            this.cctbAmount = new BasicBillPay.Controls.CtrlCurrencyTextBox();
             this.SuspendLayout();
             // 
             // dtpDateDue
@@ -89,7 +90,7 @@
             this.btnPay.Location = new System.Drawing.Point(960, -1);
             this.btnPay.Name = "btnPay";
             this.btnPay.Size = new System.Drawing.Size(39, 23);
-            this.btnPay.TabIndex = 8;
+            this.btnPay.TabIndex = 9;
             this.btnPay.Tag = "Pay";
             this.btnPay.Text = "Pay";
             this.btnPay.UseVisualStyleBackColor = true;
@@ -97,6 +98,7 @@
             // 
             // catbPayTo
             // 
+            this.catbPayTo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.catbPayTo.Location = new System.Drawing.Point(48, 0);
             this.catbPayTo.Margin = new System.Windows.Forms.Padding(0);
             this.catbPayTo.MinimumSize = new System.Drawing.Size(40, 20);
@@ -107,6 +109,7 @@
             // 
             // catbPayFrom
             // 
+            this.catbPayFrom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.catbPayFrom.Location = new System.Drawing.Point(231, 0);
             this.catbPayFrom.Margin = new System.Windows.Forms.Padding(0);
             this.catbPayFrom.MinimumSize = new System.Drawing.Size(40, 20);
@@ -115,11 +118,23 @@
             this.catbPayFrom.TabIndex = 3;
             this.catbPayFrom.Tag = "Pay From";
             // 
-            // CtrlPayment
+            // cctbAmount
+            // 
+            this.cctbAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.cctbAmount.Location = new System.Drawing.Point(757, 0);
+            this.cctbAmount.Margin = new System.Windows.Forms.Padding(0);
+            this.cctbAmount.Name = "cctbAmount";
+            this.cctbAmount.Size = new System.Drawing.Size(81, 20);
+            this.cctbAmount.TabIndex = 8;
+            this.cctbAmount.Tag = "Amount";
+            this.cctbAmount.Value = 0F;
+            // 
+            // CtrlPaymentItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.Controls.Add(this.cctbAmount);
             this.Controls.Add(this.catbPayFrom);
             this.Controls.Add(this.catbPayTo);
             this.Controls.Add(this.btnPay);
@@ -128,7 +143,7 @@
             this.Controls.Add(this.dtpDatePaid);
             this.Controls.Add(this.dtpDateDue);
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "CtrlPayment";
+            this.Name = "CtrlPaymentItem";
             this.Size = new System.Drawing.Size(1000, 22);
             this.Load += new System.EventHandler(this.CtrlPayment_Load);
             this.Controls.SetChildIndex(this.dtpDateDue, 0);
@@ -138,6 +153,7 @@
             this.Controls.SetChildIndex(this.btnPay, 0);
             this.Controls.SetChildIndex(this.catbPayTo, 0);
             this.Controls.SetChildIndex(this.catbPayFrom, 0);
+            this.Controls.SetChildIndex(this.cctbAmount, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -152,5 +168,6 @@
         private System.Windows.Forms.Button btnPay;
         private CtrlAccountTextBox catbPayTo;
         private CtrlAccountTextBox catbPayFrom;
+        private CtrlCurrencyTextBox cctbAmount;
     }
 }

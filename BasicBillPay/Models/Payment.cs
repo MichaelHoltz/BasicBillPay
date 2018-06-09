@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,8 +11,19 @@ namespace BasicBillPay.Models
     /// <summary>
     /// 
     /// </summary>
-    public class Payment:PeriodicBase
+    public class Payment:PeriodicBase, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         public int Id { get; set; }
         public int Index { get; set; }
         /// <summary>
@@ -22,12 +35,41 @@ namespace BasicBillPay.Models
         public DateTime DateDue { get; set; } // Normalization Violation
 
         public DateTime DatePaid { get; set; }
-        public float PaymentAmount { get; set; }
+        private float paymentAmount = 0f;
+        public float PaymentAmount {
+            get
+            {
+                return paymentAmount;
+            }
+            set
+            {
+                if (value != paymentAmount)
+                {
+                    paymentAmount = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
+        private String reference = String.Empty;
         /// <summary>
         /// Payment Authorization / Reference / Transaction Number
         /// </summary>
-        public String Reference { get; set; }
+        public String Reference
+        {
+            get
+            {
+                return reference;
+            }
+            set
+            {
+                if (value != reference)
+                {
+                    reference = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         //private Database databaseFunctions = null;
         public Payment()

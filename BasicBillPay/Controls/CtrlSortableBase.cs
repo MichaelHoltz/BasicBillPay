@@ -93,7 +93,7 @@ namespace BasicBillPay.Controls
         private object getData(DragEventArgs e)
         {
             object o;
-            o = e.Data.GetData(typeof(CtrlPayment));
+            o = e.Data.GetData(typeof(CtrlPaymentItem));
             if (o == null)
             {
                 //Examples from different application for different types

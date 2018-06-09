@@ -12,31 +12,33 @@ using System.Globalization;
 using BasicBillPay.Tools;
 namespace BasicBillPay.Controls
 {
-    public partial class CtrlPayment : CtrlSortableBase
+    public partial class CtrlPaymentItem : CtrlSortableBase
     {
 
         Payment p;
         Database databaseFunctions;
-        /// <summary>
-        /// Account Selected (Selected Account available)
-        /// </summary>
-        public event EventHandler<AccountSelectedEventArgs> AccountSelected;
+        ErrorProvider epGeneral;
+        ///// <summary>
+        ///// Account Selected (Selected Account available)
+        ///// </summary>
+        //public event EventHandler<AccountSelectedEventArgs> AccountSelected;
         /// <summary>
         /// Payment Amount Changed (Transaction Period and Amount available)
         /// </summary>
         public event EventHandler<AmountChangedEventArgs> AmountChanged;
-        /// <summary>
-        /// General Payment Changed Event 
-        /// </summary>
-        public event EventHandler PaymentChanged;
-        public CtrlPayment()
+        ///// <summary>
+        ///// General Payment Changed Event 
+        ///// </summary>
+        //public event EventHandler PaymentChanged;
+        public CtrlPaymentItem()
         {
             InitializeComponent();
 
         }
-        public CtrlPayment(ref Database db, ref Payment payment, int itemIndex) : base(itemIndex)
+        public CtrlPaymentItem(ref Database db, ref Payment payment, int itemIndex, ErrorProvider epGeneral) : base(itemIndex)
         {
             InitializeComponent();
+            this.epGeneral = epGeneral;
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
 
@@ -48,7 +50,7 @@ namespace BasicBillPay.Controls
             catbPayFrom.BackColor = BackColor;
 
             tbAmount.BackColor = BackColor;
-            
+            cctbAmount.BackColor = BackColor;
             base.ReorderIndexes -= CtrlPayment_ReorderIndexes;
             base.ReorderIndexes += CtrlPayment_ReorderIndexes;
             //base.IndexChanged -= CtrlPayment_IndexChanged;
@@ -125,6 +127,7 @@ namespace BasicBillPay.Controls
             b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
             b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
             tbAmount.DataBindings.Add(b);
+            cctbAmount.Bind(p, "PaymentAmount");
         }
 
         public class AccountSelectedEventArgs : EventArgs
@@ -238,7 +241,9 @@ namespace BasicBillPay.Controls
                 }
 
             }
-            MessageBox.Show("Now need the Confirmation Number");
+            CtrlPaymentConfirm cpc = new CtrlPaymentConfirm(p);
+            Forms.ShowPopupControl(cpc, "Payment Confirmation Information", btnPay);
+            //MessageBox.Show("Now need the Confirmation Number");
 
         }
 

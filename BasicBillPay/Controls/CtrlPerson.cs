@@ -71,7 +71,7 @@ namespace BasicBillPay.Controls
         private void InitializeFlowLayout()
         {
             //CtrlPayment firstPayment = flpBills.Controls.OfType<CtrlPayment>().FirstOrDefault();
-            List<HeaderItem> headerItems = new CtrlPayment().GetHeaderItems();
+            List<HeaderItem> headerItems = new CtrlPaymentItem().GetHeaderItems();
             //Add Bill Header for First Account
             CtrlHeader ch = new CtrlHeader(headerItems);
             flpBills.Controls.Add(ch);
@@ -100,14 +100,15 @@ namespace BasicBillPay.Controls
             //Only Add Accounts this person is paying directly to.
             if (person.AccountIds.Contains( p.PayFromId))
             {
-                CtrlPayment ctrlPayment = new CtrlPayment(ref db, ref p, paymentItemIndex++);
+                CtrlPaymentItem ctrlPayment = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++, epGeneral);
+                this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count + 1) * ctrlPayment.Height);
                 flpBills.Controls.Add(ctrlPayment);
                 ctrlPayment.ItemDeleted += CtrlPayment_ItemDeleted;
                 ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
-                this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + flpBills.Controls.Count * ctrlPayment.Height);
+                
             }
         }
-        private void CtrlPayment_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
+        private void CtrlPayment_AmountChanged(object sender, CtrlPaymentItem.AmountChangedEventArgs e)
         {
             CalculateTotals(currentTransactionPeriod);
         }
@@ -190,9 +191,10 @@ namespace BasicBillPay.Controls
             {
 
                 CtrlSortableBase csb = (sender as CtrlSortableBase);
-                CtrlPayment cp = (sender as CtrlPayment);
+                CtrlPaymentItem cp = (sender as CtrlPaymentItem);
                 Payment p = cp.GetPayment();
                 db.Payments.Remove(p);
+                this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count - 1) * csb.Height);
                 //WARNING - need to make sure the Account isn't being used by other payments and is an Expense Account
                 Account a = db.GetAccount(p.PayToId);
                 if(a.Type == AccountType.Expense)

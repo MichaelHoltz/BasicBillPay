@@ -192,36 +192,36 @@ namespace BasicBillPay
         /// <param name="p"></param>
         private void AddPaymentCtrl(Payment p)
         {
-            CtrlPayment ctrlPayment = new CtrlPayment(ref db, ref p, paymentItemIndex++);
-            ctrlPayment.ItemDeleted += CtrlPayment_ItemDeletedOrIndexChanged;
-            ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
-            ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
-            ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
-            if (p.PayFromId == 0)
-            {
-                flpBills.Controls.Add(ctrlPayment);
-                String name = db.GetAccount(p.PayToId).Name;
-                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-                Charts.AddChartPoint(chartAccount1, name, Amount);
+            //CtrlPaymentItem ctrlPayment = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++, epGeneral);
+            //ctrlPayment.ItemDeleted += CtrlPayment_ItemDeletedOrIndexChanged;
+            ////ctrlPayment.AccountSelected += CtrlPayment_AccountSelected;
+            //ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
+            //ctrlPayment.IndexChanged += CtrlPayment_ItemDeletedOrIndexChanged;
+            //if (p.PayFromId == 0)
+            //{
+            //    flpBills.Controls.Add(ctrlPayment);
+            //    String name = db.GetAccount(p.PayToId).Name;
+            //    float Amount = p.GetMonthlyAmount(p.PaymentAmount);
+            //    Charts.AddChartPoint(chartAccount1, name, Amount);
                 
-            }
-            else if (p.PayFromId == 1)
-            {
-                flpBills2.Controls.Add(ctrlPayment);
-                String name = db.GetAccount(p.PayToId).Name;
-                float Amount = p.GetMonthlyAmount(p.PaymentAmount);
-                Charts.AddChartPoint(chartAccount2, name, Amount);
-            }
+            //}
+            //else if (p.PayFromId == 1)
+            //{
+            //    flpBills2.Controls.Add(ctrlPayment);
+            //    String name = db.GetAccount(p.PayToId).Name;
+            //    float Amount = p.GetMonthlyAmount(p.PaymentAmount);
+            //    Charts.AddChartPoint(chartAccount2, name, Amount);
+            //}
         }
 
 
 
-        private void CtrlPayment_AmountChanged(object sender, CtrlPayment.AmountChangedEventArgs e)
+        private void CtrlPayment_AmountChanged(object sender, CtrlPaymentItem.AmountChangedEventArgs e)
         {
             CalculateTotals();
         }
 
-        private void CtrlPayment_AccountSelected(object sender, CtrlPayment.AccountSelectedEventArgs e)
+        private void CtrlPayment_AccountSelected(object sender, CtrlPaymentItem.AccountSelectedEventArgs e)
         {
             //BudgetItem b = 
             UserControl ca = new CtrlAccount(e.SelectedAccount);
@@ -237,7 +237,7 @@ namespace BasicBillPay
         /// <param name="b"></param>
         private void AddBudgetCtrl(BudgetItem b)
         {
-            CtrlBudget ctrlBudget = new CtrlBudget(ref b, budgetItemIndex++);
+            CtrlBudgetItem ctrlBudget = new CtrlBudgetItem(ref b, budgetItemIndex++);
             ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
             flpBudget.Controls.Add(ctrlBudget);
 

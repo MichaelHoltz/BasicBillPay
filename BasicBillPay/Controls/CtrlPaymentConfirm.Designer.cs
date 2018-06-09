@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.lblInfo = new System.Windows.Forms.Label();
             this.lblAuthorization = new System.Windows.Forms.Label();
             this.tbAuthorization = new System.Windows.Forms.TextBox();
             this.lblPaymentAmount = new System.Windows.Forms.Label();
             this.tbAmount = new System.Windows.Forms.TextBox();
+            this.epGeneral = new System.Windows.Forms.ErrorProvider(this.components);
+            this.ctrlCurrencyTextBox1 = new BasicBillPay.Controls.CtrlCurrencyTextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.epGeneral)).BeginInit();
             this.SuspendLayout();
             // 
             // lblInfo
@@ -60,6 +64,7 @@
             this.tbAuthorization.Name = "tbAuthorization";
             this.tbAuthorization.Size = new System.Drawing.Size(263, 52);
             this.tbAuthorization.TabIndex = 2;
+            this.tbAuthorization.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbAuthorization_KeyUp);
             // 
             // lblPaymentAmount
             // 
@@ -77,19 +82,37 @@
             this.tbAmount.Size = new System.Drawing.Size(100, 20);
             this.tbAmount.TabIndex = 4;
             this.tbAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbAmount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbAmount_KeyUp);
+            // 
+            // epGeneral
+            // 
+            this.epGeneral.ContainerControl = this.ctrlCurrencyTextBox1;
+            // 
+            // ctrlCurrencyTextBox1
+            // 
+            this.ctrlCurrencyTextBox1.Location = new System.Drawing.Point(127, 158);
+            this.ctrlCurrencyTextBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.ctrlCurrencyTextBox1.Name = "ctrlCurrencyTextBox1";
+            this.ctrlCurrencyTextBox1.Size = new System.Drawing.Size(66, 20);
+            this.ctrlCurrencyTextBox1.TabIndex = 5;
+            this.ctrlCurrencyTextBox1.Value = 0F;
+
             // 
             // CtrlPaymentConfirm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.ctrlCurrencyTextBox1);
             this.Controls.Add(this.tbAmount);
             this.Controls.Add(this.lblPaymentAmount);
             this.Controls.Add(this.tbAuthorization);
             this.Controls.Add(this.lblAuthorization);
             this.Controls.Add(this.lblInfo);
+            this.DoubleBuffered = true;
             this.Name = "CtrlPaymentConfirm";
             this.Size = new System.Drawing.Size(286, 204);
             this.Load += new System.EventHandler(this.CtrlPaymentConfirm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.epGeneral)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -102,5 +125,7 @@
         private System.Windows.Forms.TextBox tbAuthorization;
         private System.Windows.Forms.Label lblPaymentAmount;
         private System.Windows.Forms.TextBox tbAmount;
+        private System.Windows.Forms.ErrorProvider epGeneral;
+        private CtrlCurrencyTextBox ctrlCurrencyTextBox1;
     }
 }

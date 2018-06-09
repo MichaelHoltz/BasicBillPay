@@ -14,18 +14,28 @@ namespace BasicBillPay.Tools
         {
             // The method converts only to string type. Test this using the DesiredType.
             if (cevent.DesiredType != typeof(string)) return;
-
-            // Use the ToString method to format the value as currency ("c").
-            cevent.Value = ((float)cevent.Value).ToString("c");
+            try
+            {
+                // Use the ToString method to format the value as currency ("c").
+                cevent.Value = ((float)cevent.Value).ToString("c");
+            }
+            catch
+            {
+            }
         }
 
         internal static void CurrencyStringToFloat(object sender, ConvertEventArgs cevent)
         {
             // The method converts back to decimal type only. 
             if (cevent.DesiredType != typeof(float)) return;
-
-            // Converts the string back to decimal using the static Parse method.
-            cevent.Value = float.Parse(cevent.Value.ToString(), NumberStyles.Currency, null);
+            try
+            {
+                // Converts the string back to decimal using the static Parse method.
+                cevent.Value = float.Parse(cevent.Value.ToString(), NumberStyles.Currency, null);
+            }
+            catch
+            {
+            }
         }
         /// <summary>
         /// Returns singularName's or persons' with NO Trailing Spaces

@@ -12,18 +12,18 @@ using System.Globalization;
 using BasicBillPay.Tools;
 namespace BasicBillPay.Controls
 {
-    public partial class CtrlBudget : CtrlSortableBase
+    public partial class CtrlBudgetItem : CtrlSortableBase
     {
         private float Total = 100f;
         private float Split1 = 50f;
         private float Split2 = 50f;
         private float splitPercentage = .5f;
         BudgetItem b;
-        public CtrlBudget()
+        public CtrlBudgetItem()
         {
             InitializeComponent();
         }
-        public CtrlBudget(ref BudgetItem budgetItem, int itemIndex) : base(itemIndex)
+        public CtrlBudgetItem(ref BudgetItem budgetItem, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
             //Bind to Source List FIRST

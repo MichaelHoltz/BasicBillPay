@@ -1,6 +1,6 @@
 ﻿namespace BasicBillPay.Controls
 {
-    partial class CtrlBudget
+    partial class CtrlBudgetItem
     {
         /// <summary> 
         /// Required designer variable.

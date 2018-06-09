@@ -63,6 +63,12 @@
     <Compile Include="Controls\CtrlAccountTextBox.Designer.cs">
       <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CtrlCurrencyTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrlCurrencyTextBox.Designer.cs">
+      <DependentUpon>CtrlCurrencyTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CtrlPasswordEnter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -81,11 +87,11 @@
     <Compile Include="Controls\CtrlAccount.Designer.cs">
       <DependentUpon>CtrlAccount.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CtrlBudget.cs">
+    <Compile Include="Controls\CtrlBudgetItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\CtrlBudget.Designer.cs">
-      <DependentUpon>CtrlBudget.cs</DependentUpon>
+    <Compile Include="Controls\CtrlBudgetItem.Designer.cs">
+      <DependentUpon>CtrlBudgetItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\CtrlDateTimePicker.cs">
       <SubType>Component</SubType>
@@ -105,11 +111,11 @@
     <Compile Include="Controls\CtrlPasswordSetup.Designer.cs">
       <DependentUpon>CtrlPasswordSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CtrlPayment.cs">
+    <Compile Include="Controls\CtrlPaymentItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\CtrlPayment.Designer.cs">
-      <DependentUpon>CtrlPayment.cs</DependentUpon>
+    <Compile Include="Controls\CtrlPaymentItem.Designer.cs">
+      <DependentUpon>CtrlPaymentItem.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\CtrlPaymentConfirm.cs">
       <SubType>UserControl</SubType>
@@ -200,6 +206,10 @@
     <EmbeddedResource Include="Controls\CtrlAccountTextBox.resx">
       <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CtrlCurrencyTextBox.resx">
+      <DependentUpon>CtrlCurrencyTextBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlPasswordEnter.resx">
       <DependentUpon>CtrlPasswordEnter.cs</DependentUpon>
     </EmbeddedResource>
@@ -209,8 +219,8 @@
     <EmbeddedResource Include="Controls\CtrlAccount.resx">
       <DependentUpon>CtrlAccount.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\CtrlBudget.resx">
-      <DependentUpon>CtrlBudget.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\CtrlBudgetItem.resx">
+      <DependentUpon>CtrlBudgetItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlHeader.resx">
       <DependentUpon>CtrlHeader.cs</DependentUpon>
@@ -218,8 +228,8 @@
     <EmbeddedResource Include="Controls\CtrlPasswordSetup.resx">
       <DependentUpon>CtrlPasswordSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\CtrlPayment.resx">
-      <DependentUpon>CtrlPayment.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\CtrlPaymentItem.resx">
+      <DependentUpon>CtrlPaymentItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlPaymentConfirm.resx">
       <DependentUpon>CtrlPaymentConfirm.cs</DependentUpon>
@@ -253,6 +263,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmWelcomePassword.resx">
       <DependentUpon>frmWelcomePassword.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
