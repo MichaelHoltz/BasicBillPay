@@ -57,6 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\CtrlAccountTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrlAccountTextBox.Designer.cs">
+      <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CtrlPasswordEnter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -104,6 +110,12 @@
     </Compile>
     <Compile Include="Controls\CtrlPayment.Designer.cs">
       <DependentUpon>CtrlPayment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CtrlPaymentConfirm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrlPaymentConfirm.Designer.cs">
+      <DependentUpon>CtrlPaymentConfirm.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\CtrlPerson.cs">
       <SubType>UserControl</SubType>
@@ -185,6 +197,9 @@
     <Compile Include="Tools\Crypto.cs" />
     <Compile Include="Tools\Forms.cs" />
     <Compile Include="Tools\PersistenceBase.cs" />
+    <EmbeddedResource Include="Controls\CtrlAccountTextBox.resx">
+      <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlPasswordEnter.resx">
       <DependentUpon>CtrlPasswordEnter.cs</DependentUpon>
     </EmbeddedResource>
@@ -205,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlPayment.resx">
       <DependentUpon>CtrlPayment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CtrlPaymentConfirm.resx">
+      <DependentUpon>CtrlPaymentConfirm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlPerson.resx">
       <DependentUpon>CtrlPerson.cs</DependentUpon>

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using BasicBillPay.Tools;
+
 namespace BasicBillPay.Models
 {
     /// <summary>
@@ -143,9 +145,15 @@ namespace BasicBillPay.Models
             return unManaged;
         }
 
-        public float GetAccountTotal(String name, TransactionPeriod period)
+        /// <summary>
+        /// Get Account Total for Account by ID Translated to Transaction Period
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="period"></param>
+        /// <returns></returns>
+        public float GetAccountTotal(int id, TransactionPeriod period)
         {
-            Account a = GetAccount(name);
+            Account a = GetAccount(id);
             float total = 0f;
             foreach (Payment p in Payments)
             {
@@ -155,6 +163,20 @@ namespace BasicBillPay.Models
                 }
             }
             return total;
+        }
+        public List<Account> GetExpenseAccountsForIncomeAccount(String name)
+        {
+            List<Account> retVal = new List<Account>();
+            Account a = GetAccount(name);
+            foreach (Payment p in Payments)
+            {
+                if (p.PayFromId == a.Id)
+                {
+                    retVal.Add(GetAccount(p.PayToId));
+                }
+            }
+            return retVal;
+
         }
         #endregion Account Functions
         #region Payment Functions
@@ -197,9 +219,26 @@ namespace BasicBillPay.Models
         }
         public Person AddPerson(String name)
         {
-            Person p = new Person(name);
-            People.Add(p);
-            return p;
+            //Add the Person
+            Person person = new Person(name);
+            People.Add(person);
+
+            //Add Default Income Tracking Account
+            String accountName = Conversion.Pluralize(person.Name) + " Income Account"; // Cash or Checking
+            //Add account to Database
+            Account a = AddAccount(accountName, AccountType.Income, null, null, null);
+            //Associate the Account with this person
+            person.AccountIds.Add(a.Id);
+
+
+            //Add Default Pay Source Account
+            String payCheckName = Conversion.Pluralize(person.Name) + " Paycheck";
+            //Add Paycheck to database
+            Paycheck pc = AddPayCheck(payCheckName, TransactionPeriod.Biweekly); // Need to Ask
+            //Associate the paycheck with this person
+            person.PaycheckIds.Add(pc.Id);
+            return person;
+
         }
 
         #endregion People Functions

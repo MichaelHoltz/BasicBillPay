@@ -31,10 +31,10 @@
             this.dtpDateDue = new System.Windows.Forms.DateTimePicker();
             this.dtpDatePaid = new System.Windows.Forms.DateTimePicker();
             this.tbAmount = new System.Windows.Forms.TextBox();
-            this.tbName = new System.Windows.Forms.TextBox();
-            this.tbPayFrom = new System.Windows.Forms.TextBox();
             this.cbPaidFrequency = new System.Windows.Forms.ComboBox();
             this.btnPay = new System.Windows.Forms.Button();
+            this.catbPayTo = new BasicBillPay.Controls.CtrlAccountTextBox();
+            this.catbPayFrom = new BasicBillPay.Controls.CtrlAccountTextBox();
             this.SuspendLayout();
             // 
             // dtpDateDue
@@ -72,26 +72,6 @@
             this.tbAmount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbAmount_KeyUp);
             this.tbAmount.Leave += new System.EventHandler(this.tbAmount_Leave);
             // 
-            // tbName
-            // 
-            this.tbName.Location = new System.Drawing.Point(50, 0);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(182, 20);
-            this.tbName.TabIndex = 2;
-            this.tbName.Tag = "Pay To";
-            this.tbName.TextChanged += new System.EventHandler(this.tbName_TextChanged);
-            this.tbName.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbName_MouseDoubleClick);
-            // 
-            // tbPayFrom
-            // 
-            this.tbPayFrom.Location = new System.Drawing.Point(232, 0);
-            this.tbPayFrom.Name = "tbPayFrom";
-            this.tbPayFrom.Size = new System.Drawing.Size(182, 20);
-            this.tbPayFrom.TabIndex = 3;
-            this.tbPayFrom.Tag = "Pay From";
-            this.tbPayFrom.TextChanged += new System.EventHandler(this.tbPayFrom_TextChanged);
-            this.tbPayFrom.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tbPayFrom_MouseDoubleClick);
-            // 
             // cbPaidFrequency
             // 
             this.cbPaidFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -115,15 +95,35 @@
             this.btnPay.UseVisualStyleBackColor = true;
             this.btnPay.Click += new System.EventHandler(this.btnPay_Click);
             // 
+            // catbPayTo
+            // 
+            this.catbPayTo.Location = new System.Drawing.Point(48, 0);
+            this.catbPayTo.Margin = new System.Windows.Forms.Padding(0);
+            this.catbPayTo.MinimumSize = new System.Drawing.Size(40, 20);
+            this.catbPayTo.Name = "catbPayTo";
+            this.catbPayTo.Size = new System.Drawing.Size(182, 20);
+            this.catbPayTo.TabIndex = 2;
+            this.catbPayTo.Tag = "Pay To";
+            // 
+            // catbPayFrom
+            // 
+            this.catbPayFrom.Location = new System.Drawing.Point(231, 0);
+            this.catbPayFrom.Margin = new System.Windows.Forms.Padding(0);
+            this.catbPayFrom.MinimumSize = new System.Drawing.Size(40, 20);
+            this.catbPayFrom.Name = "catbPayFrom";
+            this.catbPayFrom.Size = new System.Drawing.Size(182, 20);
+            this.catbPayFrom.TabIndex = 3;
+            this.catbPayFrom.Tag = "Pay From";
+            // 
             // CtrlPayment
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.Controls.Add(this.catbPayFrom);
+            this.Controls.Add(this.catbPayTo);
             this.Controls.Add(this.btnPay);
             this.Controls.Add(this.cbPaidFrequency);
-            this.Controls.Add(this.tbPayFrom);
-            this.Controls.Add(this.tbName);
             this.Controls.Add(this.tbAmount);
             this.Controls.Add(this.dtpDatePaid);
             this.Controls.Add(this.dtpDateDue);
@@ -134,10 +134,10 @@
             this.Controls.SetChildIndex(this.dtpDateDue, 0);
             this.Controls.SetChildIndex(this.dtpDatePaid, 0);
             this.Controls.SetChildIndex(this.tbAmount, 0);
-            this.Controls.SetChildIndex(this.tbName, 0);
-            this.Controls.SetChildIndex(this.tbPayFrom, 0);
             this.Controls.SetChildIndex(this.cbPaidFrequency, 0);
             this.Controls.SetChildIndex(this.btnPay, 0);
+            this.Controls.SetChildIndex(this.catbPayTo, 0);
+            this.Controls.SetChildIndex(this.catbPayFrom, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,9 +148,9 @@
         private System.Windows.Forms.DateTimePicker dtpDateDue;
         private System.Windows.Forms.DateTimePicker dtpDatePaid;
         private System.Windows.Forms.TextBox tbAmount;
-        private System.Windows.Forms.TextBox tbName;
-        private System.Windows.Forms.TextBox tbPayFrom;
         private System.Windows.Forms.ComboBox cbPaidFrequency;
         private System.Windows.Forms.Button btnPay;
+        private CtrlAccountTextBox catbPayTo;
+        private CtrlAccountTextBox catbPayFrom;
     }
 }

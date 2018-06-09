@@ -169,6 +169,10 @@ namespace BasicBillPay.Tools.Encryption
                 {
                     MessageBox.Show("Data File is corrupt!", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else if (err.Message.Contains("Must have a password of at least 4 characters"))
+                {
+                    //Do nothing, they will get a validation failed message.
+                }
                 else
                 {
                     MessageBox.Show("Unexpected File Error", "File Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

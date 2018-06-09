@@ -1,28 +1,57 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using BasicBillPay.Tools.Encryption;
+
+
 namespace BasicBillPay.Models
 {
     /// <summary>
     /// Account - Rent, Car Payment, Utility, etc.
     /// </summary>
-    public class Account:EncryptedModel
+    public class Account:EncryptedModel, INotifyPropertyChanged
     {
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         /// <summary>
         /// Account Id for normalization
         /// </summary>
         public int Id { get; set; }
+        private String name;
         /// <summary>
         /// Account Name
         /// 
         /// Spreadsheet Source = What
         /// </summary>
-        public String Name { get; set; }
+        public String Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (value != name)
+                {
+                    name = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         /// <summary>
         /// Index for sorting (All are Zero unless sorted)
@@ -52,7 +81,7 @@ namespace BasicBillPay.Models
         public float Balance { get; set; }
         public void Encrypt()
         {
-
+            
             Number = AESGCM.SimpleEncryptWithPassword(Number);
             Link = AESGCM.SimpleEncryptWithPassword(Link);
             UserName = AESGCM.SimpleEncryptWithPassword(UserName);
@@ -89,6 +118,9 @@ namespace BasicBillPay.Models
         #region HashCodes / Object Identification
         //TODO - use / include the "correct" id..
         private int _hashCode = 0;
+
+
+
         [JsonIgnore]
         [JsonProperty("H")]
         public int HashCode
@@ -107,11 +139,13 @@ namespace BasicBillPay.Models
         {
             //THis is expensive and should be done only once since it will not be changing
             //TODO - use / include the "correct" id..
-            String key = this.GetType().Name + Name + Number;
+            String key = this.GetType().Name + Id + Name;
             //Google: "disable fips mode" if the line below fails
             System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
             var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
             int ivalue = BitConverter.ToInt32(hashed, 0);
+            _hashCode = ivalue;
+            //Console.WriteLine(Name + " - " + Id + ": " + _hashCode);
             return ivalue;
 
         }

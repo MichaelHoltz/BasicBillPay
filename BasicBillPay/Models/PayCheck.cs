@@ -99,11 +99,12 @@ namespace BasicBillPay.Models
         {
             //THis is expensive and should be done only once since it will not be changing
             //TODO - use / include the "correct" id..
-            String key = this.GetType().Name + Name; //If Id included then duplicate names are created.
+            String key = this.GetType().Name + Id + Name; //If Id included then duplicate names are created.
             //Google: "disable fips mode" if the line below fails
             System.Security.Cryptography.MD5 md5Hasher = System.Security.Cryptography.MD5.Create();
             var hashed = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(key));
             int ivalue = BitConverter.ToInt32(hashed, 0);
+            _hashCode = ivalue;
             return ivalue;
 
         }

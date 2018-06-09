@@ -42,13 +42,21 @@ namespace BasicBillPay.Tools
                 }
                 index++;
             }
-            if (!found)
+            if (!found )
             {
-                c.Series[0].Points.Add(dp);
+                if(Amount > 0)
+                    c.Series[0].Points.Add(dp);
             }
             else
             {
-                c.Series[0].Points[index] = dp;
+                if (Amount > 0)
+                {
+                    c.Series[0].Points[index] = dp;
+                }
+                else
+                {
+                    c.Series[0].Points.RemoveAt(index); // Remove Zero Budget Items
+                }
                 //c.Series[0].Points.Remove(odp);
                 //c.Series[0].Points.Add(dp);
                 ////odp = dp;

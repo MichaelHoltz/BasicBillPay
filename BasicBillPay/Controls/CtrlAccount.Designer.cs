@@ -90,6 +90,7 @@
             this.tbLink.Name = "tbLink";
             this.tbLink.Size = new System.Drawing.Size(342, 20);
             this.tbLink.TabIndex = 4;
+            this.tbLink.TextChanged += new System.EventHandler(this.tbLink_TextChanged);
             // 
             // lblLink
             // 

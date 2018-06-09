@@ -49,39 +49,7 @@ namespace BasicBillPay
 
         private void btnBegin_Click(object sender, EventArgs e)
         {
-
-            
             Person person = db.AddPerson(tbName.Text.Trim());
-            //Get Proper Ending
-            String ending = "'s ";
-            if (person.Name.EndsWith("s"))
-            {
-                ending = "' ";
-            }
-            //Add Default Income Tracking Account
-            String accountName = person.Name + ending;
-            if (rbCheckingAccount.Checked)
-            {
-                accountName += "Checking Account";    
-            }
-            else
-            {
-                accountName += "Cash Account";
-            }
-            //Add account to Database
-            Account a =db.AddAccount(accountName, AccountType.Income, null, null, null);
-            //Associate the Account with this person
-            person.AccountIds.Add(a.Id);
-
-
-            //Add Default Pay Source Account
-            String payCheckName = person.Name + ending + "Paycheck";
-            //Add Paycheck to database
-            Paycheck pc = db.AddPayCheck(payCheckName, TransactionPeriod.Biweekly); // Need to Ask
-            //Associate the paycheck with this person
-            person.PaycheckIds.Add(pc.Id);
-            String testDebugDBPath = appSettings.DbPath;
-            
             //Deal with Encryption Last 
             if (rbStoreUserPassword.Checked)
             {

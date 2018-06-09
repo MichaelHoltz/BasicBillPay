@@ -48,7 +48,7 @@ namespace BasicBillPay
         }
         private void InitializeFlowLayout()
         {
-
+            flpBudget.Controls.Clear(); // Remove Anything / Everything
 
             //Add Budget Header
             CtrlHeader chBudget = new CtrlHeader();
@@ -62,7 +62,7 @@ namespace BasicBillPay
         {
             InitializeCharts();
             InitializeFlowLayout();
-
+            flpPeopleBills.Controls.Clear();
 
             foreach (Person p in db.People)
             {
@@ -202,6 +202,9 @@ namespace BasicBillPay
         {
             frmPeopleManager fpm = new frmPeopleManager(ref db);
             fpm.ShowDialog();
+            //Need to refresh all items if Names changed or People were added.
+            LoadData();
+
         }
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)

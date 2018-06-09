@@ -30,15 +30,15 @@
         {
             this.lblInfo = new System.Windows.Forms.Label();
             this.gbSecurityOptions = new System.Windows.Forms.GroupBox();
-            this.rbNoSecurity = new System.Windows.Forms.RadioButton();
-            this.rbAutoEncrypt = new System.Windows.Forms.RadioButton();
+            this.ctrlPassword1 = new BasicBillPay.Controls.CtrlPasswordSetup();
             this.rbStoreUserPassword = new System.Windows.Forms.RadioButton();
+            this.rbAutoEncrypt = new System.Windows.Forms.RadioButton();
+            this.rbNoSecurity = new System.Windows.Forms.RadioButton();
             this.lblPrimaryPerson = new System.Windows.Forms.Label();
             this.tbName = new System.Windows.Forms.TextBox();
             this.rbCashAccount = new System.Windows.Forms.RadioButton();
             this.rbCheckingAccount = new System.Windows.Forms.RadioButton();
             this.btnBegin = new System.Windows.Forms.Button();
-            this.ctrlPassword1 = new BasicBillPay.Controls.CtrlPasswordSetup();
             this.gbSecurityOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,17 +63,24 @@
             this.gbSecurityOptions.TabStop = false;
             this.gbSecurityOptions.Text = "Security Options";
             // 
-            // rbNoSecurity
+            // ctrlPassword1
             // 
-            this.rbNoSecurity.AutoSize = true;
-            this.rbNoSecurity.Checked = true;
-            this.rbNoSecurity.Location = new System.Drawing.Point(18, 24);
-            this.rbNoSecurity.Name = "rbNoSecurity";
-            this.rbNoSecurity.Size = new System.Drawing.Size(176, 17);
-            this.rbNoSecurity.TabIndex = 0;
-            this.rbNoSecurity.TabStop = true;
-            this.rbNoSecurity.Text = "No Security (Not recommended)";
-            this.rbNoSecurity.UseVisualStyleBackColor = true;
+            this.ctrlPassword1.Location = new System.Drawing.Point(42, 89);
+            this.ctrlPassword1.MinimumSize = new System.Drawing.Size(176, 48);
+            this.ctrlPassword1.Name = "ctrlPassword1";
+            this.ctrlPassword1.Password = null;
+            this.ctrlPassword1.Size = new System.Drawing.Size(176, 95);
+            this.ctrlPassword1.TabIndex = 3;
+            // 
+            // rbStoreUserPassword
+            // 
+            this.rbStoreUserPassword.AutoSize = true;
+            this.rbStoreUserPassword.Location = new System.Drawing.Point(18, 66);
+            this.rbStoreUserPassword.Name = "rbStoreUserPassword";
+            this.rbStoreUserPassword.Size = new System.Drawing.Size(226, 17);
+            this.rbStoreUserPassword.TabIndex = 2;
+            this.rbStoreUserPassword.Text = "User Supplied Password Every Time (Best)";
+            this.rbStoreUserPassword.UseVisualStyleBackColor = true;
             // 
             // rbAutoEncrypt
             // 
@@ -85,15 +92,17 @@
             this.rbAutoEncrypt.Text = "Auto Encrypt (Better)";
             this.rbAutoEncrypt.UseVisualStyleBackColor = true;
             // 
-            // rbStoreUserPassword
+            // rbNoSecurity
             // 
-            this.rbStoreUserPassword.AutoSize = true;
-            this.rbStoreUserPassword.Location = new System.Drawing.Point(18, 66);
-            this.rbStoreUserPassword.Name = "rbStoreUserPassword";
-            this.rbStoreUserPassword.Size = new System.Drawing.Size(226, 17);
-            this.rbStoreUserPassword.TabIndex = 2;
-            this.rbStoreUserPassword.Text = "User Supplied Password Every Time (Best)";
-            this.rbStoreUserPassword.UseVisualStyleBackColor = true;
+            this.rbNoSecurity.AutoSize = true;
+            this.rbNoSecurity.Checked = true;
+            this.rbNoSecurity.Location = new System.Drawing.Point(18, 24);
+            this.rbNoSecurity.Name = "rbNoSecurity";
+            this.rbNoSecurity.Size = new System.Drawing.Size(176, 17);
+            this.rbNoSecurity.TabIndex = 0;
+            this.rbNoSecurity.TabStop = true;
+            this.rbNoSecurity.Text = "No Security (Not recommended)";
+            this.rbNoSecurity.UseVisualStyleBackColor = true;
             // 
             // lblPrimaryPerson
             // 
@@ -143,16 +152,9 @@
             this.btnBegin.UseVisualStyleBackColor = true;
             this.btnBegin.Click += new System.EventHandler(this.btnBegin_Click);
             // 
-            // ctrlPassword1
-            // 
-            this.ctrlPassword1.Location = new System.Drawing.Point(42, 89);
-            this.ctrlPassword1.MinimumSize = new System.Drawing.Size(176, 48);
-            this.ctrlPassword1.Name = "ctrlPassword1";
-            this.ctrlPassword1.Size = new System.Drawing.Size(176, 95);
-            this.ctrlPassword1.TabIndex = 3;
-            // 
             // frmWelcome
             // 
+            this.AcceptButton = this.btnBegin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 332);

@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace BasicBillPay.Tools
 {
-    public static class Conversion
+    internal static class Conversion
     {
-        public static void FloatToCurrencyString(object sender, ConvertEventArgs cevent)
+        internal static void FloatToCurrencyString(object sender, ConvertEventArgs cevent)
         {
             // The method converts only to string type. Test this using the DesiredType.
             if (cevent.DesiredType != typeof(string)) return;
@@ -19,13 +19,28 @@ namespace BasicBillPay.Tools
             cevent.Value = ((float)cevent.Value).ToString("c");
         }
 
-        public static void CurrencyStringToFloat(object sender, ConvertEventArgs cevent)
+        internal static void CurrencyStringToFloat(object sender, ConvertEventArgs cevent)
         {
             // The method converts back to decimal type only. 
             if (cevent.DesiredType != typeof(float)) return;
 
             // Converts the string back to decimal using the static Parse method.
             cevent.Value = float.Parse(cevent.Value.ToString(), NumberStyles.Currency, null);
+        }
+        /// <summary>
+        /// Returns singularName's or persons' with NO Trailing Spaces
+        /// </summary>
+        /// <param name="singlularName">Insure the name is trimmed before sending here.</param>
+        /// <returns></returns>
+        internal static String Pluralize(String singlularName)
+        {
+            //Get Proper Ending
+            String ending = "'s";
+            if (singlularName.EndsWith("s"))
+            {
+                ending = "'";
+            }
+            return singlularName + ending;
         }
     }
 }

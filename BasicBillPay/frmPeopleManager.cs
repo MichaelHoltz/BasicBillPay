@@ -104,27 +104,27 @@ namespace BasicBillPay
             {
                 
                 p = db.AddPerson(tbName.Text.Trim());
-                Account newAct = db.AddAccount(p.Name, AccountType.Income, null, null, null);
-                p.AccountIds.Add(newAct.Id);
-                Paycheck pc = db.AddPayCheck(p.Name, TransactionPeriod.Biweekly);
-                p.PaycheckIds.Add(pc.Id);
-                //db.People.Add(p);
+                //Account newAct = db.AddAccount(p.Name, AccountType.Income, null, null, null);
+                //p.AccountIds.Add(newAct.Id);
+                //Paycheck pc = db.AddPayCheck(p.Name, TransactionPeriod.Biweekly);
+                //p.PaycheckIds.Add(pc.Id);
+                ////db.People.Add(p);
             }
-            p.AccountIds.Clear(); // Clear Accounts so they can be un-checked
-            //Add Accounts
-            foreach (var item in clbAccounts.CheckedItems)
-            {
-                Account a = item as Account;
+            //p.AccountIds.Clear(); // Clear Accounts so they can be un-checked
+            ////Add Accounts
+            //foreach (var item in clbAccounts.CheckedItems)
+            //{
+            //    Account a = item as Account;
 
-                p.AccountIds.Add(a.Id);
-            }
-            //Add PayChecks
-            p.PaycheckIds.Clear(); // Clear PayChecks so they can be unselected.
-            foreach (var item in clbPaychecks.CheckedItems)
-            {
-                Paycheck pc = item as Paycheck;
-                p.PaycheckIds.Add(pc.Id);
-            }
+            //    p.AccountIds.Add(a.Id);
+            //}
+            ////Add PayChecks
+            //p.PaycheckIds.Clear(); // Clear PayChecks so they can be unselected.
+            //foreach (var item in clbPaychecks.CheckedItems)
+            //{
+            //    Paycheck pc = item as Paycheck;
+            //    p.PaycheckIds.Add(pc.Id);
+            //}
 
             LoadPeople(); //Update People List
 

@@ -17,8 +17,18 @@ namespace BasicBillPay.Controls
 
         Payment p;
         Database databaseFunctions;
+        /// <summary>
+        /// Account Selected (Selected Account available)
+        /// </summary>
         public event EventHandler<AccountSelectedEventArgs> AccountSelected;
+        /// <summary>
+        /// Payment Amount Changed (Transaction Period and Amount available)
+        /// </summary>
         public event EventHandler<AmountChangedEventArgs> AmountChanged;
+        /// <summary>
+        /// General Payment Changed Event 
+        /// </summary>
+        public event EventHandler PaymentChanged;
         public CtrlPayment()
         {
             InitializeComponent();
@@ -34,9 +44,11 @@ namespace BasicBillPay.Controls
             //Initialize Backing Data Model
             p = payment;
 
-            tbName.BackColor = BackColor;
-            tbPayFrom.BackColor = BackColor;
+            catbPayTo.BackColor = BackColor;
+            catbPayFrom.BackColor = BackColor;
+
             tbAmount.BackColor = BackColor;
+            
             base.ReorderIndexes -= CtrlPayment_ReorderIndexes;
             base.ReorderIndexes += CtrlPayment_ReorderIndexes;
             //base.IndexChanged -= CtrlPayment_IndexChanged;
@@ -79,24 +91,22 @@ namespace BasicBillPay.Controls
         private void CtrlPayment_Load(object sender, EventArgs e)
         {
             //Set DataBindings 
-            tbName.DataBindings.Clear();
             if (p.PayToId == -1)
             {
                 //Need to add new account or link to Existing one.
             }
             else
             {
-                tbName.DataBindings.Add("Text", databaseFunctions.GetAccount(p.PayToId), "Name");
+                catbPayTo.SetAccount(databaseFunctions.GetAccount(p.PayToId));
             }
 
-            tbPayFrom.DataBindings.Clear();
             if (p.PayFromId == -1)
             {
                 //Need to add new account or link to Existing one.
             }
             else
             {
-                tbPayFrom.DataBindings.Add("Text", databaseFunctions.GetAccount(p.PayFromId), "Name");
+                catbPayFrom.SetAccount(databaseFunctions.GetAccount(p.PayFromId));
             }
 
             dtpDateDue.DataBindings.Clear();
@@ -116,52 +126,7 @@ namespace BasicBillPay.Controls
             b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
             tbAmount.DataBindings.Add(b);
         }
-        private void tbName_TextChanged(object sender, EventArgs e)
-        {
-            //Only do this for Unlinked account
-            if (p.PayToId == -1)
-            {
-                Account a = databaseFunctions.GetAccount(tbName.Text);
-                if (a != null)
-                {
-                    if (MessageBox.Show("Account Found with that name, would you like to link to it?", "Confirm Account Link", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        p.PayToId = a.Id;
-                        tbName.DataBindings.Clear();
-                        tbName.DataBindings.Add("Text", a, "Name");
-                    }
-                }
-            }
-        }
-        private void tbPayFrom_TextChanged(object sender, EventArgs e)
-        {
-            //Only do this for Unlinked account
-            if (p.PayFromId == -1)
-            {
-                Account a = databaseFunctions.GetAccount(tbPayFrom.Text);
-                if (a != null)
-                {
-                    if (MessageBox.Show("Account Found with that name, would you like to link to it?", "Confirm Account Link", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        p.PayFromId = a.Id;
-                        tbPayFrom.DataBindings.Clear();
-                        tbPayFrom.DataBindings.Add("Text", a, "Name");
-                    }
-                }
-            }
-        }
 
-        private void tbName_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            AccountSelected?.Invoke(sender, new AccountSelectedEventArgs(databaseFunctions.GetAccount(p.PayToId))); // Only fire if there is a listener
-            //If they change the account name I need to update it though!!!
-        }
-
-        private void tbPayFrom_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            AccountSelected?.Invoke(sender, new AccountSelectedEventArgs(databaseFunctions.GetAccount(p.PayFromId))); // Only fire if there is a listener
-            //If they change the account name I need to update it though!!! 
-        }
         public class AccountSelectedEventArgs : EventArgs
         {
             public Account SelectedAccount { get; }
@@ -195,9 +160,16 @@ namespace BasicBillPay.Controls
         {
             if (tbAmount.Text.Length > 0 && e.KeyCode == Keys.Enter)
             {
-                p.PaymentAmount = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-                tbAmount.Text = (p.PaymentAmount).ToString("c");
-                AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
+                try
+                {
+                    p.PaymentAmount = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
+                    tbAmount.Text = (p.PaymentAmount).ToString("c");
+                    AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
+                }
+                catch
+                {
+                    
+                }
             }
         }
 
@@ -216,6 +188,7 @@ namespace BasicBillPay.Controls
         {
             //Need to adjust DateDue by Pay Frequency and  Paid Date to now.
             p.DatePaid = DateTime.Now;
+            dtpDatePaid.Value = p.DatePaid; // Manual Bind
             //Adjusting the DateDue is not going to be simple
             switch (p.PayPeriod)
             {
@@ -240,9 +213,35 @@ namespace BasicBillPay.Controls
                 default:
                     break;
             }
+            dtpDateDue.Value = p.DateDue; // Manual Bind
 
-            
-        
+            //If there is a valid Link bring it up.
+            Account a = databaseFunctions.GetAccount(p.PayToId);
+            if (a.Link != null)
+            {
+                String url = a.Link;
+                //For safety this should be validated to be a web page - Since the user is in full control and it's encrypted it should be ok
+                //If this were not a page, but some system command that would be bad.
+                Uri uriResult;
+                bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)  && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+                if (result)
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(uriResult.AbsoluteUri); // This would be a potential problem for publishing this app..
+                        
+                    }
+                    catch (Exception err)
+                    {
+                        MessageBox.Show("Error with Account link for Account: '" + a.Name + "' using Link: '" + a.Link + "'\r\n" + err.Message, "Link Exception");
+                    }
+                }
+
+            }
+            MessageBox.Show("Now need the Confirmation Number");
+
         }
+
+
     }
 }

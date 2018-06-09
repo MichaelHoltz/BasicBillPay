@@ -80,5 +80,15 @@ namespace BasicBillPay.Controls
                 a.Type = (AccountType)Enum.Parse(typeof(AccountType), cbAccountType.SelectedItem.ToString());
             }
         }
+
+        private void tbLink_TextChanged(object sender, EventArgs e)
+        {
+            String url = tbLink.Text;
+            //For safety this should be validated to be a web page - Since the user is in full control and it's encrypted it should be ok
+            //If this were not a page, but some system command that would be bad.
+            Uri uriResult;
+            bool result = Uri.TryCreate(url, UriKind.Absolute, out uriResult) && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            tbLink.BackColor = result ? SystemColors.Window : Color.Red;
+        }
     }
 }

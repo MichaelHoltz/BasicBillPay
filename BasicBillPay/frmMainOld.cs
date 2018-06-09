@@ -142,17 +142,17 @@ namespace BasicBillPay
                 split1Total += bItem.GetMonthlyAmount(bItem.Split1Amount);
                 split2Total += bItem.GetMonthlyAmount(bItem.Split2Amount);
             }
-            tbTotal.Text = db.GetAccountTotal("M Checking", TransactionPeriod.Monthly).ToString("c");
+            tbTotal.Text = db.GetAccountTotal(db.GetAccount("M Checking").Id, TransactionPeriod.Monthly).ToString("c");
 
-            tbTotal2.Text = db.GetAccountTotal("C Checking", TransactionPeriod.Monthly).ToString("c");
+            tbTotal2.Text = db.GetAccountTotal(db.GetAccount("C Checking").Id, TransactionPeriod.Monthly).ToString("c");
             tbBudgetTotal.Text = BudgetTotal.ToString("c");
             tbSplit1Total.Text = split1Total.ToString("c"); //Account 2 (Reversed)
             
 
             tbSplit2Total.Text = split2Total.ToString("c");
             
-            tbTotalBillBudgetAccount1.Text = (db.GetAccountTotal("M Checking", TransactionPeriod.Monthly) + split2Total).ToString("c");
-            tbTotalBillBudgetAccount2.Text = (db.GetAccountTotal("C Checking", TransactionPeriod.Monthly) + split1Total).ToString("c");
+            tbTotalBillBudgetAccount1.Text = (db.GetAccountTotal(db.GetAccount("M Checking").Id, TransactionPeriod.Monthly) + split2Total).ToString("c");
+            tbTotalBillBudgetAccount2.Text = (db.GetAccountTotal(db.GetAccount("C Checking").Id, TransactionPeriod.Monthly) + split1Total).ToString("c");
 
 
         }
