@@ -30,7 +30,6 @@
         {
             this.dtpDateDue = new System.Windows.Forms.DateTimePicker();
             this.dtpDatePaid = new System.Windows.Forms.DateTimePicker();
-            this.tbAmount = new System.Windows.Forms.TextBox();
             this.cbPaidFrequency = new System.Windows.Forms.ComboBox();
             this.btnPay = new System.Windows.Forms.Button();
             this.catbPayTo = new BasicBillPay.Controls.CtrlAccountTextBox();
@@ -41,7 +40,7 @@
             // dtpDateDue
             // 
             this.dtpDateDue.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateDue.Location = new System.Drawing.Point(485, 0);
+            this.dtpDateDue.Location = new System.Drawing.Point(486, 0);
             this.dtpDateDue.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDateDue.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDateDue.Name = "dtpDateDue";
@@ -54,24 +53,13 @@
             // 
             this.dtpDatePaid.CustomFormat = "";
             this.dtpDatePaid.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDatePaid.Location = new System.Drawing.Point(581, 0);
+            this.dtpDatePaid.Location = new System.Drawing.Point(583, 0);
             this.dtpDatePaid.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDatePaid.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDatePaid.Name = "dtpDatePaid";
             this.dtpDatePaid.Size = new System.Drawing.Size(96, 20);
             this.dtpDatePaid.TabIndex = 6;
             this.dtpDatePaid.Tag = "Last Paid";
-            // 
-            // tbAmount
-            // 
-            this.tbAmount.Location = new System.Drawing.Point(677, 0);
-            this.tbAmount.Name = "tbAmount";
-            this.tbAmount.Size = new System.Drawing.Size(62, 20);
-            this.tbAmount.TabIndex = 7;
-            this.tbAmount.Tag = "Amount";
-            this.tbAmount.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbAmount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbAmount_KeyUp);
-            this.tbAmount.Leave += new System.EventHandler(this.tbAmount_Leave);
             // 
             // cbPaidFrequency
             // 
@@ -121,11 +109,11 @@
             // cctbAmount
             // 
             this.cctbAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.cctbAmount.Location = new System.Drawing.Point(757, 0);
+            this.cctbAmount.Location = new System.Drawing.Point(680, 0);
             this.cctbAmount.Margin = new System.Windows.Forms.Padding(0);
             this.cctbAmount.Name = "cctbAmount";
-            this.cctbAmount.Size = new System.Drawing.Size(81, 20);
-            this.cctbAmount.TabIndex = 8;
+            this.cctbAmount.Size = new System.Drawing.Size(72, 20);
+            this.cctbAmount.TabIndex = 7;
             this.cctbAmount.Tag = "Amount";
             this.cctbAmount.Value = 0F;
             // 
@@ -139,7 +127,6 @@
             this.Controls.Add(this.catbPayTo);
             this.Controls.Add(this.btnPay);
             this.Controls.Add(this.cbPaidFrequency);
-            this.Controls.Add(this.tbAmount);
             this.Controls.Add(this.dtpDatePaid);
             this.Controls.Add(this.dtpDateDue);
             this.Margin = new System.Windows.Forms.Padding(0);
@@ -148,7 +135,6 @@
             this.Load += new System.EventHandler(this.CtrlPayment_Load);
             this.Controls.SetChildIndex(this.dtpDateDue, 0);
             this.Controls.SetChildIndex(this.dtpDatePaid, 0);
-            this.Controls.SetChildIndex(this.tbAmount, 0);
             this.Controls.SetChildIndex(this.cbPaidFrequency, 0);
             this.Controls.SetChildIndex(this.btnPay, 0);
             this.Controls.SetChildIndex(this.catbPayTo, 0);
@@ -163,7 +149,6 @@
 
         private System.Windows.Forms.DateTimePicker dtpDateDue;
         private System.Windows.Forms.DateTimePicker dtpDatePaid;
-        private System.Windows.Forms.TextBox tbAmount;
         private System.Windows.Forms.ComboBox cbPaidFrequency;
         private System.Windows.Forms.Button btnPay;
         private CtrlAccountTextBox catbPayTo;

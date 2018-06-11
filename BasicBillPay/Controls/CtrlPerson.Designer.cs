@@ -52,10 +52,12 @@
             this.tbSavings = new System.Windows.Forms.TextBox();
             this.btnPayCheck = new System.Windows.Forms.Button();
             this.pTopHeader = new System.Windows.Forms.Panel();
-            this.epGeneral = new System.Windows.Forms.ErrorProvider(this.components);
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addTransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cctbTotalIncome = new BasicBillPay.Controls.CtrlCurrencyTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chartAccount1)).BeginInit();
             this.pTopHeader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.epGeneral)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // chartAccount1
@@ -134,6 +136,7 @@
             // btnAddBill
             // 
             this.btnAddBill.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.btnAddBill.ContextMenuStrip = this.contextMenuStrip1;
             this.btnAddBill.Location = new System.Drawing.Point(11, 28);
             this.btnAddBill.Name = "btnAddBill";
             this.btnAddBill.Size = new System.Drawing.Size(89, 31);
@@ -244,6 +247,7 @@
             // 
             // pTopHeader
             // 
+            this.pTopHeader.Controls.Add(this.cctbTotalIncome);
             this.pTopHeader.Controls.Add(this.tbSavings);
             this.pTopHeader.Controls.Add(this.btnPayCheck);
             this.pTopHeader.Controls.Add(this.btnAddBill);
@@ -267,9 +271,28 @@
             this.pTopHeader.Size = new System.Drawing.Size(1000, 60);
             this.pTopHeader.TabIndex = 38;
             // 
-            // epGeneral
+            // contextMenuStrip1
             // 
-            this.epGeneral.ContainerControl = this;
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addTransferToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(143, 26);
+            // 
+            // addTransferToolStripMenuItem
+            // 
+            this.addTransferToolStripMenuItem.Name = "addTransferToolStripMenuItem";
+            this.addTransferToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.addTransferToolStripMenuItem.Text = "Add Transfer";
+            this.addTransferToolStripMenuItem.Click += new System.EventHandler(this.addTransferToolStripMenuItem_Click);
+            // 
+            // cctbTotalIncome
+            // 
+            this.cctbTotalIncome.Location = new System.Drawing.Point(384, 34);
+            this.cctbTotalIncome.Margin = new System.Windows.Forms.Padding(0);
+            this.cctbTotalIncome.Name = "cctbTotalIncome";
+            this.cctbTotalIncome.Size = new System.Drawing.Size(66, 20);
+            this.cctbTotalIncome.TabIndex = 38;
+            this.cctbTotalIncome.Value = 0F;
             // 
             // CtrlPerson
             // 
@@ -289,7 +312,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.chartAccount1)).EndInit();
             this.pTopHeader.ResumeLayout(false);
             this.pTopHeader.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.epGeneral)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -315,6 +338,8 @@
         private System.Windows.Forms.TextBox tbSavings;
         private System.Windows.Forms.Button btnPayCheck;
         private System.Windows.Forms.Panel pTopHeader;
-        private System.Windows.Forms.ErrorProvider epGeneral;
+        private CtrlCurrencyTextBox cctbTotalIncome;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem addTransferToolStripMenuItem;
     }
 }

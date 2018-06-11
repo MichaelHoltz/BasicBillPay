@@ -19,6 +19,13 @@ namespace BasicBillPay.Tools
             c.Series[0].ChartType = SeriesChartType.Pie;
         }
 
+        internal static void RemoveChartPoint(Chart c, String name)
+        {
+            DataPoint dp = c.Series[0].Points.Where(o => o.Name == name).FirstOrDefault();
+            c.Series[0].Points.Remove(dp);
+                
+        }
+
         internal static void AddChartPoint(Chart c, String name, float Amount)
         {
             DataPoint dp = new DataPoint(0, Amount);

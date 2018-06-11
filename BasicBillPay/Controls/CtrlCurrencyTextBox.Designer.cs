@@ -43,6 +43,8 @@
             this.tbCurrency.Size = new System.Drawing.Size(66, 20);
             this.tbCurrency.TabIndex = 0;
             this.tbCurrency.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tbCurrency.Click += new System.EventHandler(this.tbCurrency_Click);
+            this.tbCurrency.Enter += new System.EventHandler(this.tbCurrency_Enter);
             this.tbCurrency.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbCurrency_KeyUp);
             this.tbCurrency.Leave += new System.EventHandler(this.tbCurrency_Leave);
             this.tbCurrency.Validating += new System.ComponentModel.CancelEventHandler(this.tbCurrency_Validating);

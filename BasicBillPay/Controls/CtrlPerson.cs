@@ -86,6 +86,7 @@ namespace BasicBillPay.Controls
             //Minus 1 indicates a new Account.. Which Means Transfers from one existing income account to another will not be possible (nor will use of orphaned expense accounts).
             Payment p = db.AddPayment(-1, a.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
             AddPaymentCtrl(p);
+            CalculateTotals(currentTransactionPeriod);
         }
         private void AddPaymentCtrl(Payment p)
         {
@@ -100,7 +101,7 @@ namespace BasicBillPay.Controls
             //Only Add Accounts this person is paying directly to.
             if (person.AccountIds.Contains( p.PayFromId))
             {
-                CtrlPaymentItem ctrlPayment = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++, epGeneral);
+                CtrlPaymentItem ctrlPayment = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++);
                 this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count + 1) * ctrlPayment.Height);
                 flpBills.Controls.Add(ctrlPayment);
                 ctrlPayment.ItemDeleted += CtrlPayment_ItemDeleted;
@@ -136,7 +137,7 @@ namespace BasicBillPay.Controls
                 {
                     String name = db.GetAccount(pItem.PayToId).Name;
                     float Amount = pItem.GetAmount(pItem.PaymentAmount, transactionPeriod);
-                     Charts.AddChartPoint(chartAccount1, name, Amount);
+                    Charts.AddChartPoint(chartAccount1, name, Amount);
 
                 }
 
@@ -194,6 +195,8 @@ namespace BasicBillPay.Controls
                 CtrlPaymentItem cp = (sender as CtrlPaymentItem);
                 Payment p = cp.GetPayment();
                 db.Payments.Remove(p);
+                String name = db.GetAccount(p.PayToId).Name;
+                Charts.RemoveChartPoint(chartAccount1, name);
                 this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count - 1) * csb.Height);
                 //WARNING - need to make sure the Account isn't being used by other payments and is an Expense Account
                 Account a = db.GetAccount(p.PayToId);
@@ -234,6 +237,11 @@ namespace BasicBillPay.Controls
                 cbPaidFrequency.Text = currentTransactionPeriod.ToString();
                 CalculateTotals(currentTransactionPeriod);
             }
+        }
+
+        private void addTransferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Add Transfer not implemented yet.");
         }
     }
 }

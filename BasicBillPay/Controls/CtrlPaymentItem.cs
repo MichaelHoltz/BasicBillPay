@@ -17,7 +17,7 @@ namespace BasicBillPay.Controls
 
         Payment p;
         Database databaseFunctions;
-        ErrorProvider epGeneral;
+ 
         ///// <summary>
         ///// Account Selected (Selected Account available)
         ///// </summary>
@@ -35,10 +35,10 @@ namespace BasicBillPay.Controls
             InitializeComponent();
 
         }
-        public CtrlPaymentItem(ref Database db, ref Payment payment, int itemIndex, ErrorProvider epGeneral) : base(itemIndex)
+        public CtrlPaymentItem(ref Database db, ref Payment payment, int itemIndex) : base(itemIndex)
         {
             InitializeComponent();
-            this.epGeneral = epGeneral;
+
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
 
@@ -48,8 +48,6 @@ namespace BasicBillPay.Controls
 
             catbPayTo.BackColor = BackColor;
             catbPayFrom.BackColor = BackColor;
-
-            tbAmount.BackColor = BackColor;
             cctbAmount.BackColor = BackColor;
             base.ReorderIndexes -= CtrlPayment_ReorderIndexes;
             base.ReorderIndexes += CtrlPayment_ReorderIndexes;
@@ -120,13 +118,13 @@ namespace BasicBillPay.Controls
             //Couldn't get Binding to work right so doing it manually
             cbPaidFrequency.Text = p.PayPeriod.ToString();
 
-            tbAmount.DataBindings.Clear();
-            Binding b = new Binding("Text", p, "PaymentAmount");
-            // Add the delegates to the event.
+            //tbAmount.DataBindings.Clear();
+            //Binding b = new Binding("Text", p, "PaymentAmount");
+            //// Add the delegates to the event.
             
-            b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            tbAmount.DataBindings.Add(b);
+            //b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
+            //b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
+            //tbAmount.DataBindings.Add(b);
             cctbAmount.Bind(p, "PaymentAmount");
         }
 
@@ -157,29 +155,6 @@ namespace BasicBillPay.Controls
                 cbPaidFrequency.Text = p.PayPeriod.ToString();
                 AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
             }
-        }
-
-        private void tbAmount_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (tbAmount.Text.Length > 0 && e.KeyCode == Keys.Enter)
-            {
-                try
-                {
-                    p.PaymentAmount = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-                    tbAmount.Text = (p.PaymentAmount).ToString("c");
-                    AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
-                }
-                catch
-                {
-                    
-                }
-            }
-        }
-
-        private void tbAmount_Leave(object sender, EventArgs e)
-        {
-            p.PaymentAmount = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-            AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount)); // Only fire if there is a listener
         }
 
         /// <summary>

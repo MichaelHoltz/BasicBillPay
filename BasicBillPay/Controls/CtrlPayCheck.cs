@@ -32,8 +32,11 @@ namespace BasicBillPay.Controls
             tbName.DataBindings.Clear();
             tbName.DataBindings.Add("Text", pc, "Name");
 
+            cctbNetPay.Bind(pc, "NetPayPerPayPeriod");
             BindControl(tbNetPay, "Text", "NetPayPerPayPeriod");
             Charts.AddChartPoint(chartPayCheck, "Net Pay", pc.NetPayPerPayPeriod);
+
+
             //tbNetPay.DataBindings.Clear();
             //Binding b = new Binding("Text", pc, "NetPayPerPayPeriod");
             //// Add the delegates to the event.
@@ -46,6 +49,7 @@ namespace BasicBillPay.Controls
             dtpPayDayStart.DataBindings.Clear();
             dtpPayDayStart.DataBindings.Add("Text", pc, "PayDayStart");
 
+            
             BindControl(tbGrossPay, "Text", "GrossPayPerPayPeriod");
             //No Chart because this is the total
 
@@ -182,6 +186,11 @@ namespace BasicBillPay.Controls
             pc.OtherCostPerPayPeriod = float.Parse(tbOther.Text, NumberStyles.Currency, null);
             tbOther.Text = (pc.OtherCostPerPayPeriod).ToString("c");
             Charts.AddChartPoint(chartPayCheck, "Other", pc.OtherCostPerPayPeriod);
+        }
+
+        private void CtrlPaycheck_Leave(object sender, EventArgs e)
+        {
+            this.Validate();
         }
     }
 }

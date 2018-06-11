@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +9,24 @@ using Newtonsoft.Json;
 using BasicBillPay.Tools.Encryption;
 namespace BasicBillPay.Models
 {
-    public class Paycheck:PeriodicBase, EncryptedModel
+    public class Paycheck:PeriodicBase, EncryptedModel, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         /// <summary>
         /// Id of this PayCheck Information
         /// </summary>
         public int Id { get; set; }
+        private String name { get; set; }
         ///// <summary>
         ///// Account this is tied to - Umm Actually Should be the Person... Leaving for now.. But it's confusing. :(and I created it.)
         ///// </summary>
@@ -20,24 +34,138 @@ namespace BasicBillPay.Models
         /// <summary>
         /// Name of the PayCheck  (Typically Company worked for, or person giving the money, etc.)
         /// </summary>
-        public String Name { get; set; }
-
+        public String Name {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (value != name)
+                {
+                    name = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private float netPayPerPayPeriod = 0f;
         /// How much you keep when paid
         /// Direct Set (Can be calculated if all other values are set correctly) - But people can see the amount they just received..
         /// (Net Pay)
         /// The Minimum Required Value for use.. All the Others are just Extra.
         /// 
         /// </summary>
-        public float NetPayPerPayPeriod { get; set; }
-        public float GrossPayPerPayPeriod { get; set; }
-        public float TaxPerPayPeriod { get; set; }
-        public float BenefitCostPerPayPeriod { get; set; }
-        public float GarnishmentCostPerPayPeriod { get; set; }
-        public float OtherCostPerPayPeriod { get; set; }
+        public float NetPayPerPayPeriod
+        {
+            get
+            {
+                return netPayPerPayPeriod;
+            }
+            set
+            {
+                if (value != netPayPerPayPeriod)
+                {
+                    netPayPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private float grossPayPerPayPeriod = 0f;
+        public float GrossPayPerPayPeriod {
+            get
+            {
+                return grossPayPerPayPeriod;
+            }
+            set
+            {
+                if (value != grossPayPerPayPeriod)
+                {
+                    grossPayPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private float taxPerPayPeriod = 0f;
+        public float TaxPerPayPeriod {
+            get
+            {
+                return taxPerPayPeriod;
+            }
+            set
+            {
+                if (value != taxPerPayPeriod)
+                {
+                    taxPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+         }
+        private float benefitCostPerPayPeriod = 0f;
+        public float BenefitCostPerPayPeriod {
+            get
+            {
+                return benefitCostPerPayPeriod;
+            }
+            set
+            {
+                if (value != benefitCostPerPayPeriod)
+                {
+                    benefitCostPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private float garnishmentCostPerPayPeriod = 0f;
+        public float GarnishmentCostPerPayPeriod
+        {
+            get
+            {
+                return garnishmentCostPerPayPeriod;
+            }
+            set
+            {
+                if (value != garnishmentCostPerPayPeriod)
+                {
+                    garnishmentCostPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private float otherCostPerPayPeriod = 0f;
+        public float OtherCostPerPayPeriod
+        {
+            get
+            {
+                return otherCostPerPayPeriod;
+            }
+            set
+            {
+                if (value != otherCostPerPayPeriod)
+                {
+                    otherCostPerPayPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+        private DateTime payDayStart = DateTime.Now;
         /// <summary>
         /// Start Date to Establish proper frequency
         /// </summary>
-        public DateTime PayDayStart { get; set; }
+        public DateTime PayDayStart
+        {
+            get
+            {
+                return payDayStart;
+            }
+            set
+            {
+                if (value != payDayStart)
+                {
+                    payDayStart = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
 
         public Paycheck()
         {

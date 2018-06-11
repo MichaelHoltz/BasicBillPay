@@ -37,6 +37,15 @@ namespace BasicBillPay.Controls
             this.propertyName = propertyName;
             Bind();
         }
+        public void Bind<T>(T iNotifyPropertyChangedDataObject_Property)
+        {
+            T obj;
+            
+            this.dataObject = iNotifyPropertyChangedDataObject_Property  as INotifyPropertyChanged;
+            this.propertyName = "";
+            Bind();
+
+        }
         private void Bind()
         {
             dataObject.PropertyChanged -= DataObject_PropertyChanged; //Remove First Pattern
@@ -117,6 +126,26 @@ namespace BasicBillPay.Controls
             errorProvider1.Clear();
             isValid = true;
             badFloat = String.Empty;
+        }
+
+
+
+        private void tbCurrency_Click(object sender, EventArgs e)
+        {
+            if (tbCurrency.Text.Contains("$"))
+            {
+                //int ss = tbCurrency.SelectionStart-1;
+                tbCurrency.Text = tbCurrency.Text.Replace("$", "").Replace(",","");
+               // int count = tbCurrency.Text.Count(f => f == ',');
+                //tbCurrency.SelectionStart = ss;
+                tbCurrency.SelectAll();
+                
+            }
+        }
+
+        private void tbCurrency_Enter(object sender, EventArgs e)
+        {
+            tbCurrency.SelectAll();
         }
     }
 }

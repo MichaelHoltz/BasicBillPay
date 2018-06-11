@@ -42,6 +42,7 @@
             this.lblTimePeriod = new System.Windows.Forms.Label();
             this.cbPaidFrequency = new System.Windows.Forms.ComboBox();
             this.gbDetails = new System.Windows.Forms.GroupBox();
+            this.cctbNetPay = new BasicBillPay.Controls.CtrlCurrencyTextBox();
             this.tbOther = new System.Windows.Forms.TextBox();
             this.lblOther = new System.Windows.Forms.Label();
             this.tbGarnishment = new System.Windows.Forms.TextBox();
@@ -133,6 +134,7 @@
             // 
             // gbDetails
             // 
+            this.gbDetails.Controls.Add(this.cctbNetPay);
             this.gbDetails.Controls.Add(this.tbOther);
             this.gbDetails.Controls.Add(this.lblOther);
             this.gbDetails.Controls.Add(this.tbGarnishment);
@@ -149,6 +151,15 @@
             this.gbDetails.TabIndex = 34;
             this.gbDetails.TabStop = false;
             this.gbDetails.Text = "Paycheck  details";
+            // 
+            // cctbNetPay
+            // 
+            this.cctbNetPay.Location = new System.Drawing.Point(87, 37);
+            this.cctbNetPay.Margin = new System.Windows.Forms.Padding(0);
+            this.cctbNetPay.Name = "cctbNetPay";
+            this.cctbNetPay.Size = new System.Drawing.Size(64, 20);
+            this.cctbNetPay.TabIndex = 27;
+            this.cctbNetPay.Value = 0F;
             // 
             // tbOther
             // 
@@ -293,9 +304,11 @@
             this.Controls.Add(this.tbName);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.lblId);
+            this.DoubleBuffered = true;
             this.Name = "CtrlPaycheck";
             this.Size = new System.Drawing.Size(755, 282);
             this.Load += new System.EventHandler(this.ControlPaycheck_Load);
+            this.Leave += new System.EventHandler(this.CtrlPaycheck_Leave);
             this.gbDetails.ResumeLayout(false);
             this.gbDetails.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chartPayCheck)).EndInit();
@@ -327,5 +340,6 @@
         private System.Windows.Forms.Label lblOther;
         private System.Windows.Forms.DateTimePicker dtpPayDayStart;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPayCheck;
+        private CtrlCurrencyTextBox cctbNetPay;
     }
 }
