@@ -16,7 +16,7 @@ namespace BasicBillPay.Models
     /// <summary>
     /// Application Settings (Encrypted)
     /// </summary>
-    internal class ApplicationSettings:EncryptedModel
+    public class ApplicationSettings:EncryptedModel
     {
         //private String tPass = null;
         public ApplicationSettings()

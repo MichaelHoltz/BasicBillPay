@@ -17,7 +17,7 @@ namespace BasicBillPay
         {
             InitializeComponent();
         }
-        internal frmSettings(ApplicationSettings appSettings)
+        public frmSettings(ApplicationSettings appSettings)
         {
             InitializeComponent();
             appSet = appSettings;

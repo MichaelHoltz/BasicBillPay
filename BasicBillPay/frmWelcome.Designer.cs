@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmWelcome));
             this.lblInfo = new System.Windows.Forms.Label();
             this.gbSecurityOptions = new System.Windows.Forms.GroupBox();
             this.ctrlPassword1 = new BasicBillPay.Controls.CtrlPasswordSetup();
@@ -44,6 +45,7 @@
             // 
             // lblInfo
             // 
+            this.lblInfo.BackColor = System.Drawing.Color.Transparent;
             this.lblInfo.Location = new System.Drawing.Point(15, 16);
             this.lblInfo.Name = "lblInfo";
             this.lblInfo.Size = new System.Drawing.Size(449, 81);
@@ -52,6 +54,7 @@
             // 
             // gbSecurityOptions
             // 
+            this.gbSecurityOptions.BackColor = System.Drawing.Color.Transparent;
             this.gbSecurityOptions.Controls.Add(this.ctrlPassword1);
             this.gbSecurityOptions.Controls.Add(this.rbStoreUserPassword);
             this.gbSecurityOptions.Controls.Add(this.rbAutoEncrypt);
@@ -123,16 +126,18 @@
             // rbCashAccount
             // 
             this.rbCashAccount.AutoSize = true;
+            this.rbCashAccount.BackColor = System.Drawing.Color.Transparent;
             this.rbCashAccount.Location = new System.Drawing.Point(307, 179);
             this.rbCashAccount.Name = "rbCashAccount";
             this.rbCashAccount.Size = new System.Drawing.Size(92, 17);
             this.rbCashAccount.TabIndex = 4;
             this.rbCashAccount.Text = "Cash Account";
-            this.rbCashAccount.UseVisualStyleBackColor = true;
+            this.rbCashAccount.UseVisualStyleBackColor = false;
             // 
             // rbCheckingAccount
             // 
             this.rbCheckingAccount.AutoSize = true;
+            this.rbCheckingAccount.BackColor = System.Drawing.Color.Transparent;
             this.rbCheckingAccount.Checked = true;
             this.rbCheckingAccount.Location = new System.Drawing.Point(307, 156);
             this.rbCheckingAccount.Name = "rbCheckingAccount";
@@ -140,7 +145,7 @@
             this.rbCheckingAccount.TabIndex = 5;
             this.rbCheckingAccount.TabStop = true;
             this.rbCheckingAccount.Text = "Checking Account";
-            this.rbCheckingAccount.UseVisualStyleBackColor = true;
+            this.rbCheckingAccount.UseVisualStyleBackColor = false;
             // 
             // btnBegin
             // 
@@ -157,6 +162,8 @@
             this.AcceptButton = this.btnBegin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(478, 332);
             this.Controls.Add(this.btnBegin);
             this.Controls.Add(this.rbCheckingAccount);

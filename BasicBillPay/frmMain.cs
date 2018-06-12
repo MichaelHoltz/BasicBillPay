@@ -125,6 +125,7 @@ namespace BasicBillPay
             if (fs.ShowDialog() == DialogResult.OK)
             {
                 PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
+                db = PersistenceBase.Load<Database>(appSettings.DbPath); 
             }
         }
          
