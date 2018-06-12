@@ -222,6 +222,9 @@ namespace BasicBillPay.Controls
 
         }
 
-
+        private void cctbAmount_ValueChanged(object sender, EventArgs e)
+        {
+            AmountChanged?.Invoke(sender, new AmountChangedEventArgs(TransactionPeriod.Monthly, p.PaymentAmount));
+        }
     }
 }

@@ -63,6 +63,12 @@
     <Compile Include="Controls\CtrlAccountTextBox.Designer.cs">
       <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CtrlBudget.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\CtrlBudget.designer.cs">
+      <DependentUpon>CtrlBudget.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CtrlCurrencyTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -205,6 +211,9 @@
     <Compile Include="Tools\PersistenceBase.cs" />
     <EmbeddedResource Include="Controls\CtrlAccountTextBox.resx">
       <DependentUpon>CtrlAccountTextBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\CtrlBudget.resx">
+      <DependentUpon>CtrlBudget.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\CtrlCurrencyTextBox.resx">
       <DependentUpon>CtrlCurrencyTextBox.cs</DependentUpon>

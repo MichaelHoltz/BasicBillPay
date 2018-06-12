@@ -28,9 +28,10 @@ namespace BasicBillPay.Models
             AccountIds = new HashSet<int>();
             PaycheckIds = new HashSet<int>();
         }
-        public Person(String name)
+        public Person(String name, int id)
         {
             Name = name;
+            Id = id;
             AccountIds = new HashSet<int>();
             PaycheckIds = new HashSet<int>();
 

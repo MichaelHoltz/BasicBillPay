@@ -237,7 +237,7 @@ namespace BasicBillPay
         /// <param name="b"></param>
         private void AddBudgetCtrl(BudgetItem b)
         {
-            CtrlBudgetItem ctrlBudget = new CtrlBudgetItem(ref b, budgetItemIndex++);
+            CtrlBudgetItem ctrlBudget = new CtrlBudgetItem(ref b, budgetItemIndex++, db);
             ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
             flpBudget.Controls.Add(ctrlBudget);
 

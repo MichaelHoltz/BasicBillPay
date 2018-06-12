@@ -47,6 +47,7 @@ namespace BasicBillPay.Controls
                 ending = "' Bills";
             }
             lblAccount1.Text = person.Name + ending;
+            cctbTotalIncome.Bind(db.MyBudgetTotal(person.Id)); //One WayBind..
             LoadData();
         }
         /// <summary>
@@ -161,16 +162,16 @@ namespace BasicBillPay.Controls
             //TODO - Get Budget Items like Account Total
             float BudgetTotal = 0f;
             //Split of this Person.
-            float splitTotal = 0f;
-            foreach (BudgetItem bItem in db.BudgetItems)
-            {
+            float splitTotal = db.MyBudgetTotal(person.Id);
+            //foreach (BudgetItem bItem in db.BudgetItems)
+            //{
 
-                BudgetTotal += bItem.GetAmount(bItem.Amount, transactionPeriod); //Get Scaled Budget
-                if (person.AccountIds.Contains(bItem.Split1AccountId))
-                    splitTotal += bItem.GetAmount(bItem.Split1Amount, transactionPeriod); // Tied to specific accounts.. need to fix
-                if (person.AccountIds.Contains(bItem.Split2AccountId))
-                    splitTotal += bItem.GetAmount(bItem.Split2Amount, transactionPeriod);
-            }
+            //    BudgetTotal += bItem.GetAmount(bItem.Amount, transactionPeriod); //Get Scaled Budget
+            //    if (person.Id == bItem.Split1AccountId)
+            //        splitTotal += bItem.GetAmount(bItem.Split1Amount, transactionPeriod); // Tied to specific accounts.. need to fix
+            //    if (person.Id == bItem.Split2AccountId)
+            //        splitTotal += bItem.GetAmount(bItem.Split2Amount, transactionPeriod);
+            //}
             tbSplitTotal.Text = splitTotal.ToString("c");
             Charts.AddChartPoint(chartAccount1, "Budget", splitTotal); // Add Budget to the Chart
 

@@ -28,16 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 1D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(0D, 2D);
             this.btnSave = new System.Windows.Forms.Button();
-            this.flpBudget = new System.Windows.Forms.FlowLayoutPanel();
-            this.btnAddBudget = new System.Windows.Forms.Button();
-            this.tbBudgetTotal = new System.Windows.Forms.TextBox();
-            this.chartBudget = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.flpPeopleBills = new System.Windows.Forms.FlowLayoutPanel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,13 +38,12 @@
             this.manageAccountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.peopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.managePeopleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.chartBudget)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(8, 755);
+            this.btnSave.Location = new System.Drawing.Point(276, 26);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(89, 23);
             this.btnSave.TabIndex = 2;
@@ -61,71 +51,12 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // flpBudget
-            // 
-            this.flpBudget.AllowDrop = true;
-            this.flpBudget.AutoScroll = true;
-            this.flpBudget.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flpBudget.Location = new System.Drawing.Point(103, 714);
-            this.flpBudget.Name = "flpBudget";
-            this.flpBudget.Size = new System.Drawing.Size(1003, 239);
-            this.flpBudget.TabIndex = 4;
-            // 
-            // btnAddBudget
-            // 
-            this.btnAddBudget.BackColor = System.Drawing.Color.Yellow;
-            this.btnAddBudget.Location = new System.Drawing.Point(8, 714);
-            this.btnAddBudget.Name = "btnAddBudget";
-            this.btnAddBudget.Size = new System.Drawing.Size(89, 31);
-            this.btnAddBudget.TabIndex = 5;
-            this.btnAddBudget.Text = "Add Budget";
-            this.btnAddBudget.UseVisualStyleBackColor = false;
-            this.btnAddBudget.Click += new System.EventHandler(this.btnAddBudget_Click);
-            // 
-            // tbBudgetTotal
-            // 
-            this.tbBudgetTotal.Location = new System.Drawing.Point(460, 688);
-            this.tbBudgetTotal.Name = "tbBudgetTotal";
-            this.tbBudgetTotal.Size = new System.Drawing.Size(72, 20);
-            this.tbBudgetTotal.TabIndex = 8;
-            this.tbBudgetTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // chartBudget
-            // 
-            this.chartBudget.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.Area3DStyle.Enable3D = true;
-            chartArea3.BackColor = System.Drawing.Color.Transparent;
-            chartArea3.Name = "ChartArea1";
-            this.chartBudget.ChartAreas.Add(chartArea3);
-            legend3.BackColor = System.Drawing.Color.Transparent;
-            legend3.Name = "Legend1";
-            this.chartBudget.Legends.Add(legend3);
-            this.chartBudget.Location = new System.Drawing.Point(1112, 714);
-            this.chartBudget.Name = "chartBudget";
-            this.chartBudget.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Pastel;
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie;
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            dataPoint5.IsValueShownAsLabel = true;
-            dataPoint5.Label = "";
-            dataPoint5.LabelFormat = "c0";
-            dataPoint6.IsValueShownAsLabel = true;
-            dataPoint6.LabelFormat = "c";
-            dataPoint6.LegendText = "P1";
-            series3.Points.Add(dataPoint5);
-            series3.Points.Add(dataPoint6);
-            this.chartBudget.Series.Add(series3);
-            this.chartBudget.Size = new System.Drawing.Size(476, 239);
-            this.chartBudget.TabIndex = 20;
-            this.chartBudget.Text = "chart2";
-            // 
             // flpPeopleBills
             // 
             this.flpPeopleBills.AutoScroll = true;
             this.flpPeopleBills.Location = new System.Drawing.Point(2, 55);
             this.flpPeopleBills.Name = "flpPeopleBills";
-            this.flpPeopleBills.Size = new System.Drawing.Size(1596, 630);
+            this.flpPeopleBills.Size = new System.Drawing.Size(1596, 894);
             this.flpPeopleBills.TabIndex = 23;
             // 
             // menuStrip1
@@ -199,10 +130,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1604, 961);
             this.Controls.Add(this.flpPeopleBills);
-            this.Controls.Add(this.chartBudget);
-            this.Controls.Add(this.tbBudgetTotal);
-            this.Controls.Add(this.btnAddBudget);
-            this.Controls.Add(this.flpBudget);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -211,7 +138,6 @@
             this.Text = "Basic Bill Pay (and Budget)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.chartBudget)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -221,10 +147,6 @@
 
         #endregion
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.FlowLayoutPanel flpBudget;
-        private System.Windows.Forms.Button btnAddBudget;
-        private System.Windows.Forms.TextBox tbBudgetTotal;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chartBudget;
         private System.Windows.Forms.FlowLayoutPanel flpPeopleBills;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;

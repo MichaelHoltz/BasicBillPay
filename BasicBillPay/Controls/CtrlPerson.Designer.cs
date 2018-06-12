@@ -41,6 +41,8 @@
             this.lblAccount1 = new System.Windows.Forms.Label();
             this.tbTotalBills = new System.Windows.Forms.TextBox();
             this.btnAddBill = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addTransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.flpBills = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTotalIncome = new System.Windows.Forms.Label();
             this.cbPaidFrequency = new System.Windows.Forms.ComboBox();
@@ -52,12 +54,10 @@
             this.tbSavings = new System.Windows.Forms.TextBox();
             this.btnPayCheck = new System.Windows.Forms.Button();
             this.pTopHeader = new System.Windows.Forms.Panel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.addTransferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cctbTotalIncome = new BasicBillPay.Controls.CtrlCurrencyTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chartAccount1)).BeginInit();
-            this.pTopHeader.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            this.pTopHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // chartAccount1
@@ -87,7 +87,7 @@
             series1.Points.Add(dataPoint1);
             series1.Points.Add(dataPoint2);
             this.chartAccount1.Series.Add(series1);
-            this.chartAccount1.Size = new System.Drawing.Size(300, 144);
+            this.chartAccount1.Size = new System.Drawing.Size(300, 106);
             this.chartAccount1.TabIndex = 27;
             this.chartAccount1.Text = "chart1";
             // 
@@ -145,6 +145,20 @@
             this.btnAddBill.UseVisualStyleBackColor = false;
             this.btnAddBill.Click += new System.EventHandler(this.btnAddBill_Click);
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addTransferToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(142, 26);
+            // 
+            // addTransferToolStripMenuItem
+            // 
+            this.addTransferToolStripMenuItem.Name = "addTransferToolStripMenuItem";
+            this.addTransferToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.addTransferToolStripMenuItem.Text = "Add Transfer";
+            this.addTransferToolStripMenuItem.Click += new System.EventHandler(this.addTransferToolStripMenuItem_Click);
+            // 
             // flpBills
             // 
             this.flpBills.AllowDrop = true;
@@ -158,7 +172,7 @@
             this.flpBills.MaximumSize = new System.Drawing.Size(1040, 600);
             this.flpBills.MinimumSize = new System.Drawing.Size(1000, 46);
             this.flpBills.Name = "flpBills";
-            this.flpBills.Size = new System.Drawing.Size(1000, 84);
+            this.flpBills.Size = new System.Drawing.Size(1000, 46);
             this.flpBills.TabIndex = 20;
             // 
             // lblTotalIncome
@@ -271,20 +285,6 @@
             this.pTopHeader.Size = new System.Drawing.Size(1000, 60);
             this.pTopHeader.TabIndex = 38;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.addTransferToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(143, 26);
-            // 
-            // addTransferToolStripMenuItem
-            // 
-            this.addTransferToolStripMenuItem.Name = "addTransferToolStripMenuItem";
-            this.addTransferToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.addTransferToolStripMenuItem.Text = "Add Transfer";
-            this.addTransferToolStripMenuItem.Click += new System.EventHandler(this.addTransferToolStripMenuItem_Click);
-            // 
             // cctbTotalIncome
             // 
             this.cctbTotalIncome.Location = new System.Drawing.Point(384, 34);
@@ -305,14 +305,14 @@
             this.Controls.Add(this.pTopHeader);
             this.Controls.Add(this.chartAccount1);
             this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(1300, 146);
+            this.MinimumSize = new System.Drawing.Size(1300, 108);
             this.Name = "CtrlPerson";
-            this.Size = new System.Drawing.Size(1300, 144);
+            this.Size = new System.Drawing.Size(1300, 106);
             this.Load += new System.EventHandler(this.CtrlPerson_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chartAccount1)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.pTopHeader.ResumeLayout(false);
             this.pTopHeader.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

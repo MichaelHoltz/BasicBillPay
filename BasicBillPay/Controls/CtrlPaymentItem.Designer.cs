@@ -116,6 +116,7 @@
             this.cctbAmount.TabIndex = 7;
             this.cctbAmount.Tag = "Amount";
             this.cctbAmount.Value = 0F;
+            this.cctbAmount.ValueChanged += new System.EventHandler(this.cctbAmount_ValueChanged);
             // 
             // CtrlPaymentItem
             // 

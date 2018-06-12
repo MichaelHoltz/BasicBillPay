@@ -12,31 +12,70 @@ using System.Globalization;
 using BasicBillPay.Tools;
 namespace BasicBillPay.Controls
 {
-    public partial class CtrlBudgetItem : CtrlSortableBase
+    internal partial class CtrlBudgetItem : CtrlSortableBase
     {
         private float Total = 100f;
         private float Split1 = 50f;
         private float Split2 = 50f;
         private float splitPercentage = .5f;
         BudgetItem b;
+        Database databaseFunctions;
+        public event EventHandler BudgetTotalChanged;
+        public event EventHandler BudgetSplitChanged;
         public CtrlBudgetItem()
         {
             InitializeComponent();
         }
-        public CtrlBudgetItem(ref BudgetItem budgetItem, int itemIndex) : base(itemIndex)
+        public CtrlBudgetItem(ref BudgetItem budgetItem, int itemIndex, Database database) : base(itemIndex)
         {
             InitializeComponent();
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
             b = budgetItem;
-
+            b.PropertyChanged -= BudgetItem_PropertyChanged; //Remove first pattern.
+            b.PropertyChanged += BudgetItem_PropertyChanged;
             Total = b.Amount;
             Split1 = b.Split1Amount;
             Split2 = b.Split2Amount;
-
-
-
+            tbName.BackColor = BackColor;
+            tbSplit1Account.BackColor = BackColor;
+            tbSplit2Account.BackColor = BackColor;
+            databaseFunctions = database;
         }
+
+        private void BudgetItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Amount":
+                    if (Total != b.Amount)
+                    {
+                        Total = b.Amount;
+                        CalculateSplit(0);
+                        BudgetTotalChanged?.Invoke(this, new EventArgs());
+                    }
+                    break;
+                case "Split1Amount":
+                    if (Split1 != b.Split1Amount)
+                    {
+                        Split1 = b.Split1Amount;
+                        CalculateSplit(1);
+                        BudgetSplitChanged?.Invoke(this, new EventArgs());
+                    }
+                    break;
+                case "Split2Amount":
+                    if (Split2 != b.Split2Amount)
+                    {
+                        Split2 = b.Split2Amount;
+                        CalculateSplit(2);
+                        BudgetSplitChanged?.Invoke(this, new EventArgs());
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void CtrlBudget_Load(object sender, EventArgs e)
         {
 
@@ -52,33 +91,45 @@ namespace BasicBillPay.Controls
             //cbPaidFrequency.DisplayMember
 
             //Total Budget Amount
-            tbAmount.DataBindings.Clear();
-            Binding bb = new Binding("Text", b.Amount, "");
-            //// Add the delegates to the event.
-            bb.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            bb.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            tbAmount.DataBindings.Add(bb);
+            cctbAmount.Bind(b, "Amount");
 
             //Split1Amount
-            tbSplit1Amount.DataBindings.Clear();
-            Binding bb2 = new Binding("Text", b.Split1Amount, "");
-            // Add the delegates to the event.
-            bb2.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            bb2.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            tbSplit1Amount.DataBindings.Add(bb2);
+            cctbSplit1Amount.Bind(b, "Split1Amount");
+
+            tbSplit1Account.DataBindings.Clear();
+            tbSplit1Account.DataBindings.Add("Text", databaseFunctions.GetPerson(b.Split1AccountId), "");
 
             ////Split2Amount
-            tbSplit2Amount.DataBindings.Clear();
-            Binding bb3 = new Binding("Text", b.Split2Amount, "");
-            //// Add the delegates to the event.
-            bb3.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            bb3.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            tbSplit2Amount.DataBindings.Add(bb3);
-
+            cctbSplit2Amount.Bind(b, "Split2Amount");
+            tbSplit2Account.DataBindings.Clear();
+            tbSplit2Account.DataBindings.Add("Text", databaseFunctions.GetPerson(b.Split2AccountId), "");
             //Set in Constructor
-            splitPercentage = (Split1 / Total);
+            if (Total == 0)
+                splitPercentage =0;
+            else
+                splitPercentage = (Split1 / Total);
             CalculateSplit(0);
         }
+
+        public List<HeaderItem> GetHeaderItems()
+        {
+            List<HeaderItem> retVal = new List<HeaderItem>();
+            //Want to order by Tab Index
+            foreach (Control item in Controls.OfType<Control>().OrderBy(o => o.TabIndex))
+            {
+                if (item.Tag.ToString() != "Ignore")
+                {
+                    HeaderItem hi = new HeaderItem();
+                    hi.Title = item.Tag.ToString(); // 
+                    hi.Width = item.Width;
+                    hi.SourceLeft = item.Left;
+
+                    retVal.Add(hi);
+                }
+            }
+            return retVal;
+        }
+
         /// <summary>
         /// Zero is based on Total Changing
         /// 1 is Split1
@@ -95,54 +146,70 @@ namespace BasicBillPay.Controls
                     //Change both Split1 and Split2
                     Split1 = (splitPercentage * Total);
                     Split2 = Total - Split1; //The Rest..
-                    tbSplit1Amount.Text = ((float)Split1).ToString("c");
-                    tbSplit2Amount.Text = ((float)Split2).ToString("c");
+                    cctbSplit1Amount.Text = ((float)Split1).ToString("c");
+                    cctbSplit2Amount.Text = ((float)Split2).ToString("c");
+                    b.Split1Amount = Split1;
+                    b.Split2Amount = Split2;
                     break;
                 case 1:
                     //Change Split 2
                     Split2 = Total - Split1;
-                    splitPercentage = (Split1 / Total);
-                    tbSplit2Amount.Text = ((float)Split2).ToString("c");
+                    if (Total == 0)
+                        splitPercentage = 0;
+                    else
+                        splitPercentage = (Split1 / Total);
+                    cctbSplit2Amount.Text = ((float)Split2).ToString("c");
+                    b.Split2Amount = Split2;
                     break;
                 case 2:
                     Split1 = Total - Split2;
-                    splitPercentage = (Split1 / Total);
-                    tbSplit1Amount.Text = ((float)Split1).ToString("c");
+                    if (Total == 0)
+                        splitPercentage = 0;
+                    else
+                        splitPercentage = (Split1 / Total);
+                    cctbSplit1Amount.Text = ((float)Split1).ToString("c");
+                    b.Split1Amount = Split1;
                     //Change Split 1
                     break;
             }
         }
 
+        //private void cctbSplit1Amount_Leave(object sender, EventArgs e)
+        //{
+        //   // CalculateSplit(1);
+        //}
 
-        private void tbSplit1Amount_Leave(object sender, EventArgs e)
-        {
-            Split1 = float.Parse(tbSplit1Amount.Text, NumberStyles.Currency, null);
-            tbSplit1Amount.Text = ((float)Split1).ToString("c");
-            CalculateSplit(1);
-            b.Split1Amount = Split1;
-        }
+        //private void cctbSplit2Amount_Leave(object sender, EventArgs e)
+        //{
+        //  //  CalculateSplit(2);
+        //}
 
-        private void tbSplit2Amount_Leave(object sender, EventArgs e)
-        {
-            Split2 = float.Parse(tbSplit2Amount.Text, NumberStyles.Currency, null);
-            tbSplit2Amount.Text = ((float)Split2).ToString("c");
-            b.Split2Amount = Split2;
-            CalculateSplit(2);
-        }
-        private void tbAmount_Leave(object sender, EventArgs e)
-        {
-            Total = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
-            tbAmount.Text = ((float)Total).ToString("c");
-            b.Amount = Total;
-            CalculateSplit(0);
-        }
+        //private void cctbAmount_Leave(object sender, EventArgs e)
+        //{
+        //   // CalculateSplit(0);
+        //}
+        ////private void tbSplit1Amount_Leave(object sender, EventArgs e)
+        ////{
+        ////    Split1 = float.Parse(tbSplit1Amount.Text, NumberStyles.Currency, null);
+        ////    tbSplit1Amount.Text = ((float)Split1).ToString("c");
+        ////    CalculateSplit(1);
+        ////    b.Split1Amount = Split1;
+        ////}
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            object cpfSI = cbPaidFrequency.SelectedItem;
-            String cpfStr = cbPaidFrequency.SelectedText;
-            object cpfSV = cbPaidFrequency.SelectedValue;
-        }
+        ////private void tbSplit2Amount_Leave(object sender, EventArgs e)
+        ////{
+        ////    Split2 = float.Parse(tbSplit2Amount.Text, NumberStyles.Currency, null);
+        ////    tbSplit2Amount.Text = ((float)Split2).ToString("c");
+        ////    b.Split2Amount = Split2;
+        ////    CalculateSplit(2);
+        ////}
+        ////private void tbAmount_Leave(object sender, EventArgs e)
+        ////{
+        ////    Total = float.Parse(tbAmount.Text, NumberStyles.Currency, null);
+        ////    tbAmount.Text = ((float)Total).ToString("c");
+        ////    b.Amount = Total;
+        ////    CalculateSplit(0);
+        ////}
 
         private void cbPaidFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -207,5 +274,7 @@ namespace BasicBillPay.Controls
             // If the ListBox has focus, draw a focus rectangle around the selected item.
             e.DrawFocusRectangle();
         }
+
+
     }
 }

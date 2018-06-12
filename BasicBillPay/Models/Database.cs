@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,8 +13,19 @@ namespace BasicBillPay.Models
     /// <summary>
     /// All Data
     /// </summary>
-    public class Database:EncryptedModel
+    public class Database:EncryptedModel, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
         public int NextPayCheckId { get; set; }
         public HashSet<Paycheck> PayChecks { get; set; }
         public int NextAccountId { get; set; }
@@ -21,7 +34,7 @@ namespace BasicBillPay.Models
         public HashSet<Payment> Payments { get; set; }
         public int NextBudgetItemId { get; set; }
         public HashSet<BudgetItem> BudgetItems { get; set; }
-
+        public int NextPersonId { get; set; }
         /// <summary>
         /// People relevant to this system.
         /// </summary>
@@ -180,7 +193,7 @@ namespace BasicBillPay.Models
         }
         #endregion Account Functions
         #region Payment Functions
-        public Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, TransactionPeriod paymentFrequency)
+        internal Payment AddPayment(int payToId, int payFromId, DateTime dateDue, DateTime datePaid, float paymentAmount, TransactionPeriod paymentFrequency)
         {
             Payment p = new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount, paymentFrequency);
             bool retVal = Payments.Add(p);
@@ -200,7 +213,7 @@ namespace BasicBillPay.Models
         /// <param name="amount"></param>
         /// <param name="paidFrequency"></param>
         /// <returns></returns>
-        public BudgetItem AddBudgetItem(String name, float amount, TransactionPeriod paidFrequency)
+        internal BudgetItem AddBudgetItem(String name, float amount, TransactionPeriod paidFrequency)
         {
             BudgetItem b = new BudgetItem(NextBudgetItemId++, name, amount, paidFrequency); // new Payment(NextPaymentId++, payToId, payFromId, dateDue, datePaid, paymentAmount);
             bool retVal = BudgetItems.Add(b);
@@ -211,16 +224,87 @@ namespace BasicBillPay.Models
             return b;
 
         }
+        [JsonIgnore]
+        public TransactionPeriod budgetTransactionPeriod { get; set; } = TransactionPeriod.Monthly;
+        public float BudgetTotal
+        {
+            get
+            {
+                float BudgetTotal = 0f;
+                //float BudgetSplit1Total = 0f;
+                //float BudgetSplit2Total = 0f;
+                foreach (BudgetItem bItem in BudgetItems)
+                {
+                    BudgetTotal += bItem.GetAmount(bItem.Amount, budgetTransactionPeriod);
+                  //  BudgetSplit1Total += bItem.GetAmount(bItem.Split1Amount, budgetTransactionPeriod);
+                  //  BudgetSplit2Total += bItem.GetAmount(bItem.Split2Amount, budgetTransactionPeriod);
+                }
+                return BudgetTotal;
+            }
+            set
+            {
+                //Nothing to set.. which makes binding seem silly..
+            }
+        }
+        /// <summary>
+        /// WRONG - due to the planned ability to choose split so would be adding apples and non-apples.
+        /// </summary>
+        public float BudgetSplit1Total
+        {
+            get
+            {
+                float BudgetSplit1Total = 0f;
+                foreach (BudgetItem bItem in BudgetItems)
+                {
+                    BudgetSplit1Total += bItem.GetAmount(bItem.Split1Amount, budgetTransactionPeriod);
+                }
+                return BudgetSplit1Total;
+            }
+        }
+        /// <summary>
+        /// WRONG - due to the planned ability to choose split so would be adding apples and non-apples.
+        /// </summary>
+
+        public float BudgetSplit2Total
+        {
+            get
+            {
+                float BudgetSplit2Total = 0f;
+                foreach (BudgetItem bItem in BudgetItems)
+                {
+                    BudgetSplit2Total += bItem.GetAmount(bItem.Split2Amount, budgetTransactionPeriod);
+                }
+                return BudgetSplit2Total;
+            }
+        }
+        public float MyBudgetTotal(int myId)
+        {
+            float budgetTotal = 0f;
+            foreach (BudgetItem bItem in BudgetItems.Where(o=>o.Split1AccountId == myId))
+            {
+                budgetTotal += bItem.GetAmount(bItem.Split1Amount, budgetTransactionPeriod);
+            }
+            foreach (BudgetItem bItem in BudgetItems.Where(o => o.Split2AccountId == myId))
+            {
+                budgetTotal += bItem.GetAmount(bItem.Split2Amount, budgetTransactionPeriod);
+            }
+            return budgetTotal;
+        }
         #endregion Budget Item Functions
         #region People Functions
         public Person GetPerson(String name)
         {
             return People.FirstOrDefault(o => o.Name == name);
         }
+        public Person GetPerson(int id)
+        {
+            return People.FirstOrDefault(o => o.Id == id);
+        }
+
         public Person AddPerson(String name)
         {
             //Add the Person
-            Person person = new Person(name);
+            Person person = new Person(name, NextPersonId++);
             People.Add(person);
 
             //Add Default Income Tracking Account

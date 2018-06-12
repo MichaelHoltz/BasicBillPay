@@ -23,13 +23,24 @@ namespace BasicBillPay.Controls
         String propertyName;
         bool isValid = true;
         String badFloat = String.Empty;
-
+        public event EventHandler ValueChanged;
         public CtrlCurrencyTextBox()
         {
             InitializeComponent();
         }
 
-        public float Value { get; set; }
+        private float value = 0f;
+        public float Value {
+            get { return value; }
+            set
+            {
+                if (value != this.value)
+                {
+                    this.value = value;
+                    ValueChanged?.Invoke(this, new EventArgs());
+                }
+            }
+                }
 
         public void Bind(INotifyPropertyChanged dataObject, String propertyName)
         {
@@ -37,21 +48,24 @@ namespace BasicBillPay.Controls
             this.propertyName = propertyName;
             Bind();
         }
-        public void Bind<T>(T iNotifyPropertyChangedDataObject_Property)
-        {
-            T obj;
-            
-            this.dataObject = iNotifyPropertyChangedDataObject_Property  as INotifyPropertyChanged;
-            this.propertyName = "";
-            Bind();
+        //public void Bind<T>(T iNotifyPropertyChangedDataObject_Property)
+        //{
+        //    T obj;
 
-        }
-        private void Bind()
+        //    this.dataObject = iNotifyPropertyChangedDataObject_Property; // as INotifyPropertyChanged;
+        //    this.propertyName = "";
+        //    Bind();
+
+        //}
+        /// <summary>
+        /// One Way binding..
+        /// </summary>
+        /// <param name="dataSource"></param>
+        public void Bind(object dataSource)
         {
-            dataObject.PropertyChanged -= DataObject_PropertyChanged; //Remove First Pattern
-            dataObject.PropertyChanged += DataObject_PropertyChanged;
             tbCurrency.DataBindings.Clear();
-            Binding b = new Binding("Text", dataObject, propertyName);
+            Binding b = new Binding("Text", dataSource, "");
+
             b.Format += B_Format;
             b.Parse += B_Parse;
             //// Add the delegates to the event.
@@ -61,6 +75,28 @@ namespace BasicBillPay.Controls
             b.Parse -= new ConvertEventHandler(Conversion.CurrencyStringToFloat);//Remove First Pattern
             b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
             tbCurrency.DataBindings.Add(b);
+
+        }
+        private void Bind()
+        {
+            if (dataObject != null && !String.IsNullOrEmpty(propertyName))
+            {
+
+                dataObject.PropertyChanged -= DataObject_PropertyChanged; //Remove First Pattern
+                dataObject.PropertyChanged += DataObject_PropertyChanged;
+                tbCurrency.DataBindings.Clear();
+                Binding b = new Binding("Text", dataObject, propertyName);
+
+                b.Format += B_Format;
+                b.Parse += B_Parse;
+                //// Add the delegates to the event.
+
+                b.Format -= new ConvertEventHandler(Conversion.FloatToCurrencyString);//Remove First Pattern
+                b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
+                b.Parse -= new ConvertEventHandler(Conversion.CurrencyStringToFloat);//Remove First Pattern
+                b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
+                tbCurrency.DataBindings.Add(b);
+            }
 
         }
 
@@ -147,5 +183,15 @@ namespace BasicBillPay.Controls
         {
             tbCurrency.SelectAll();
         }
+        /// <summary>
+        /// This is for when it's not bound and it's being set.. (I think setting the value would be better.)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tbCurrency_TextChanged(object sender, EventArgs e)
+        {
+            Value = float.Parse(tbCurrency.Text, NumberStyles.Currency, null);
+        }
+        
     }
 }
