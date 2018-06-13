@@ -23,24 +23,25 @@ namespace BasicBillPay.Controls
         String propertyName;
         bool isValid = true;
         String badFloat = String.Empty;
-        public event EventHandler ValueChanged;
+        public event EventHandler<AmountChangedEventArgs> ValueChanged;
         public CtrlCurrencyTextBox()
         {
             InitializeComponent();
         }
 
         private float value = 0f;
-        public float Value {
+        public float Value
+        {
             get { return value; }
             set
             {
                 if (value != this.value)
                 {
                     this.value = value;
-                    ValueChanged?.Invoke(this, new EventArgs());
+                    ValueChanged?.Invoke(this, new AmountChangedEventArgs(this.value));
                 }
             }
-                }
+        }
 
         public void Bind(INotifyPropertyChanged dataObject, String propertyName)
         {
@@ -48,15 +49,6 @@ namespace BasicBillPay.Controls
             this.propertyName = propertyName;
             Bind();
         }
-        //public void Bind<T>(T iNotifyPropertyChangedDataObject_Property)
-        //{
-        //    T obj;
-
-        //    this.dataObject = iNotifyPropertyChangedDataObject_Property; // as INotifyPropertyChanged;
-        //    this.propertyName = "";
-        //    Bind();
-
-        //}
         /// <summary>
         /// One Way binding..
         /// </summary>
@@ -170,12 +162,8 @@ namespace BasicBillPay.Controls
         {
             if (tbCurrency.Text.Contains("$"))
             {
-                //int ss = tbCurrency.SelectionStart-1;
                 tbCurrency.Text = tbCurrency.Text.Replace("$", "").Replace(",","");
-               // int count = tbCurrency.Text.Count(f => f == ',');
-                //tbCurrency.SelectionStart = ss;
                 tbCurrency.SelectAll();
-                
             }
         }
 
@@ -192,6 +180,15 @@ namespace BasicBillPay.Controls
         {
             Value = float.Parse(tbCurrency.Text, NumberStyles.Currency, null);
         }
-        
+        public class AmountChangedEventArgs : EventArgs
+        {
+            public String ValueString { get; }
+            public float Value { get; }
+            public AmountChangedEventArgs(float value)
+            {
+                Value = value;
+                ValueString = Value.ToString("C");
+            }
+        }
     }
 }

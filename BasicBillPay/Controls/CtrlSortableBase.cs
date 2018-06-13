@@ -96,10 +96,11 @@ namespace BasicBillPay.Controls
             o = e.Data.GetData(typeof(CtrlPaymentItem));
             if (o == null)
             {
+
+                o = e.Data.GetData(typeof(CtrlBudgetItem));
+                if (o == null)
+                {
                 //Examples from different application for different types
-                //o = e.Data.GetData(typeof(FrameMessageCtrl));
-                //if (o == null)
-                //{
                 //    o = e.Data.GetData(typeof(FrameRetryCtrl));
                 //    if (o == null)
                 //    {
@@ -118,7 +119,7 @@ namespace BasicBillPay.Controls
                 //            }
                 //        }
                 //    }
-                //}
+                }
             }
             return o;
         }

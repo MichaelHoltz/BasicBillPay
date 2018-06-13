@@ -93,7 +93,7 @@ namespace BasicBillPay.Models
                 }
             }
         }
-        private int split1AccountId = 0;
+        private int split1AccountId = -1;
         public int Split1AccountId
         {
             get { return split1AccountId; }
@@ -119,7 +119,7 @@ namespace BasicBillPay.Models
                 }
             }
         }
-        private int split2AccountId = 0;
+        private int split2AccountId = -1;
         public int Split2AccountId
         {
             get { return split2AccountId; }
@@ -136,11 +136,13 @@ namespace BasicBillPay.Models
         public BudgetItem()
         {
         }
-        public BudgetItem(int id, String name, float amount, TransactionPeriod paidFrequency):base(paidFrequency)
+        public BudgetItem(int id, String name, float amount, TransactionPeriod paidFrequency, int accountid1, int accountid2):base(paidFrequency)
         {
             Id = id;
             Name = name;
             Amount = amount;
+            Split1AccountId = accountid1;
+            split2AccountId = accountid2;
         }
         #region Overrides
         /// <summary>

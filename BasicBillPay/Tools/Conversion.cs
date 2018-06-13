@@ -52,5 +52,15 @@ namespace BasicBillPay.Tools
             }
             return singlularName + ending;
         }
+        internal static Boolean ListsContainSameItems<T>(List<T> list1, List<T> list2)
+        {
+            //Different Size lists will never be equal..
+            if (list1.Count != list2.Count)
+                return false;
+
+            int combine = list1.Union(list2).Count(); //If the combined total count = either one count then they are the same.
+
+            return combine == list1.Count();
+        }
     }
 }

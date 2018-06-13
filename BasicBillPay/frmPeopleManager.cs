@@ -98,6 +98,7 @@ namespace BasicBillPay
             else
             {
                 //This should be a new person anyway if no list box selection
+                //Danger in getting anything by Name!!!
                 p = db.GetPerson(tbName.Text.Trim());
             }
             if (p == null)

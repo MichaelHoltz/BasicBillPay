@@ -38,7 +38,7 @@
             this.tbTotalIncome = new System.Windows.Forms.TextBox();
             this.tbTotalBillBudgetAccount1 = new System.Windows.Forms.TextBox();
             this.tbSplitTotal = new System.Windows.Forms.TextBox();
-            this.lblAccount1 = new System.Windows.Forms.Label();
+            this.lblPerson = new System.Windows.Forms.Label();
             this.tbTotalBills = new System.Windows.Forms.TextBox();
             this.btnAddBill = new System.Windows.Forms.Button();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -114,16 +114,15 @@
             this.tbSplitTotal.Size = new System.Drawing.Size(72, 20);
             this.tbSplitTotal.TabIndex = 24;
             this.tbSplitTotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.tbSplitTotal.TextChanged += new System.EventHandler(this.tbSplitTotal_TextChanged);
             // 
             // lblAccount1
             // 
-            this.lblAccount1.AutoSize = true;
-            this.lblAccount1.Location = new System.Drawing.Point(8, 2);
-            this.lblAccount1.Name = "lblAccount1";
-            this.lblAccount1.Size = new System.Drawing.Size(64, 13);
-            this.lblAccount1.TabIndex = 23;
-            this.lblAccount1.Text = "M Checking";
+            this.lblPerson.AutoSize = true;
+            this.lblPerson.Location = new System.Drawing.Point(8, 2);
+            this.lblPerson.Name = "lblAccount1";
+            this.lblPerson.Size = new System.Drawing.Size(64, 13);
+            this.lblPerson.TabIndex = 23;
+            this.lblPerson.Text = "M Checking";
             // 
             // tbTotalBills
             // 
@@ -267,7 +266,7 @@
             this.pTopHeader.Controls.Add(this.btnAddBill);
             this.pTopHeader.Controls.Add(this.lblSavings);
             this.pTopHeader.Controls.Add(this.tbTotalBills);
-            this.pTopHeader.Controls.Add(this.lblAccount1);
+            this.pTopHeader.Controls.Add(this.lblPerson);
             this.pTopHeader.Controls.Add(this.lblExpenseTotal);
             this.pTopHeader.Controls.Add(this.tbSplitTotal);
             this.pTopHeader.Controls.Add(this.lblBudgetTotal);
@@ -324,7 +323,7 @@
         private System.Windows.Forms.TextBox tbTotalIncome;
         private System.Windows.Forms.TextBox tbTotalBillBudgetAccount1;
         private System.Windows.Forms.TextBox tbSplitTotal;
-        private System.Windows.Forms.Label lblAccount1;
+        private System.Windows.Forms.Label lblPerson;
         private System.Windows.Forms.TextBox tbTotalBills;
         private System.Windows.Forms.Button btnAddBill;
         private System.Windows.Forms.FlowLayoutPanel flpBills;

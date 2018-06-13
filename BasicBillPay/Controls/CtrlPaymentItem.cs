@@ -85,7 +85,6 @@ namespace BasicBillPay.Controls
         private void CtrlPayment_IndexChanged(object sender, EventArgs e)
         {
            // p.Index = ItemIndex;
-           // throw new NotImplementedException();
         }
 
         private void CtrlPayment_Load(object sender, EventArgs e)
@@ -222,9 +221,10 @@ namespace BasicBillPay.Controls
 
         }
 
-        private void cctbAmount_ValueChanged(object sender, EventArgs e)
+        private void cctbAmount_ValueChanged(object sender, CtrlCurrencyTextBox.AmountChangedEventArgs e)
         {
-            AmountChanged?.Invoke(sender, new AmountChangedEventArgs(TransactionPeriod.Monthly, p.PaymentAmount));
+            p.PaymentAmount = e.Value; // Value does not need to be translated because it is set in the control.
+            AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount));
         }
     }
 }

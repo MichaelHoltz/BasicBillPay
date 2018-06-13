@@ -17,11 +17,13 @@ namespace BasicBillPay.Controls
         private float Total = 100f;
         private float Split1 = 50f;
         private float Split2 = 50f;
-        private float splitPercentage = .5f;
+        private float splitPercentage = 1f;
         BudgetItem b;
         Database databaseFunctions;
         public event EventHandler BudgetTotalChanged;
         public event EventHandler BudgetSplitChanged;
+        bool updatingds1 = false;
+        bool updatingds2 = false;
         public CtrlBudgetItem()
         {
             InitializeComponent();
@@ -31,16 +33,37 @@ namespace BasicBillPay.Controls
             InitializeComponent();
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
+
+
+            
+
             b = budgetItem;
             b.PropertyChanged -= BudgetItem_PropertyChanged; //Remove first pattern.
             b.PropertyChanged += BudgetItem_PropertyChanged;
+
+            base.ReorderIndexes -= CtrlBudgetItem_ReorderIndexes; // Remove first Pattern
+            base.ReorderIndexes += CtrlBudgetItem_ReorderIndexes;
             Total = b.Amount;
             Split1 = b.Split1Amount;
             Split2 = b.Split2Amount;
             tbName.BackColor = BackColor;
-            tbSplit1Account.BackColor = BackColor;
-            tbSplit2Account.BackColor = BackColor;
+            cbbSplit1Account.BackColor = BackColor; //Does nothing at this time
+            cbbSplit2Account.BackColor = BackColor; //Does nothing at this time
             databaseFunctions = database;
+
+            //For Mutual Exclusion
+            cbbSplit1Account.DataSource = new List<Person>(); // Needed in this order
+            cbbSplit2Account.DataSource = new List<Person>(); //Needed in this order
+            updatingds1 = updatingds2 = true;
+            cbbSplit1Account.DataSource = databaseFunctions.GetPeople(true);
+            cbbSplit2Account.DataSource = databaseFunctions.GetPeople(true); //Want mutual exclusion so that the same person can't be selected for both.
+            updatingds1 = updatingds2 = false;
+
+        }
+
+        private void CtrlBudgetItem_ReorderIndexes(object sender, EventArgs e)
+        {
+            b.Index = ItemIndex;
         }
 
         private void BudgetItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -95,17 +118,29 @@ namespace BasicBillPay.Controls
 
             //Split1Amount
             cctbSplit1Amount.Bind(b, "Split1Amount");
-
-            tbSplit1Account.DataBindings.Clear();
-            tbSplit1Account.DataBindings.Add("Text", databaseFunctions.GetPerson(b.Split1AccountId), "");
+            Person p1 = databaseFunctions.GetPerson(b.Split1AccountId);
+            if (p1 != null)
+            {
+                cbbSplit1Account.Text = p1.Name;
+                //tbSplit1Account.DataBindings.Clear();
+                //tbSplit1Account.DataBindings.Add("Text", p1, "");
+            }
 
             ////Split2Amount
             cctbSplit2Amount.Bind(b, "Split2Amount");
-            tbSplit2Account.DataBindings.Clear();
-            tbSplit2Account.DataBindings.Add("Text", databaseFunctions.GetPerson(b.Split2AccountId), "");
+            
+            Person p2 = databaseFunctions.GetPerson(b.Split2AccountId);
+            if (p2 != null)
+            {
+                cbbSplit2Account.Text = p2.Name;
+//                tbSplit2Account.DataBindings.Clear();
+//                tbSplit2Account.DataBindings.Add("Text", p2, "");
+            }
+
+
             //Set in Constructor
             if (Total == 0)
-                splitPercentage =0;
+                splitPercentage =1f;
             else
                 splitPercentage = (Split1 / Total);
             CalculateSplit(0);
@@ -129,6 +164,8 @@ namespace BasicBillPay.Controls
             }
             return retVal;
         }
+
+
 
         /// <summary>
         /// Zero is based on Total Changing
@@ -155,7 +192,7 @@ namespace BasicBillPay.Controls
                     //Change Split 2
                     Split2 = Total - Split1;
                     if (Total == 0)
-                        splitPercentage = 0;
+                        splitPercentage = 1f;
                     else
                         splitPercentage = (Split1 / Total);
                     cctbSplit2Amount.Text = ((float)Split2).ToString("c");
@@ -164,7 +201,7 @@ namespace BasicBillPay.Controls
                 case 2:
                     Split1 = Total - Split2;
                     if (Total == 0)
-                        splitPercentage = 0;
+                        splitPercentage = 1f;
                     else
                         splitPercentage = (Split1 / Total);
                     cctbSplit1Amount.Text = ((float)Split1).ToString("c");
@@ -174,6 +211,10 @@ namespace BasicBillPay.Controls
             }
         }
 
+        public BudgetItem GetBudgetItem()
+        {
+            return b;
+        }
         //private void cctbSplit1Amount_Leave(object sender, EventArgs e)
         //{
         //   // CalculateSplit(1);
@@ -275,6 +316,46 @@ namespace BasicBillPay.Controls
             e.DrawFocusRectangle();
         }
 
+        private void cbbSplit1Account_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbbSplit1Account.SelectedIndex >= 0 && !updatingds1)
+            {
+                Person p = cbbSplit1Account.SelectedItem as Person;
+                //if (!String.IsNullOrEmpty(p.Name))
+                //{
+                if (!Conversion.ListsContainSameItems<Person>(cbbSplit2Account.DataSource as List<Person>, databaseFunctions.GetPeople(true, p)))
+                {
+                    updatingds2 = true;
+                    Person p2 = cbbSplit2Account.SelectedItem as Person;
+                    cbbSplit2Account.DataSource = databaseFunctions.GetPeople(true, p); //Want mutual exclusion so that the same person can't be selected for both.
+                    cbbSplit2Account.SelectedItem = p2;
+                    updatingds2 = false;
+                }
+                
+               // }
+                b.Split1AccountId = p.Id;
+            }
+        }
 
+        private void cbbSplit2Account_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbbSplit2Account.SelectedIndex >= 0 && !updatingds2)
+            {
+                Person p = cbbSplit2Account.SelectedItem as Person;
+                //if (!String.IsNullOrEmpty(p.Name))
+                //{
+                    if (!Conversion.ListsContainSameItems<Person>(cbbSplit1Account.DataSource as List<Person>, databaseFunctions.GetPeople(true, p)))
+                    {
+                        updatingds1 = true;
+                        Person p1 = cbbSplit1Account.SelectedItem as Person; //Save Selected Person
+                        cbbSplit1Account.DataSource = databaseFunctions.GetPeople(true, p); //Want mutual exclusion so that the same person can't be selected for both.
+                        cbbSplit1Account.SelectedItem = p1;
+                         updatingds1 = false;
+                    }
+                    
+                //}
+                b.Split2AccountId = p.Id;
+            }
+        }
     }
 }

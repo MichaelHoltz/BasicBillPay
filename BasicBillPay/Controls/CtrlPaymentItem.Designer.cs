@@ -40,7 +40,7 @@
             // dtpDateDue
             // 
             this.dtpDateDue.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateDue.Location = new System.Drawing.Point(486, 0);
+            this.dtpDateDue.Location = new System.Drawing.Point(482, 0);
             this.dtpDateDue.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDateDue.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDateDue.Name = "dtpDateDue";
@@ -53,7 +53,7 @@
             // 
             this.dtpDatePaid.CustomFormat = "";
             this.dtpDatePaid.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDatePaid.Location = new System.Drawing.Point(583, 0);
+            this.dtpDatePaid.Location = new System.Drawing.Point(578, 0);
             this.dtpDatePaid.MaxDate = new System.DateTime(2400, 12, 31, 0, 0, 0, 0);
             this.dtpDatePaid.MinDate = new System.DateTime(2016, 1, 1, 0, 0, 0, 0);
             this.dtpDatePaid.Name = "dtpDatePaid";
@@ -65,7 +65,7 @@
             // 
             this.cbPaidFrequency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPaidFrequency.FormattingEnabled = true;
-            this.cbPaidFrequency.Location = new System.Drawing.Point(414, 0);
+            this.cbPaidFrequency.Location = new System.Drawing.Point(411, 0);
             this.cbPaidFrequency.Margin = new System.Windows.Forms.Padding(0);
             this.cbPaidFrequency.Name = "cbPaidFrequency";
             this.cbPaidFrequency.Size = new System.Drawing.Size(71, 21);
@@ -98,7 +98,7 @@
             // catbPayFrom
             // 
             this.catbPayFrom.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.catbPayFrom.Location = new System.Drawing.Point(231, 0);
+            this.catbPayFrom.Location = new System.Drawing.Point(229, 0);
             this.catbPayFrom.Margin = new System.Windows.Forms.Padding(0);
             this.catbPayFrom.MinimumSize = new System.Drawing.Size(40, 20);
             this.catbPayFrom.Name = "catbPayFrom";
@@ -109,14 +109,14 @@
             // cctbAmount
             // 
             this.cctbAmount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.cctbAmount.Location = new System.Drawing.Point(680, 0);
+            this.cctbAmount.Location = new System.Drawing.Point(674, 0);
             this.cctbAmount.Margin = new System.Windows.Forms.Padding(0);
             this.cctbAmount.Name = "cctbAmount";
             this.cctbAmount.Size = new System.Drawing.Size(72, 20);
             this.cctbAmount.TabIndex = 7;
             this.cctbAmount.Tag = "Amount";
             this.cctbAmount.Value = 0F;
-            this.cctbAmount.ValueChanged += new System.EventHandler(this.cctbAmount_ValueChanged);
+            this.cctbAmount.ValueChanged += new System.EventHandler<CtrlCurrencyTextBox.AmountChangedEventArgs>(this.cctbAmount_ValueChanged);
             // 
             // CtrlPaymentItem
             // 

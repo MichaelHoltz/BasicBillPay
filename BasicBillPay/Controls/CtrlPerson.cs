@@ -22,7 +22,6 @@ namespace BasicBillPay.Controls
     {
         Database db = null;
         Person person = null;
-        TransactionPeriod currentTransactionPeriod = TransactionPeriod.Monthly; // Default Period
         int paymentItemIndex = 0;
         public CtrlPerson()
         {
@@ -33,21 +32,31 @@ namespace BasicBillPay.Controls
             InitializeComponent();
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
-            cbPaidFrequency.Text = currentTransactionPeriod.ToString();
+            cbPaidFrequency.Text =  person.TotalsTransactionPeriod.ToString();
             db = database;
             paymentItemIndex = pii;
             this.person = person;
+            this.person.PropertyChanged += Person_PropertyChanged;
+        }
+        /// <summary>
+        /// One of the Person's properties Changed..
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Person_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //Property Changes come from PayCheck Change, Payment Change, and Budget Change.
+            switch (e.PropertyName)
+            {
+                default:
+                    break;
+            }
         }
 
         private void CtrlPerson_Load(object sender, EventArgs e)
         {
-            String ending = "'s Bills";
-            if (person.Name.EndsWith("s"))
-            {
-                ending = "' Bills";
-            }
-            lblAccount1.Text = person.Name + ending;
-            cctbTotalIncome.Bind(db.MyBudgetTotal(person.Id)); //One WayBind..
+            lblPerson.Text = Conversion.Pluralize(person.Name) + " Bills";
+            cctbTotalIncome.Bind(db.GetTotalIncome(person)); //One WayBind.. and set
             LoadData();
         }
         /// <summary>
@@ -62,7 +71,7 @@ namespace BasicBillPay.Controls
             {
                 AddPaymentCtrl(pItem);
             }
-            CalculateTotals(currentTransactionPeriod);
+            CalculateTotals(person.TotalsTransactionPeriod);
         }
         
         private void InitializeCharts()
@@ -78,6 +87,47 @@ namespace BasicBillPay.Controls
             flpBills.Controls.Add(ch);
             flpBills.Controls.SetChildIndex(ch, 0); // Put at the top..
         }
+        private void CalculateTotals(TransactionPeriod transactionPeriod)
+        {
+            //Income Totals
+            float iTotal = db.GetTotalIncome(person);
+            tbTotalIncome.Text = iTotal.ToString("c");
+
+            //Bills / Payments Total 
+            float totalBills = db.GetTotalBills(person);
+            tbTotalBills.Text = totalBills.ToString("C");
+
+
+            //For Each Payment
+            //Need to find transfers into one of my accounts (TODO- Make a special Transfer. Could be Income Account to Income Account or Income Account to Paycheck)
+            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
+            {
+                //Only Add Bill Accounts this person is paying directly to.
+                if (person.AccountIds.Contains(pItem.PayFromId))
+                {
+                    String name = db.GetAccount(pItem.PayToId).Name;
+                    float Amount = pItem.GetAmount(pItem.PaymentAmount, transactionPeriod);
+                    Charts.AddChartPoint(chartAccount1, name, Amount);
+
+                }
+            }
+
+            //Split of this Person.
+            float splitTotal = db.GetBudgetTotal(person);
+            tbSplitTotal.Text = splitTotal.ToString("c");
+            Charts.AddChartPoint(chartAccount1, "Budget", splitTotal); // Add Budget to the Chart
+
+            Single totalBillsAndBudget = totalBills + splitTotal;
+            //Bills plus budget items for this person.
+            tbTotalBillBudgetAccount1.Text = totalBillsAndBudget.ToString("c");
+
+            //Calculate What's left
+            Single whatsLeft = iTotal - totalBillsAndBudget;
+            tbSavings.Text = whatsLeft.ToString("c");
+            tbSavings.ForeColor = whatsLeft > 0 ? SystemColors.WindowText : Color.Red; //Conditional Red
+            Charts.AddChartPoint(chartAccount1, "What's Left", whatsLeft); // Add Budget to the Chart
+
+        }
         private void btnAddBill_Click(object sender, EventArgs e)
         {
             ////Add Payment
@@ -87,14 +137,14 @@ namespace BasicBillPay.Controls
             //Minus 1 indicates a new Account.. Which Means Transfers from one existing income account to another will not be possible (nor will use of orphaned expense accounts).
             Payment p = db.AddPayment(-1, a.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
             AddPaymentCtrl(p);
-            CalculateTotals(currentTransactionPeriod);
+            CalculateTotals(person.TotalsTransactionPeriod);
         }
         private void AddPaymentCtrl(Payment p)
         {
             //Add an account for the New Payment
             if (p.PayToId == -1)
             {
-                Account a = db.AddAccount("New Payment", AccountType.Expense, null, null, null);
+                Account a = db.AddAccount("New Payment " + db.NextPaymentId, AccountType.Expense, null, null, null);
                 p.PayToId = a.Id;
             }
 
@@ -112,80 +162,9 @@ namespace BasicBillPay.Controls
         }
         private void CtrlPayment_AmountChanged(object sender, CtrlPaymentItem.AmountChangedEventArgs e)
         {
-            CalculateTotals(currentTransactionPeriod);
+            CalculateTotals(person.TotalsTransactionPeriod);
         }
-        private void CalculateTotals(TransactionPeriod transactionPeriod)
-        {
-            //Add Up Total Bills from all accounts.. 
-            float TotalBills = 0f;
-            //Person has Income accounts..
-            foreach (int item in person.AccountIds)
-            {
-                //TODO - Make sure they are Expense Accounts.
-                TotalBills += db.GetAccountTotal(db.GetAccount(item).Id, transactionPeriod);
-            }
-            tbTotalBills.Text = TotalBills.ToString("c");
 
-
-            //Income Totals
-            float iTotal1 = 0f;
-            //For Each Payment
-            //Need to find transfers into one of my accounts (TODO- Make a special Transfer. Could be Income Account to Income Account or Income Account to Paycheck)
-            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
-            {
-                //Only Add Accounts this person is paying directly to.
-                if (person.AccountIds.Contains(pItem.PayFromId))
-                {
-                    String name = db.GetAccount(pItem.PayToId).Name;
-                    float Amount = pItem.GetAmount(pItem.PaymentAmount, transactionPeriod);
-                    Charts.AddChartPoint(chartAccount1, name, Amount);
-
-                }
-
-                if (person.AccountIds.Contains(pItem.PayToId))
-                {
-                    iTotal1 += pItem.GetAmount(pItem.PaymentAmount, transactionPeriod); //Can't create this by app at this time see TODO
-                }
-            }
-            //Add up Paycheck Amounts
-            foreach (Paycheck item in db.PayChecks)
-            {
-                if (person.PaycheckIds.Contains(item.Id)) // One of my Paychecks
-                {
-                    iTotal1 += item.GetAmount(item.NetPayPerPayPeriod, transactionPeriod); // Get Scaled amount
-                }
-
-            }
-            tbTotalIncome.Text = iTotal1.ToString("c");
-
-            //TransactionPeriod transactionPeriod = TransactionPeriod.Monthly;
-            //TODO - Get Budget Items like Account Total
-            float BudgetTotal = 0f;
-            //Split of this Person.
-            float splitTotal = db.MyBudgetTotal(person.Id);
-            //foreach (BudgetItem bItem in db.BudgetItems)
-            //{
-
-            //    BudgetTotal += bItem.GetAmount(bItem.Amount, transactionPeriod); //Get Scaled Budget
-            //    if (person.Id == bItem.Split1AccountId)
-            //        splitTotal += bItem.GetAmount(bItem.Split1Amount, transactionPeriod); // Tied to specific accounts.. need to fix
-            //    if (person.Id == bItem.Split2AccountId)
-            //        splitTotal += bItem.GetAmount(bItem.Split2Amount, transactionPeriod);
-            //}
-            tbSplitTotal.Text = splitTotal.ToString("c");
-            Charts.AddChartPoint(chartAccount1, "Budget", splitTotal); // Add Budget to the Chart
-
-            Single totalBillsAndBudget = TotalBills + splitTotal;
-            //Bills plus budget items for this person.
-            tbTotalBillBudgetAccount1.Text = totalBillsAndBudget.ToString("c");
-
-            //Calculate What's left
-            Single whatsLeft = iTotal1 - totalBillsAndBudget;
-            tbSavings.Text = whatsLeft.ToString("c");
-            tbSavings.ForeColor = whatsLeft > 0 ? SystemColors.WindowText : Color.Red; //Conditional Red
-            Charts.AddChartPoint(chartAccount1, "What's Left", whatsLeft); // Add Budget to the Chart
-
-        }
 
         private void CtrlPayment_ItemDeleted(object sender, EventArgs e)
         {
@@ -213,12 +192,8 @@ namespace BasicBillPay.Controls
                     }
                 }
                 paymentItemIndex = i++;
+                CalculateTotals(person.TotalsTransactionPeriod);
             }
-        }
-
-        private void tbSplitTotal_TextChanged(object sender, EventArgs e)
-        {
-            //Charts.AddChartPoint(chartAccount1, "Budget Split Items", float.Parse(tbSplitTotal.Text, NumberStyles.Currency, null));
         }
 
         private void btnPayCheck_Click(object sender, EventArgs e)
@@ -227,16 +202,16 @@ namespace BasicBillPay.Controls
             fpc.ShowDialog();
 
             //Need to refresh if they added or changed their paycheck.
-            CalculateTotals(currentTransactionPeriod); 
+            CalculateTotals(person.TotalsTransactionPeriod);  //Causes major flashing..
         }
 
         private void cbPaidFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbPaidFrequency.SelectedIndex > -1 && person != null)
             {
-                currentTransactionPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
-                cbPaidFrequency.Text = currentTransactionPeriod.ToString();
-                CalculateTotals(currentTransactionPeriod);
+                person.TotalsTransactionPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
+                cbPaidFrequency.Text = person.TotalsTransactionPeriod.ToString();
+                CalculateTotals(person.TotalsTransactionPeriod);
             }
         }
 

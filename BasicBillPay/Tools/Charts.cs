@@ -21,7 +21,7 @@ namespace BasicBillPay.Tools
 
         internal static void RemoveChartPoint(Chart c, String name)
         {
-            DataPoint dp = c.Series[0].Points.Where(o => o.Name == name).FirstOrDefault();
+            DataPoint dp = c.Series[0].Points.Where(o => o.LegendText == name).FirstOrDefault();
             c.Series[0].Points.Remove(dp);
                 
         }
@@ -31,7 +31,7 @@ namespace BasicBillPay.Tools
             DataPoint dp = new DataPoint(0, Amount);
             dp.IsValueShownAsLabel = true;
             dp.LabelFormat = "C0";
-            dp.Name = name;
+            dp.Name = name; //Doesn't seem to work.
             dp.LegendText = name;
             dp.LabelToolTip = name; // Amount.ToString("C0");
             dp.LegendToolTip = Amount.ToString("C0");

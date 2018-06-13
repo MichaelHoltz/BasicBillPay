@@ -75,10 +75,6 @@ namespace BasicBillPay.Controls
         }
         private void btnAddBudgetItem_Click(object sender, EventArgs e)
         {
-            ////Add Payment
-            // Big problem if they don't have an account.. They should always have one though, also the first account MUST be an income account
-            int firstAccountId = 0; // person.AccountIds.FirstOrDefault(); 
-            Account a = db.GetAccount(firstAccountId);
             BudgetItem b = db.AddBudgetItem("New Budget Item" + db.NextBudgetItemId, 0.0f, TransactionPeriod.Monthly);
             AddBudgetItemControl(b);
             CalculateTotals(currentTransactionPeriod);
@@ -102,7 +98,8 @@ namespace BasicBillPay.Controls
         {
             CtrlBudgetItem ctrlBudget = new CtrlBudgetItem(ref b, budgetItemIndex++, db);
             ctrlBudget.BudgetTotalChanged += CtrlBudget_BudgetTotalChanged;
-            //ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
+            ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
+
             this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBudget.Controls.Count + 1) * ctrlBudget.Height);
             flpBudget.Controls.Add(ctrlBudget);
             String name = b.Name;
@@ -119,7 +116,16 @@ namespace BasicBillPay.Controls
         {
             if (sender is CtrlSortableBase)
             {
-                CtrlSortableBase csb = (sender as CtrlSortableBase);
+                CtrlSortableBase csb = (sender as CtrlSortableBase); //CtrlBudgetItem.
+                CtrlBudgetItem cb = (sender as CtrlBudgetItem);
+                BudgetItem b = cb.GetBudgetItem(); // Get the budget Item in the Control
+                db.BudgetItems.Remove(b);
+                Person p1 = db.GetPerson(b.Split1AccountId); // Split 1 Person
+                Person p2 = db.GetPerson(b.Split2AccountId); // Split 2 Person
+                Charts.RemoveChartPoint(chartBudget, b.Name); // Removes from Budget Control - TODO - Needs to be removed from charts of p1 and p2.
+                BudgetItemDeleted?.Invoke(sender, new EventArgs());
+                //Shrink the Flow layout panel
+                this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBudget.Controls.Count - 1) * csb.Height);
                 int i = 0;
                 foreach (Control c in flpBudget.Controls)
                 {
