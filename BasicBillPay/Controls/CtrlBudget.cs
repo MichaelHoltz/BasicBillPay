@@ -23,8 +23,7 @@ namespace BasicBillPay.Controls
         Database db = null;
         TransactionPeriod currentTransactionPeriod = TransactionPeriod.Monthly; // Default Period
         int budgetItemIndex = 0;
-        public event EventHandler BudgetItemChanged;
-        public event EventHandler BudgetItemDeleted;
+       // public event EventHandler BudgetItemDeleted;
         public CtrlBudget()
         {
             InitializeComponent();
@@ -34,9 +33,12 @@ namespace BasicBillPay.Controls
             InitializeComponent();
             //Bind to Source List FIRST
             cbPayFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
-            cbPayFrequency.Text = currentTransactionPeriod.ToString();
+            
             db = database;
+            currentTransactionPeriod = db.BudgetTotalTransactionPeriod;
+            cbPayFrequency.Text = currentTransactionPeriod.ToString();
             budgetItemIndex = bii;
+            
         }
 
         private void CtrlBudget_Load(object sender, EventArgs e)
@@ -55,9 +57,9 @@ namespace BasicBillPay.Controls
             {
                 AddBudgetItemControl(bItem);
             }
-           // CalculateTotals(currentTransactionPeriod);
+           
+            //Budget Items can only change from inside this Control
             cctbBudgetTotal.Bind(db, "BudgetTotal"); //Just One way binding.. so not really a point.
-            
         }
         
         private void InitializeCharts()
@@ -73,45 +75,51 @@ namespace BasicBillPay.Controls
             flpBudget.Controls.Add(ch);
             flpBudget.Controls.SetChildIndex(ch, 0); // Put at the top..
         }
+        /// <summary>
+        /// User adding a Budget Items
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAddBudgetItem_Click(object sender, EventArgs e)
         {
             BudgetItem b = db.AddBudgetItem("New Budget Item" + db.NextBudgetItemId, 0.0f, TransactionPeriod.Monthly);
             AddBudgetItemControl(b);
-            CalculateTotals(currentTransactionPeriod);
-        }
-        private void CalculateTotals(TransactionPeriod transactionPeriod)
-        {
-            //TODO - Get Budget Items like Account Total
-            float BudgetTotal = 0f;
-            float split1Total = 0f;
-            float split2Total = 0f;
-            foreach (BudgetItem bItem in db.BudgetItems)
-            {
-                BudgetTotal += bItem.GetAmount(bItem.Amount, transactionPeriod);
-                split1Total += bItem.GetAmount(bItem.Split1Amount, transactionPeriod);
-                split2Total += bItem.GetAmount(bItem.Split2Amount, transactionPeriod);
-            }
-            cctbBudgetTotal.Value = BudgetTotal;
-            //cctbBudgetTotal.Text = BudgetTotal.ToString("C"); //Setting the Text of the user Control does nothing!!! Duh!!
         }
         private void AddBudgetItemControl(BudgetItem b)
         {
-            CtrlBudgetItem ctrlBudget = new CtrlBudgetItem(ref b, budgetItemIndex++, db);
-            ctrlBudget.BudgetTotalChanged += CtrlBudget_BudgetTotalChanged;
-            ctrlBudget.ItemDeleted += CtrlBudget_ItemDeleted;
+            CtrlBudgetItem ctrlBudgetItem = new CtrlBudgetItem(ref b, budgetItemIndex++, db);
+            ctrlBudgetItem.BudgetItemTotalChanged += CtrlBudget_BudgetTotalChanged;
+            ctrlBudgetItem.ItemDeleted += CtrlBudget_ItemDeleted;
 
-            this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBudget.Controls.Count + 1) * ctrlBudget.Height);
-            flpBudget.Controls.Add(ctrlBudget);
+            this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBudget.Controls.Count + 1) * ctrlBudgetItem.Height);
+            flpBudget.Controls.Add(ctrlBudgetItem);
             String name = b.Name;
             float Amount = b.GetAmount(b.Amount, currentTransactionPeriod);
             Charts.AddChartPoint(chartBudget, name, Amount);
         }
 
-        private void CtrlBudget_BudgetTotalChanged(object sender, EventArgs e)
+        private void CtrlBudget_BudgetTotalChanged(object sender, BudgetItemTotalChangedEventArgs e)
         {
-            cctbBudgetTotal.Bind(db, "BudgetTotal"); //Just One way binding.. so not really a point.
+            //Handle Rename
+            if (e.Name != e.PreviousName)
+            {
+                Charts.RenameChartPoint(chartBudget, e.PreviousName, e.Name);
+            }
+            UpdateTotals();
+            //Charts.AddChartPoint(chartBudget, e.Name, e.BudgetItem.GetAmount(e.BudgetItem.Amount, currentTransactionPeriod));
         }
+        private void UpdateTotals()
+        {
+            float budgetTotal = 0f;
+            foreach (BudgetItem bitem in db.BudgetItems)
+            {
+                Charts.AddChartPoint(chartBudget, bitem.Name, bitem.GetAmount(bitem.Amount, currentTransactionPeriod));
+                budgetTotal += bitem.GetAmount(bitem.Amount, currentTransactionPeriod);
+            }
+            db.BudgetTotal = budgetTotal;
+            cctbBudgetTotal.Bind(db, "BudgetTotal"); //Just One way binding.. so not really a point.
 
+        }
         private void CtrlBudget_ItemDeleted(object sender, EventArgs e)
         {
             if (sender is CtrlSortableBase)
@@ -123,7 +131,7 @@ namespace BasicBillPay.Controls
                 Person p1 = db.GetPerson(b.Split1AccountId); // Split 1 Person
                 Person p2 = db.GetPerson(b.Split2AccountId); // Split 2 Person
                 Charts.RemoveChartPoint(chartBudget, b.Name); // Removes from Budget Control - TODO - Needs to be removed from charts of p1 and p2.
-                BudgetItemDeleted?.Invoke(sender, new EventArgs());
+                //BudgetItemDeleted?.Invoke(sender, new EventArgs());
                 //Shrink the Flow layout panel
                 this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBudget.Controls.Count - 1) * csb.Height);
                 int i = 0;
@@ -143,14 +151,16 @@ namespace BasicBillPay.Controls
         }
 
 
-        private void cbPaidFrequency_SelectedIndexChanged(object sender, EventArgs e)
+        private void cbPayFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //if (cbPaidFrequency.SelectedIndex > -1 && person != null)
-            //{
-            //    currentTransactionPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPaidFrequency.Text);
-            //    cbPaidFrequency.Text = currentTransactionPeriod.ToString();
-            //    CalculateTotals(currentTransactionPeriod);
-            //}
+            if (cbPayFrequency.SelectedIndex > -1 && db != null)
+            {
+                currentTransactionPeriod = (TransactionPeriod)Enum.Parse(typeof(TransactionPeriod), cbPayFrequency.Text);
+                cbPayFrequency.Text = currentTransactionPeriod.ToString();
+                db.BudgetTotalTransactionPeriod = currentTransactionPeriod;
+                UpdateTotals();
+                //    CalculateTotals(currentTransactionPeriod);
+            }
         }
 
         private void addTransferToolStripMenuItem_Click(object sender, EventArgs e)

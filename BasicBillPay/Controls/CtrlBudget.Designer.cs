@@ -122,7 +122,7 @@
             this.cbPayFrequency.Name = "cbPayFrequency";
             this.cbPayFrequency.Size = new System.Drawing.Size(71, 21);
             this.cbPayFrequency.TabIndex = 30;
-            this.cbPayFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPaidFrequency_SelectedIndexChanged);
+            this.cbPayFrequency.SelectedIndexChanged += new System.EventHandler(this.cbPayFrequency_SelectedIndexChanged);
             // 
             // lblTimePeriod
             // 

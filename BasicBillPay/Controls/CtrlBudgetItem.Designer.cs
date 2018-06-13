@@ -44,6 +44,8 @@
             this.tbName.Size = new System.Drawing.Size(241, 20);
             this.tbName.TabIndex = 2;
             this.tbName.Tag = "Budget Name";
+            this.tbName.Leave += new System.EventHandler(this.tbName_Leave);
+            this.tbName.Validated += new System.EventHandler(this.tbName_Validated);
             // 
             // cbPaidFrequency
             // 

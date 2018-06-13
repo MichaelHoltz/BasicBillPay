@@ -17,7 +17,7 @@ namespace BasicBillPay.Controls
 
         Payment p;
         Database databaseFunctions;
- 
+        String lastName;
         ///// <summary>
         ///// Account Selected (Selected Account available)
         ///// </summary>
@@ -26,10 +26,10 @@ namespace BasicBillPay.Controls
         /// Payment Amount Changed (Transaction Period and Amount available)
         /// </summary>
         public event EventHandler<AmountChangedEventArgs> AmountChanged;
-        ///// <summary>
-        ///// General Payment Changed Event 
-        ///// </summary>
-        //public event EventHandler PaymentChanged;
+        /// <summary>
+        /// General Payment Changed Event (Name change is the most common use.)
+        /// </summary>
+        public event EventHandler<PaymentChangedEventArgs> PaymentChanged;
         public CtrlPaymentItem()
         {
             InitializeComponent();
@@ -127,25 +127,9 @@ namespace BasicBillPay.Controls
             cctbAmount.Bind(p, "PaymentAmount");
         }
 
-        public class AccountSelectedEventArgs : EventArgs
-        {
-            public Account SelectedAccount { get; }
-            public AccountSelectedEventArgs(Account selectedAccount)
-            {
-                SelectedAccount = selectedAccount;
-            }
-        }
 
-        public class AmountChangedEventArgs : EventArgs
-        {
-            public TransactionPeriod PayPeriod { get;}
-            public float Amount { get; }
-            public AmountChangedEventArgs(TransactionPeriod payPeriod, float amount)
-            {
-                PayPeriod = payPeriod;
-                Amount = amount;
-            }
-        }
+
+
         private void cbPaidFrequency_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbPaidFrequency.SelectedIndex > -1 && p != null)
@@ -225,6 +209,36 @@ namespace BasicBillPay.Controls
         {
             p.PaymentAmount = e.Value; // Value does not need to be translated because it is set in the control.
             AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount));
+        }
+    }
+    public class AccountSelectedEventArgs : EventArgs
+    {
+        public Account SelectedAccount { get; }
+        public AccountSelectedEventArgs(Account selectedAccount)
+        {
+            SelectedAccount = selectedAccount;
+        }
+    }
+    public class AmountChangedEventArgs : EventArgs
+    {
+        public TransactionPeriod PayPeriod { get; }
+        public float Amount { get; }
+        public AmountChangedEventArgs(TransactionPeriod payPeriod, float amount)
+        {
+            PayPeriod = payPeriod;
+            Amount = amount;
+        }
+    }
+    public class PaymentChangedEventArgs : EventArgs
+    {
+        public String OldName { get; }
+        public String NewName { get; }
+        public Payment Payment { get; }
+        public PaymentChangedEventArgs(String oldName, String newName, Payment payment)
+        {
+            OldName = oldName;
+            NewName = newName;
+            Payment = payment;
         }
     }
 }

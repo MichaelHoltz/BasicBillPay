@@ -9,7 +9,6 @@ namespace BasicBillPay.Controls
     public partial class CtrlPaycheck : UserControl
     {
         Paycheck pc = null;
-        TransactionPeriod currentTransactionPeriod = TransactionPeriod.Monthly; // Default Period
         public CtrlPaycheck()
         {
             InitializeComponent();
@@ -20,9 +19,6 @@ namespace BasicBillPay.Controls
             //Bind to Source List FIRST
             cbPaidFrequency.DataSource = Enum.GetNames(typeof(TransactionPeriod));
             pc = paycheck;
-
-            
-           
         }
 
         private void ControlPaycheck_Load(object sender, EventArgs e)
@@ -35,14 +31,6 @@ namespace BasicBillPay.Controls
             cctbNetPay.Bind(pc, "NetPayPerPayPeriod");
             BindControl(tbNetPay, "Text", "NetPayPerPayPeriod");
             Charts.AddChartPoint(chartPayCheck, "Net Pay", pc.NetPayPerPayPeriod);
-
-
-            //tbNetPay.DataBindings.Clear();
-            //Binding b = new Binding("Text", pc, "NetPayPerPayPeriod");
-            //// Add the delegates to the event.
-            //b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            //b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            //tbNetPay.DataBindings.Add(b);
 
             cbPaidFrequency.Text = pc.PayPeriod.ToString();
 

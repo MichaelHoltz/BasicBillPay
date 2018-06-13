@@ -25,7 +25,26 @@ namespace BasicBillPay.Tools
             c.Series[0].Points.Remove(dp);
                 
         }
-
+        internal static void RenameChartPoint(Chart c, String oldName, String newName)
+        {
+            // Can't use because I need to update by index
+            bool found = false;
+            int index = 0;
+            foreach (DataPoint dps in c.Series[0].Points)
+            {
+                if (dps.LegendText == oldName)
+                {
+                    found = true;
+                    break;
+                }
+                index++;
+            }
+            if (found)
+            {
+                c.Series[0].Points[index].LegendText = newName;
+                c.Series[0].Points[index].LabelToolTip = newName;
+            }
+        }
         internal static void AddChartPoint(Chart c, String name, float Amount)
         {
             DataPoint dp = new DataPoint(0, Amount);

@@ -48,6 +48,15 @@ namespace BasicBillPay.Controls
             //Property Changes come from PayCheck Change, Payment Change, and Budget Change.
             switch (e.PropertyName)
             {
+                case "BillsTotal":
+                    CalculateTotals(person.TotalsTransactionPeriod);
+                    break;
+                case "BudgetTotal":
+                    CalculateTotals(person.TotalsTransactionPeriod);
+                    break;
+                case "TotalsTransactionPeriod":
+                    CalculateTotals(person.TotalsTransactionPeriod);
+                    break;
                 default:
                     break;
             }
@@ -160,7 +169,7 @@ namespace BasicBillPay.Controls
                 
             }
         }
-        private void CtrlPayment_AmountChanged(object sender, CtrlPaymentItem.AmountChangedEventArgs e)
+        private void CtrlPayment_AmountChanged(object sender, AmountChangedEventArgs e)
         {
             CalculateTotals(person.TotalsTransactionPeriod);
         }

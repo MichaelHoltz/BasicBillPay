@@ -14,7 +14,6 @@ namespace BasicBillPay.Controls
     {
         List<HeaderItem> headerItems = new List<HeaderItem>();
         Label lastLabel = new Label();
-        bool firstLabel = true;
         public CtrlHeader()
         {
             InitializeComponent();

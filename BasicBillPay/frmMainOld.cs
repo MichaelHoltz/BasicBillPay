@@ -216,12 +216,12 @@ namespace BasicBillPay
 
 
 
-        private void CtrlPayment_AmountChanged(object sender, CtrlPaymentItem.AmountChangedEventArgs e)
+        private void CtrlPayment_AmountChanged(object sender, AmountChangedEventArgs e)
         {
             CalculateTotals();
         }
 
-        private void CtrlPayment_AccountSelected(object sender, CtrlPaymentItem.AccountSelectedEventArgs e)
+        private void CtrlPayment_AccountSelected(object sender, AccountSelectedEventArgs e)
         {
             //BudgetItem b = 
             UserControl ca = new CtrlAccount(e.SelectedAccount);

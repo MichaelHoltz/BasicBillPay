@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +11,36 @@ namespace BasicBillPay.Models
     /// <summary>
     /// Base Class for Periodic Transactions
     /// </summary>
-    public class PeriodicBase
+    public class PeriodicBase: INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        // This method is called by the Set accessor of each property.
+        // The CallerMemberName attribute that is applied to the optional propertyName
+        // parameter causes the property name of the caller to be substituted as an argument.
+        protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+            private TransactionPeriod payPeriod = TransactionPeriod.Monthly;
         /// <summary>
         /// How often you are paid
         /// Direct Set
         /// </summary>
-        public TransactionPeriod PayPeriod { get; set; } = TransactionPeriod.Biweekly; // Default to Every two Weeeks
+        public TransactionPeriod PayPeriod
+        {
+            get { return payPeriod; }
+            set
+            {
+                if (value != payPeriod)
+                {
+                    payPeriod = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        } 
         /// <summary>
         /// 
         public PeriodicBase()

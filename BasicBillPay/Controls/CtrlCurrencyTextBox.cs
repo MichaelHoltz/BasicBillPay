@@ -139,7 +139,7 @@ namespace BasicBillPay.Controls
                 isValid = true;
                 badFloat = String.Empty;
             }
-            catch(Exception err)
+            catch //(Exception err)
             {
                 badFloat = tbCurrency.Text;
                 isValid = false;

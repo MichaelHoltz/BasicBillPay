@@ -221,9 +221,9 @@ namespace BasicBillPay.Models
             //Need first two People
             Person[] p = People.ToArray();
             
-            Person p0 = p[0];
+            Person p0 = p[0]; //First Person
             Person p1 = new Person();
-            if (p.Length > 0)
+            if (p.Length > 0) //Second Person if they exist.
                 p1 = p[1];
             
 
@@ -236,16 +236,29 @@ namespace BasicBillPay.Models
             return b;
 
         }
+        public TransactionPeriod BudgetTotalTransactionPeriod { get; set; } = TransactionPeriod.Monthly; // Default to Monthly
+        private float budgetTotal = 0f;
+        /// <summary>
+        /// Calculated and Stored Budget Total
+        /// </summary>
         public float BudgetTotal
         {
             get
             {
-                float budgetTotal = 0f;
-                foreach (BudgetItem bitem in BudgetItems)
-                {
-                    budgetTotal += bitem.Amount;
-                }
+                //float budgetTotal = 0f;
+                //foreach (BudgetItem bitem in BudgetItems)
+                //{
+                //    budgetTotal += bitem.Amount;
+                //}
                 return budgetTotal;
+            }
+            set
+            {
+                if (value != budgetTotal)
+                {
+                    budgetTotal = value;
+                    NotifyPropertyChanged();
+                }
             }
         }
 

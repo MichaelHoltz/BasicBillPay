@@ -116,7 +116,7 @@ namespace BasicBillPay.Tools
                 appSettings.Verification = verification;
             }
             bool needPassword = true;
-            bool needUserPassword = false;
+           // bool needUserPassword = false;
             switch (appSettings.EncryptionLevel)
             {
                 case EncryptionLevel.None:
@@ -127,7 +127,7 @@ namespace BasicBillPay.Tools
                     break;
                 case EncryptionLevel.Full:
                     needPassword = true;
-                    needUserPassword = true; //Need to Ask For the Password Every time
+                    //needUserPassword = true; //Need to Ask For the Password Every time
                     break;
                 default:
                     break;
