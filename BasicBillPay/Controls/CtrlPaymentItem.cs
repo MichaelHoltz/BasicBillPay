@@ -17,7 +17,6 @@ namespace BasicBillPay.Controls
 
         Payment p;
         Database databaseFunctions;
-        String lastName;
         ///// <summary>
         ///// Account Selected (Selected Account available)
         ///// </summary>
@@ -90,22 +89,15 @@ namespace BasicBillPay.Controls
         private void CtrlPayment_Load(object sender, EventArgs e)
         {
             //Set DataBindings 
-            if (p.PayToId == -1)
+            if (p.PayToId != -1)
             {
-                //Need to add new account or link to Existing one.
-            }
-            else
-            {
-                catbPayTo.SetAccount(databaseFunctions.GetAccount(p.PayToId));
+                //Need to track Name Changes for Pay To Account since it is used as the label for the Chart
+                catbPayTo.SetAccount(databaseFunctions.GetAccount(p.PayToId)); //Sets Text Value
             }
 
-            if (p.PayFromId == -1)
-            {
-                //Need to add new account or link to Existing one.
-            }
-            else
-            {
-                catbPayFrom.SetAccount(databaseFunctions.GetAccount(p.PayFromId));
+            if (p.PayFromId != -1)
+            { 
+                catbPayFrom.SetAccount(databaseFunctions.GetAccount(p.PayFromId)); //Sets Text Value
             }
 
             dtpDateDue.DataBindings.Clear();
@@ -117,13 +109,6 @@ namespace BasicBillPay.Controls
             //Couldn't get Binding to work right so doing it manually
             cbPaidFrequency.Text = p.PayPeriod.ToString();
 
-            //tbAmount.DataBindings.Clear();
-            //Binding b = new Binding("Text", p, "PaymentAmount");
-            //// Add the delegates to the event.
-            
-            //b.Format += new ConvertEventHandler(Conversion.FloatToCurrencyString);
-            //b.Parse += new ConvertEventHandler(Conversion.CurrencyStringToFloat);
-            //tbAmount.DataBindings.Add(b);
             cctbAmount.Bind(p, "PaymentAmount");
         }
 
@@ -210,13 +195,16 @@ namespace BasicBillPay.Controls
             p.PaymentAmount = e.Value; // Value does not need to be translated because it is set in the control.
             AmountChanged?.Invoke(sender, new AmountChangedEventArgs(p.PayPeriod, p.PaymentAmount));
         }
-    }
-    public class AccountSelectedEventArgs : EventArgs
-    {
-        public Account SelectedAccount { get; }
-        public AccountSelectedEventArgs(Account selectedAccount)
+
+        private void catbPayTo_AccountChanged(object sender, AccountChangedEventArgs e)
         {
-            SelectedAccount = selectedAccount;
+            PaymentChanged?.Invoke(sender, new PaymentChangedEventArgs(e.OldName, e.SelectedAccount.Name, p));
+        }
+
+        private void catbPayFrom_AccountChanged(object sender, AccountChangedEventArgs e)
+        {
+            //Pay From isn't tracked the same way so not going to raise the event at this time.
+            //PaymentChanged?.Invoke(sender, new PaymentChangedEventArgs(e.OldName, e.SelectedAccount.Name, p));
         }
     }
     public class AmountChangedEventArgs : EventArgs

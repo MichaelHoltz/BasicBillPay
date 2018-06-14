@@ -18,7 +18,10 @@ namespace BasicBillPay.Controls
         /// Account Selected (Selected Account available)
         /// </summary>
         public event EventHandler<AccountSelectedEventArgs> AccountSelected;
+        public event EventHandler<AccountChangedEventArgs> AccountChanged;
+        
         Account a;
+        String oldName;
         public CtrlAccountTextBox()
         {
             InitializeComponent();
@@ -47,6 +50,7 @@ namespace BasicBillPay.Controls
         public void SetAccount(Account account)
         {
             a = account;
+            oldName = a.Name; // Save account Name
             a.PropertyChanged += Account_PropertyChanged;
             Bind();
         }
@@ -54,6 +58,16 @@ namespace BasicBillPay.Controls
         private void Account_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Bind();
+            switch (e.PropertyName)
+            {
+                case "Name":
+                    AccountChanged?.Invoke(sender, new AccountChangedEventArgs(a, oldName));
+                    oldName = a.Name; 
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
         private void btnAccountLink_Click(object sender, EventArgs e)
@@ -65,17 +79,11 @@ namespace BasicBillPay.Controls
             tbAccountName.Text = a.Name;
             AccountSelected?.Invoke(sender, new AccountSelectedEventArgs(a)); // Only fire if there is a listener
         }
-        public class AccountSelectedEventArgs : EventArgs
-        {
-            public Account SelectedAccount { get; }
-            public AccountSelectedEventArgs(Account selectedAccount)
-            {
-                SelectedAccount = selectedAccount;
-            }
-        }
+
 
         private void tbAccountName_KeyUp(object sender, KeyEventArgs e)
         {
+            //Setting the Name for each key press causes all events to fire and is not so efficient.
             a.Name = tbAccountName.Text;
         }
 
@@ -83,6 +91,24 @@ namespace BasicBillPay.Controls
         {
             tbAccountName.BackColor = this.BackColor;
             btnAccountLink.BackColor = BackColor;
+        }
+    }
+    public class AccountSelectedEventArgs : EventArgs
+    {
+        public Account SelectedAccount { get; }
+        public AccountSelectedEventArgs(Account selectedAccount)
+        {
+            SelectedAccount = selectedAccount;
+        }
+    }
+    public class AccountChangedEventArgs : EventArgs
+    {
+        public Account SelectedAccount { get; }
+        public String OldName {get;}
+        public AccountChangedEventArgs(Account selectedAccount, String oldName)
+        {
+            SelectedAccount = selectedAccount;
+            OldName = oldName;
         }
     }
 }

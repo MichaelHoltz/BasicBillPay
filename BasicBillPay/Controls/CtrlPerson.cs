@@ -66,7 +66,12 @@ namespace BasicBillPay.Controls
         {
             lblPerson.Text = Conversion.Pluralize(person.Name) + " Bills";
             cctbTotalIncome.Bind(db.GetTotalIncome(person)); //One WayBind.. and set
+            //flpBills.SuspendLayout();
+            //this.SuspendLayout();
             LoadData();
+            //flpBills.ResumeLayout(false);
+            //this.PerformLayout();
+            
         }
         /// <summary>
         /// Function to LoadData
@@ -76,7 +81,13 @@ namespace BasicBillPay.Controls
             InitializeCharts();
             InitializeFlowLayout();
             //Need to Load all Controls and order by due date.
-            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
+
+
+            //Pre Calculate the Size 
+            CtrlPaymentItem cpi = new CtrlPaymentItem();
+            this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (db.GetPayments(person).Count + 1) * cpi.Height);
+            //Only this person's payments
+            foreach (Payment pItem in db.GetPayments(person).OrderBy(o => o.DateDue))
             {
                 AddPaymentCtrl(pItem);
             }
@@ -109,16 +120,11 @@ namespace BasicBillPay.Controls
 
             //For Each Payment
             //Need to find transfers into one of my accounts (TODO- Make a special Transfer. Could be Income Account to Income Account or Income Account to Paycheck)
-            foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
+            foreach (Payment pItem in db.GetPayments(person).OrderBy(o => o.DateDue))
             {
-                //Only Add Bill Accounts this person is paying directly to.
-                if (person.AccountIds.Contains(pItem.PayFromId))
-                {
-                    String name = db.GetAccount(pItem.PayToId).Name;
-                    float Amount = pItem.GetAmount(pItem.PaymentAmount, transactionPeriod);
-                    Charts.AddChartPoint(chartAccount1, name, Amount);
-
-                }
+                String name = db.GetAccount(pItem.PayToId).Name;
+                float Amount = pItem.GetAmount(pItem.PaymentAmount, transactionPeriod);
+                Charts.AddChartPoint(chartAccount1, name, Amount);
             }
 
             //Split of this Person.
@@ -145,6 +151,8 @@ namespace BasicBillPay.Controls
             Account a = db.GetAccount(firstAccountId);
             //Minus 1 indicates a new Account.. Which Means Transfers from one existing income account to another will not be possible (nor will use of orphaned expense accounts).
             Payment p = db.AddPayment(-1, a.Id, DateTime.Now, DateTime.Now.AddMonths(-1), 0.00f, TransactionPeriod.Monthly);
+            CtrlPaymentItem cpi = new CtrlPaymentItem();
+            this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count + 1) * cpi.Height);
             AddPaymentCtrl(p);
             CalculateTotals(person.TotalsTransactionPeriod);
         }
@@ -158,17 +166,30 @@ namespace BasicBillPay.Controls
             }
 
 
-            //Only Add Accounts this person is paying directly to.
-            if (person.AccountIds.Contains( p.PayFromId))
-            {
-                CtrlPaymentItem ctrlPayment = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++);
-                this.MinimumSize = new Size(this.MinimumSize.Width, pTopHeader.Height + 5 + (flpBills.Controls.Count + 1) * ctrlPayment.Height);
-                flpBills.Controls.Add(ctrlPayment);
-                ctrlPayment.ItemDeleted += CtrlPayment_ItemDeleted;
-                ctrlPayment.AmountChanged += CtrlPayment_AmountChanged;
+            CtrlPaymentItem ctrlPaymentItem = new CtrlPaymentItem(ref db, ref p, paymentItemIndex++);
                 
-            }
+            flpBills.Controls.Add(ctrlPaymentItem);
+            //Remove any previous listeners pattern                
+            ctrlPaymentItem.ItemDeleted -= CtrlPayment_ItemDeleted;
+            ctrlPaymentItem.AmountChanged -= CtrlPayment_AmountChanged;
+            ctrlPaymentItem.PaymentChanged -= CtrlPaymentItem_PaymentChanged;
+            //Add new listeners
+            ctrlPaymentItem.ItemDeleted += CtrlPayment_ItemDeleted;
+            ctrlPaymentItem.AmountChanged += CtrlPayment_AmountChanged;
+            ctrlPaymentItem.PaymentChanged += CtrlPaymentItem_PaymentChanged;
+                
         }
+
+        private void CtrlPaymentItem_PaymentChanged(object sender, PaymentChangedEventArgs e)
+        {
+            if (e.OldName != e.NewName)
+            {
+                //TODO - prevent duplicate names.. because that would be a problem for the chart
+                Charts.RenameChartPoint(chartAccount1, e.OldName, e.NewName); // Dangerous if being sent on each keystroke and names cross over temporarily 
+            }
+            Charts.AddChartPoint(chartAccount1, e.NewName, e.Payment.GetAmount(e.Payment.PaymentAmount, person.TotalsTransactionPeriod));
+        }
+
         private void CtrlPayment_AmountChanged(object sender, AmountChangedEventArgs e)
         {
             CalculateTotals(person.TotalsTransactionPeriod);

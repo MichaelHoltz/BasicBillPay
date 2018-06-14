@@ -126,14 +126,43 @@ namespace BasicBillPay.Controls
                 case "PayPeriod":
                     BudgetItemTotalChanged?.Invoke(this, new BudgetItemTotalChangedEventArgs(b.Name, lastBudgetName, b));
                     break;
+                case "Split1AccountId":
+                    if (b.Split1AccountId == -1) // Removed Account
+                    {
+                        b.Split1Amount = 0;
+                        cctbSplit1Amount.Enabled = false;
+                    }
+                    else
+                    {
+                        cctbSplit1Amount.Enabled = true;
+                        BudgetItemTotalChanged?.Invoke(this, new BudgetItemTotalChangedEventArgs(b.Name, lastBudgetName, b));
+                    }
+                    break;
+                case "Split2AccountId":
+                    if (b.Split2AccountId == -1)
+                    {
+                        b.Split2Amount = 0;
+                        cctbSplit2Amount.Enabled = false;
+                    }
+                    else
+                    {
+                        cctbSplit2Amount.Enabled = true;
+                        BudgetItemTotalChanged?.Invoke(this, new BudgetItemTotalChangedEventArgs(b.Name, lastBudgetName, b));
+
+                    }
+                    break;
                 default:
                     break;
             }
-            //Update Person Splits
-            Person splitPerson1 = databaseFunctions.GetPerson(b.Split1AccountId);
-            databaseFunctions.GetBudgetTotal(splitPerson1);
-            Person splitPerson2 = databaseFunctions.GetPerson(b.Split2AccountId);
-            databaseFunctions.GetBudgetTotal(splitPerson2);
+            //Update Person Splits - Problem if Account ID is being removed individually so need to loop.
+            foreach (Person item in databaseFunctions.GetPeople())
+            {
+                databaseFunctions.GetBudgetTotal(item);
+            }
+            //Person splitPerson1 = databaseFunctions.GetPerson(b.Split1AccountId);
+            //databaseFunctions.GetBudgetTotal(splitPerson1);
+            //Person splitPerson2 = databaseFunctions.GetPerson(b.Split2AccountId);
+            //databaseFunctions.GetBudgetTotal(splitPerson2);
 
         }
 
@@ -162,6 +191,10 @@ namespace BasicBillPay.Controls
                 //tbSplit1Account.DataBindings.Clear();
                 //tbSplit1Account.DataBindings.Add("Text", p1, "");
             }
+            else
+            {
+                cctbSplit1Amount.Enabled = false;
+            }
 
             ////Split2Amount
             cctbSplit2Amount.Bind(b, "Split2Amount");
@@ -173,6 +206,10 @@ namespace BasicBillPay.Controls
                 cbbSplit2Account.Text = p2.Name;
                 //                tbSplit2Account.DataBindings.Clear();
                 //                tbSplit2Account.DataBindings.Add("Text", p2, "");
+            }
+            else
+            {
+                cctbSplit2Amount.Enabled = false;
             }
 
             //Set in Constructor

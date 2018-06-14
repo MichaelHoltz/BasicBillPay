@@ -48,6 +48,8 @@ namespace BasicBillPay
         /// </summary>
         private void LoadData()
         {
+            this.SuspendLayout();
+            flpPeopleBills.SuspendLayout();
 
             flpPeopleBills.Controls.Clear();
 
@@ -58,35 +60,13 @@ namespace BasicBillPay
                 flpPeopleBills.Controls.Add(cp);
 
             }
-            ////Income Totals
-            //float iTotal1 = 0f;
-            //float iTotal2 = 0f;
 
-            ////Need to Load all Controls
-            //foreach (Payment pItem in db.Payments.OrderBy(o => o.DateDue))
-            //{
-            //    //Need to find transfers from one account to another. (but I have all accounts as the same so need to identify income vs expense)
-            //    if (pItem.PayToId == 1 && pItem.PayFromId == 0) // Stupid hardcoded Transfer
-            //    {
-            //        iTotal2 += pItem.GetMonthlyAmount(pItem.PaymentAmount);
-            //    }
-            //}
             //Add Budget Items
             CtrlBudget cb = new CtrlBudget(ref db, ref budgetItemIndex);
             flpPeopleBills.Controls.Add(cb);
 
-            //foreach (Paycheck item in db.PayChecks)
-            //{
-            //    if (item.Id == 0) // stupid hard coded knowing account ID
-            //    {
-            //        iTotal1 += item.GetMonthlyAmount(item.NetPayPerPayPeriod); // Get monthly amount
-            //    }
-            //    if (item.Id == 2) //I think this is wrong also...
-            //    {
-            //        iTotal2 += item.GetMonthlyAmount(item.NetPayPerPayPeriod);
-            //    }
-
-            //}
+            flpPeopleBills.ResumeLayout();
+            this.ResumeLayout(true);
 
         }
 
@@ -125,7 +105,17 @@ namespace BasicBillPay
             if (fs.ShowDialog() == DialogResult.OK)
             {
                 PersistenceBase.Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
-                db = PersistenceBase.Load<Database>(appSettings.DbPath); 
+                db = PersistenceBase.Load<Database>(appSettings.DbPath);
+                //Need to Check Verification before Use.
+                if (db.Verification == appSettings.Verification)
+                {
+                    LoadData();
+                }
+                else
+                {
+                    MessageBox.Show("Wrong password for DataFile!");
+                }
+
             }
         }
          

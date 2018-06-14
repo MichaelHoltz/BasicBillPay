@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using BasicBillPay.Tools;
+using BasicBillPay.Tools.Encryption;
 
 namespace BasicBillPay.Models
 {
@@ -28,6 +29,10 @@ namespace BasicBillPay.Models
             }
         }
         #endregion INotifyPropertyChanged
+        /// <summary>
+        /// Idea is to use for Password Verification so as not to destroy the data with an incorrect password.
+        /// </summary>
+        public String Verification { get; set; }
         public int NextPayCheckId { get; set; }
         public HashSet<Paycheck> PayChecks { get; set; }
         public int NextAccountId { get; set; }
@@ -44,6 +49,7 @@ namespace BasicBillPay.Models
         #region EncryptedModel for all models that are EncryptedModel
         public void Encrypt()
         {
+            Verification = AESGCM.SimpleEncryptWithPassword(Verification);
             foreach (Account a in Accounts)
             {
                 a.Encrypt();
@@ -57,6 +63,7 @@ namespace BasicBillPay.Models
 
         public void Decrypt()
         {
+            Verification = AESGCM.SimpleDecryptWithPassword(Verification);
             foreach (Account a in Accounts)
             {
                 a.Decrypt();
@@ -206,16 +213,28 @@ namespace BasicBillPay.Models
             }
             return p;
         }
-
+        public HashSet<Payment> GetPayments(Person person)
+        {
+            HashSet<Payment> retVal = new HashSet<Payment>();
+            foreach (Payment p in Payments)
+            {
+                //Only Add Accounts this person is paying directly to.
+                if (person.AccountIds.Contains(p.PayFromId))
+                {
+                    retVal.Add(p);
+                }
+            }
+            return retVal;
+        }
         #endregion Payment Functions
-        #region Budget Item Functions
-        /// <summary>
-        /// Add Basic non-split Budget Item..
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="amount"></param>
-        /// <param name="paidFrequency"></param>
-        /// <returns></returns>
+            #region Budget Item Functions
+            /// <summary>
+            /// Add Basic non-split Budget Item..
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="amount"></param>
+            /// <param name="paidFrequency"></param>
+            /// <returns></returns>
         public BudgetItem AddBudgetItem(String name, float amount, TransactionPeriod paidFrequency)
         {
             //Need first two People

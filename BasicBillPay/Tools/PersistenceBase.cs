@@ -182,7 +182,7 @@ namespace BasicBillPay.Tools
             //appSettings.Encrypt();
             Save(PersistenceBase.GetAbsolutePath(@"\Data\ApplicationSettings.bbp"), appSettings);
             //appSettings.Decrypt();
-
+            db.Verification = appSettings.Verification; //Update Verification
             Save(appSettings.DbPath, db); // Save the database
         }
     }

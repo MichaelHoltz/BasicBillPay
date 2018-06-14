@@ -94,6 +94,7 @@
             this.catbPayTo.Size = new System.Drawing.Size(182, 20);
             this.catbPayTo.TabIndex = 2;
             this.catbPayTo.Tag = "Pay To";
+            this.catbPayTo.AccountChanged += new System.EventHandler<BasicBillPay.Controls.AccountChangedEventArgs>(this.catbPayTo_AccountChanged);
             // 
             // catbPayFrom
             // 
@@ -105,6 +106,7 @@
             this.catbPayFrom.Size = new System.Drawing.Size(182, 20);
             this.catbPayFrom.TabIndex = 3;
             this.catbPayFrom.Tag = "Pay From";
+            this.catbPayFrom.AccountChanged += new System.EventHandler<BasicBillPay.Controls.AccountChangedEventArgs>(this.catbPayFrom_AccountChanged);
             // 
             // cctbAmount
             // 
@@ -116,7 +118,7 @@
             this.cctbAmount.TabIndex = 7;
             this.cctbAmount.Tag = "Amount";
             this.cctbAmount.Value = 0F;
-            this.cctbAmount.ValueChanged += new System.EventHandler<CtrlCurrencyTextBox.AmountChangedEventArgs>(this.cctbAmount_ValueChanged);
+            this.cctbAmount.ValueChanged += new System.EventHandler<BasicBillPay.Controls.CtrlCurrencyTextBox.AmountChangedEventArgs>(this.cctbAmount_ValueChanged);
             // 
             // CtrlPaymentItem
             // 
